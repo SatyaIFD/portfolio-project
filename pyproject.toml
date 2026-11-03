@@ -1,0 +1,15 @@
+[project]
+name = "portfolio-project"
+version = "0.1.0"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S"] # 'S' includes flake8-bandit for fast static analysis
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv", "site/node_modules"]
+skips = []

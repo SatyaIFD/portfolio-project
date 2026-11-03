@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   sodipodi:docname="Favi2.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.43740881"
+     inkscape:cx="395.51101"
+     inkscape:cy="558.97365"
+     inkscape:window-width="1366"
+     inkscape:window-height="699"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <defs
+     id="defs1">
+    <rect
+       x="265.19813"
+       y="416.08673"
+       width="429.80387"
+       height="290.34623"
+       id="rect3" />
+    <rect
+       x="221.76051"
+       y="473.2415"
+       width="208.04336"
+       height="205.75717"
+       id="rect2" />
+    <rect
+       x="59.440961"
+       y="441.23483"
+       width="192.04003"
+       height="315.49433"
+       id="rect1" />
+  </defs>
+  <text
+     xml:space="preserve"
+     transform="matrix(0.69411314,-0.01090169,0.21265467,0.58850438,-241.0449,-163.03199)"
+     id="text3"
+     style="font-weight:bold;font-size:192px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans, Bold';writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect3);display:inline;fill:#006400;fill-opacity:1"><tspan
+       x="265.19727"
+       y="585.96094"
+       id="tspan1">D</tspan></text>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       transform="matrix(0.70493715,-0.80574863,0.0691301,0.50579303,-43.674928,-13.994299)"
+       id="text1"
+       style="font-weight:bold;font-size:192px;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans, Bold';writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect1);display:inline;fill:#003399;fill-opacity:1"><tspan
+         x="59.441406"
+         y="611.10938"
+         id="tspan2">V</tspan></text>
+  </g>
+</svg>
