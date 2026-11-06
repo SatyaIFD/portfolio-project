@@ -1,16 +1,16 @@
-# Python & Environments
 __pycache__/
 *.py[cod]
 .venv/
 venv/
 .env
-
-# Tooling Caches
 .ruff_cache/
+.mypy_cache/
 .pytest_cache/
 .coverage
-
-# OS & Editor
+htmlcov/
 .DS_Store
 .vscode/
-*.swp
+site/node_modules/
+site/dist/
+site/.astro/
+site/.wrangler/
