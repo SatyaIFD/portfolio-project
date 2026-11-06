@@ -3,11 +3,17 @@ repos:
     rev: v0.3.5
     hooks:
       - id: ruff
-        args: [ --fix ]
+        args: ["--fix"]
       - id: ruff-format
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.8
     hooks:
       - id: bandit
-        args: ["-c", "pyproject.toml", "-r", "."]
+        args: ["-c", "pyproject.toml", "-r", "rag_pipeline"]
         pass_filenames: false
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: ["--baseline", ".secrets.baseline"]
+        exclude: "(site/package-lock.json|uv.lock)"

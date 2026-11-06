@@ -3,25 +3,45 @@ name: DevSecOps Pipeline
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   security-and-linting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Install uv
         uses: astral-sh/setup-uv@v3
         with:
           enable-cache: true
-          
-      - name: Run Ruff Linter
-        run: uvx ruff check .
-        
+
+      - name: Sync Dependencies
+        run: uv sync --dev
+
+      - name: Run Ruff Linter & Format Check
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+
+      - name: Run Mypy Static Type Checker
+        run: uv run mypy rag_pipeline tests
+
       - name: Run Bandit Security Scan
-        run: uvx bandit -c pyproject.toml -r .
-        
-      - name: Run Trivy Vulnerability Scanner
+        run: uv run bandit -c pyproject.toml -r rag_pipeline
+
+      - name: Run pip-audit Dependency Vulnerability Scan
+        run: uv run pip-audit
+
+      - name: Run detect-secrets Check
+        run: uv run detect-secrets-hook --baseline .secrets.baseline $(git ls-files | grep -vE 'site/package-lock.json|uv.lock')
+
+      - name: Run Pytest with Coverage Gate
+        run: uv run pytest
+
+      - name: Run Trivy Filesystem Scanner
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
