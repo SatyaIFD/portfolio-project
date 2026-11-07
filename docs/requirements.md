@@ -1,7 +1,7 @@
 # Requirements & Engineering Specifications
 
 ## 1. Business Problem & Intended Outcome
-Provide recruiters and engineering leads with a fast (<200ms TTFT), verified portfolio and interactive AI assistant that answers questions strictly from grounded Markdown documentation without hallucination, operating at ₹0/month beyond the ₹1,075/year domain cost.
+Provide recruiters and engineering leads with a fast (<200ms TTFT), verified portfolio and interactive AI assistant that answers questions strictly from grounded Markdown documentation without hallucination, operating at $0/month beyond the base domain registration cost.
 
 ## 2. Functional Requirements
 - **FR1:** Serve static portfolio pages and architectural logs globally via CDN.
@@ -12,7 +12,7 @@ Provide recruiters and engineering leads with a fast (<200ms TTFT), verified por
 ## 3. Non-Functional Requirements
 - **Security & Privacy:** Block PII inputs via regex; zero server-side IP or prompt logging (GDPR); label AI output per EU AI Act Article 50.
 - **Reliability & Performance:** Static asset delivery <100ms; edge RAG streaming TTFT <200ms.
-- **Cost:** Strictly ₹0/month operational spend within Cloudflare free-tier quotas.
+- **Cost:** Strictly $0/month operational spend within Cloudflare free-tier quotas.
 - **Maintainability:** 100% pass rate on Ruff, Mypy, Bandit, pip-audit, detect-secrets, Trivy, and Pytest (>=80% coverage).
 
 ## 4. Input & Output Schemas

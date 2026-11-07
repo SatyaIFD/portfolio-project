@@ -1,14 +1,22 @@
 {
-	"$schema": "./node_modules/wrangler/config-schema.json",
-	"compatibility_date": "2026-11-01",
-	"compatibility_flags": ["global_fetch_strictly_public"],
-	"name": "site",
-	"main": "@astrojs/cloudflare/entrypoints/server",
-	"assets": {
-		"directory": "./dist",
-		"binding": "ASSETS"
-	},
-	"observability": {
-		"enabled": true
-	}
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "vraidaten-portfolio",
+  "compatibility_date": "2026-11-01",
+  "pages_build_output_dir": "./dist",
+  "ai": {
+    "binding": "AI"
+  },
+  "vectorize": [
+    {
+      "binding": "VECTOR_INDEX",
+      "index_name": "vraidaten-knowledge-index"
+    }
+  ],
+  "vars": {
+    "MODEL_ID": "@cf/meta/llama-3.2-1b-instruct",
+    "EMBEDDING_MODEL_ID": "@cf/baai/bge-small-en-v1.5",
+    "SIMILARITY_THRESHOLD": "0.70",
+    "MAX_PROMPT_LENGTH": "500",
+    "ALLOWED_ORIGIN": "https://vraidaten.com"
+  }
 }
