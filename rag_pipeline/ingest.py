@@ -4,10 +4,18 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import sys
 from pathlib import Path
 
 from rag_pipeline.schemas import KnowledgeChunk
+
+DEFAULT_DOCS_DIR = "docs"
+DEFAULT_OUTPUT_FILE = "rag_pipeline/vectorize_payload.jsonl"
+GIT_DIR_PATH = ".git"
+GIT_HEAD_PATH = ".git/HEAD"
+GIT_REF_PREFIX = "ref: "
+SHORT_SHA_LENGTH = 7
 
 # Configure structured JSON logging
 logging.basicConfig(
@@ -23,20 +31,21 @@ logger = logging.getLogger(__name__)
 
 def get_current_git_commit() -> str:
     """Retrieves the current short Git commit SHA directly from .git/HEAD."""
-    head_file = Path(".git/HEAD")
+    head_file = Path(GIT_HEAD_PATH)
     if not head_file.exists():
         logger.error("Git HEAD file not found.")
         sys.exit(1)
 
     head_content = head_file.read_text(encoding="utf-8").strip()
-    if head_content.startswith("ref: "):
-        ref_path = Path(".git") / head_content[5:]
+    if head_content.startswith(GIT_REF_PREFIX):
+        ref_rel_path = head_content.removeprefix(GIT_REF_PREFIX)
+        ref_path = Path(GIT_DIR_PATH) / ref_rel_path
         if not ref_path.exists():
             logger.error(f"Git ref file not found: {ref_path}")
             sys.exit(1)
-        return ref_path.read_text(encoding="utf-8").strip()[:7]
+        return ref_path.read_text(encoding="utf-8").strip()[:SHORT_SHA_LENGTH]
 
-    return head_content[:7]
+    return head_content[:SHORT_SHA_LENGTH]
 
 
 def chunk_markdown_file(file_path: Path, commit_sha: str) -> list[KnowledgeChunk]:
@@ -70,24 +79,17 @@ def chunk_markdown_file(file_path: Path, commit_sha: str) -> list[KnowledgeChunk
 
 def main() -> None:
     """Main execution entrypoint for local ingestion."""
-    docs_dir = Path("docs")
-    output_file = Path("rag_pipeline/vectorize_payload.jsonl")
+    docs_dir = Path(os.getenv("RAG_DOCS_DIR", DEFAULT_DOCS_DIR))
+    output_file = Path(os.getenv("RAG_OUTPUT_FILE", DEFAULT_OUTPUT_FILE))
 
     commit_sha = get_current_git_commit()
     all_chunks: list[KnowledgeChunk] = []
 
-    # Ground the AI on these specific architectural documents
-    target_files = [
-        "requirements.md",
-        "architecture.md",
-        "known-limitations.md",
-    ]
-    for filename in target_files:
-        filepath = docs_dir / filename
-        if filepath.exists():
-            all_chunks.extend(chunk_markdown_file(filepath, commit_sha))
+    # Dynamically discover all Markdown files across docs/ and subdirectories
+    for filepath in sorted(docs_dir.rglob("*.md")):
+        all_chunks.extend(chunk_markdown_file(filepath, commit_sha))
 
-    # Export to JSONL format suitable for Cloudflare Workers AI batch embedding
+    output_file.parent.mkdir(parents=True, exist_ok=True)
     with output_file.open("w", encoding="utf-8") as f:
         for chunk in all_chunks:
             record = {

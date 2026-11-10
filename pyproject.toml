@@ -22,7 +22,7 @@ target-version = "py311"
 exclude = ["site/node_modules", "site/dist", "site/.astro"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP", "S"]
+select = ["PLR2004", "E", "F", "I", "B", "UP", "S"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["S101"]
