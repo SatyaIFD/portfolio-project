@@ -11,6 +11,8 @@ from rag_pipeline.ingest import (
     main,
 )
 
+EXPECTED_CHUNK_COUNT = 3
+
 
 def test_get_current_git_commit_branch_ref(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
@@ -59,7 +61,7 @@ def test_chunk_markdown_file(tmp_path: Path) -> None:
     md_file.write_text("Chunk 1\n\nChunk 2\n\n   \n\nChunk 3", encoding="utf-8")
     chunks = chunk_markdown_file(md_file, "1234567")
 
-    assert len(chunks) == 3
+    assert len(chunks) == EXPECTED_CHUNK_COUNT
     assert chunks[0].content == "Chunk 1"
     assert chunks[0].chunk_id == "test-000"
     assert chunks[0].git_commit == "1234567"
@@ -70,27 +72,33 @@ def test_chunk_markdown_file_not_found(tmp_path: Path) -> None:
         chunk_markdown_file(tmp_path / "missing.md", "1234567")
 
 
-def test_main(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_main_dynamic_discovery_and_env(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr("rag_pipeline.ingest.get_current_git_commit", lambda: "1234567")
 
-    docs_dir = tmp_path / "docs"
-    docs_dir.mkdir()
-    (docs_dir / "requirements.md").write_text("Req 1\n\nReq 2", encoding="utf-8")
-    (docs_dir / "architecture.md").write_text("Arch 1", encoding="utf-8")
+    custom_docs = tmp_path / "custom_docs"
+    nested_decisions = custom_docs / "decisions"
+    nested_decisions.mkdir(parents=True)
+    (custom_docs / "architecture.md").write_text("Arch 1\n\nArch 2", encoding="utf-8")
+    (nested_decisions / "001-adr.md").write_text("ADR 1", encoding="utf-8")
 
-    out_dir = tmp_path / "rag_pipeline"
-    out_dir.mkdir()
+    custom_output = tmp_path / "out" / "custom_payload.jsonl"
+    monkeypatch.setenv("RAG_DOCS_DIR", str(custom_docs))
+    monkeypatch.setenv("RAG_OUTPUT_FILE", str(custom_output))
 
     main()
 
-    out_file = out_dir / "vectorize_payload.jsonl"
-    assert out_file.exists()
+    assert custom_output.exists()
+    lines = custom_output.read_text(encoding="utf-8").splitlines()
+    assert len(lines) == EXPECTED_CHUNK_COUNT
 
-    lines = out_file.read_text(encoding="utf-8").splitlines()
-    assert len(lines) == 3
+    first_record = json.loads(lines[0])
+    assert first_record["id"] == "architecture-000"
+    assert first_record["text"] == "Arch 1"
+    assert first_record["metadata"]["git_commit"] == "1234567"
 
-    data = json.loads(lines[0])
-    assert data["id"] == "requirements-000"
-    assert data["text"] == "Req 1"
-    assert data["metadata"]["git_commit"] == "1234567"
+    last_record = json.loads(lines[-1])
+    assert last_record["id"] == "001-adr-000"
+    assert last_record["text"] == "ADR 1"
