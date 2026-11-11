@@ -16,3 +16,4 @@ site/.astro/
 site/.wrangler/
 rag_pipeline/vectorize_payload.jsonl
 rag_pipeline/vectorize_payload.jsonl
+rag_pipeline/vectorize_vectors.ndjson
