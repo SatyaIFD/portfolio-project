@@ -1,25 +1,33 @@
+# 1. Python & Environments
 __pycache__/
 *.py[cod]
 .venv/
 venv/
 .env
+.env.*
+
+# 2. Tooling, Linting, & Testing Caches
 .ruff_cache/
 .mypy_cache/
 .pytest_cache/
 .coverage
 htmlcov/
-.DS_Store
-.vscode/
+
+# 3. Cloudflare & Astro Edge Artifacts
 site/node_modules/
 site/dist/
 site/.astro/
-site/.wrangler/
-rag_pipeline/vectorize_payload.jsonl
-rag_pipeline/vectorize_payload.jsonl
-rag_pipeline/vectorize_vectors.ndjson
-
-# Cloudflare Wrangler local cache, state, and local secrets
 .wrangler/
 **/.wrangler/
 .dev.vars
 **/.dev.vars
+
+# 4. Local Data Pipelines
+rag_pipeline/vectorize_payload.jsonl
+rag_pipeline/vectorize_vectors.ndjson
+
+# 5. OS & IDE Artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
