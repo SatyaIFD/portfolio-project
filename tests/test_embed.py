@@ -122,7 +122,7 @@ def test_build_vectorize_ndjson_missing_file(tmp_path: Path) -> None:
 
 
 def test_main_missing_env(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("CF_ACCOUNT_ID", raising=False)
+    monkeypatch.delenv("CLOUDFLARE_ACCOUNT_ID", raising=False)
     monkeypatch.delenv("CF_AI_CREDENTIAL", raising=False)
     with pytest.raises(SystemExit):
         main()
@@ -150,10 +150,9 @@ def test_main_end_to_end(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Non
 
     vec = [0.25] * EXPECTED_DIMENSIONS
     monkeypatch.setattr(
-        "rag_pipeline.embed.fetch_embeddings",
-        lambda **kwargs: [vec, vec],
+        "rag_pipeline.embed.fetch_embeddings", lambda **kwargs: [vec, vec]
     )
-    monkeypatch.setenv("CF_ACCOUNT_ID", "acc-123")
+    monkeypatch.setenv("CLOUDFLARE_ACCOUNT_ID", "acc-123")
     monkeypatch.setenv("CF_AI_CREDENTIAL", "cred-123")
     monkeypatch.setenv("RAG_OUTPUT_FILE", str(input_file))
     monkeypatch.setenv("RAG_VECTORS_FILE", str(output_file))
