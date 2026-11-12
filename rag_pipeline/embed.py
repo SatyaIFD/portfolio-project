@@ -117,11 +117,12 @@ def build_vectorize_ndjson(
 
 def main() -> None:
     """Main CLI entrypoint for generating Vectorize NDJSON payloads."""
-    account_id = os.getenv("CF_ACCOUNT_ID", "").strip()
+    account_id = os.getenv("CLOUDFLARE_ACCOUNT_ID", "").strip()
     cf_credential = os.getenv("CF_AI_CREDENTIAL", "").strip()
     if not account_id or not cf_credential:
         logger.error(
-            "Missing required environment variables: CF_ACCOUNT_ID and CF_AI_CREDENTIAL"
+            "Missing required environment variables: "
+            "CLOUDFLARE_ACCOUNT_ID and CF_AI_CREDENTIAL"
         )
         sys.exit(1)
 
