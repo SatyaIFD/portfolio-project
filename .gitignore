@@ -17,3 +17,9 @@ site/.wrangler/
 rag_pipeline/vectorize_payload.jsonl
 rag_pipeline/vectorize_payload.jsonl
 rag_pipeline/vectorize_vectors.ndjson
+
+# Cloudflare Wrangler local cache, state, and local secrets
+.wrangler/
+**/.wrangler/
+.dev.vars
+**/.dev.vars
