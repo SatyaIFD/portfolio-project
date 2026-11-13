@@ -1,9 +1,9 @@
-# ADR 006: Edge Model Quantization & Rate Limiting
+# ADR 006: FP8-Fast Edge Model Selection, Token Bounding & Budget Protection
 
 - **Status:** Accepted
 - **Date:** 2026-11-13
-- **Context:** Cloudflare Workers AI offers 10,000 Free Neurons daily. Generating a RAG response requires balancing execution speed (Time-To-First-Token) against budget preservation and scrape-resistance.
+- **Context:** Cloudflare Workers AI provides 10,000 Free Neurons daily. Earlier AWQ (`int4`) Llama 3 models were deprecated by Cloudflare on May 30, 2026, and output tokens consume roughly 8.5x more Neurons than input tokens.
 - **Decision:**
-  1. Implement `@cf/meta/llama-3-8b-instruct-awq` as the default edge inference model. The `int4` quantized weights cut memory payload in half compared to `int8`, drastically reducing latency for the end user.
-  2. A standard RAG query (~750 total tokens) burns ~11.25 Neurons, affording the portfolio site ~888 chats per day.
-  3. Implemented a Cloudflare Rate Limiter in `site/wrangler.toml` and bound it to `env.RATE_LIMITER`. Keying the limiter to the `CF-Connecting-IP` header restricts each visitor to 5 chats per 60 seconds, preventing automated scrapers from exhausting the daily budget allocation.
+  1. Standardize on `@cf/meta/llama-3.1-8b-instruct-fp8-fast` in `site/wrangler.jsonc`. At 4,119 Neurons per 1M input tokens and 34,868 Neurons per 1M output tokens, a bounded RAG turn (~550 input tokens + up to 200 output tokens) consumes ~9.24 Neurons, supporting ~1,082 daily chats on the free tier.
+  2. Enforce input bounds (`MAX_PROMPT_LENGTH = 500`), cosine similarity filtering (`SIMILARITY_THRESHOLD = 0.70`), and output caps (`MAX_OUTPUT_TOKENS = 256`, `temperature = 0.0`) to prevent runaway token drain.
+  3. Support edge rate limiting (`RATE_LIMITER`) and WAF rules while preserving ADR 002 GDPR telemetry guarantees (never logging raw prompts or client IP addresses).
