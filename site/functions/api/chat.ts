@@ -1,131 +1,105 @@
-export interface Env {
-  AI: {
-    run: (model: string, payload: Record<string, unknown>) => Promise< any >;
+/**
+ * Edge RAG endpoint powered by Cloudflare Workers AI, Vectorize, and Rate Limiting.
+ */
+
+interface Env {
+  AI: any;
+  VECTORIZE: any;
+  RATE_LIMITER: {
+    limit: (options: { key: string }) => Promise<{ success: boolean }>;
   };
-  VECTOR_INDEX: {
-    query: (
-      vector: number[],
-      options: { topK: number; returnMetadata?: boolean }
-    ) => Promise<{
-      matches: Array<{ id: string; score: number; metadata?: { content?: string; git_commit?: string } }>;
-    }>;
-  };
-  MODEL_ID: string;
-  EMBEDDING_MODEL_ID: string;
-  SIMILARITY_THRESHOLD: string;
-  MAX_PROMPT_LENGTH: string;
-  ALLOWED_ORIGIN: string;
 }
 
-const PII_REGEX =
-  /\b(\d{3}-\d{2}-\d{4}|\d{13,16}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\b/;
-
-function logStructuredEvent(
-  requestId: string,
-  event: string,
-  status: number,
-  latencyMs: number
-): void {
-  console.info(
-    JSON.stringify({
-      timestamp: new Date().toISOString(),
-      request_id: requestId,
-      event,
-      status,
-      latency_ms: latencyMs,
-    })
-  );
+interface RequestPayload {
+  prompt: string;
 }
 
-export const onRequestPost = async (context: {
-  request: Request;
-  env: Env;
-}): Promise<Response> => {
-  const startTime = Date.now();
-  const requestId = crypto.randomUUID();
-  const corsHeaders = {
-    "Access-Control-Allow-Origin": context.env.ALLOWED_ORIGIN || "*",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "X-Request-Id": requestId,
-  };
+const DEFAULT_EMBEDDING_MODEL = "@cf/baai/bge-small-en-v1.5";
+const DEFAULT_LLM = "@cf/meta/llama-3-8b-instruct-awq";
+const HTTP_OK = 200;
+const HTTP_BAD_REQUEST = 400;
+const HTTP_TOO_MANY_REQUESTS = 429;
+const HTTP_INTERNAL_ERROR = 500;
+const VECTOR_MATCH_LIMIT = 3;
 
+export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
-    const body = (await context.request.json()) as { prompt?: unknown };
-    if (typeof body.prompt !== "string") {
-      logStructuredEvent(requestId, "invalid_schema_type", 400, Date.now() - startTime);
-      return new Response("Invalid request schema: 'prompt' must be a string.", {
-        status: 400,
-        headers: corsHeaders,
-      });
-    }
-
-    const cleanedPrompt = body.prompt.trim();
-    const maxLen = Number.parseInt(context.env.MAX_PROMPT_LENGTH || "500", 10);
-
-    if (cleanedPrompt.length === 0 || cleanedPrompt.length > maxLen) {
-      logStructuredEvent(requestId, "prompt_length_violation", 400, Date.now() - startTime);
+    const request = context.request;
+    const env = context.env;
+    
+    // 1. IP-Based Rate Limiting to protect the Edge Budget
+    const clientIP = request.headers.get("CF-Connecting-IP") || "unknown";
+    const { success } = await env.RATE_LIMITER.limit({ key: clientIP });
+    
+    if (!success) {
       return new Response(
-        `Prompt must be between 1 and ${maxLen} characters.`,
-        { status: 400, headers: corsHeaders }
+        JSON.stringify({ error: "Rate limit exceeded. Please wait 60 seconds." }), 
+        {
+          status: HTTP_TOO_MANY_REQUESTS,
+          headers: { "Content-Type": "application/json" },
+        }
       );
     }
 
-    if (PII_REGEX.test(cleanedPrompt)) {
-      logStructuredEvent(requestId, "pii_blocked", 403, Date.now() - startTime);
-      return new Response("Request blocked: Sensitive PII detected.", {
-        status: 403,
-        headers: corsHeaders,
+    const body = (await request.json()) as RequestPayload;
+
+    if (!body || typeof body.prompt !== "string" || !body.prompt.trim()) {
+      return new Response(JSON.stringify({ error: "Invalid prompt" }), {
+        status: HTTP_BAD_REQUEST,
+        headers: { "Content-Type": "application/json" },
       });
     }
 
-    const embeddings = await context.env.AI.run(context.env.EMBEDDING_MODEL_ID, {
-      text: [cleanedPrompt],
+    const userPrompt = body.prompt.trim();
+
+    // 2. Embed the user's query
+    const embedResponse = await env.AI.run(DEFAULT_EMBEDDING_MODEL, {
+      text: [userPrompt],
+    });
+    
+    if (!embedResponse?.data?.[0]) {
+      throw new Error("Failed to generate embedding array.");
+    }
+    
+    const queryVector = embedResponse.data[0];
+
+    // 3. Query Vectorize for top matches (includes co-located metadata text)
+    const vectorMatches = await env.VECTORIZE.query(queryVector, {
+      topK: VECTOR_MATCH_LIMIT,
+      returnValues: false,
+      returnMetadata: "all",
     });
 
-    const vectorQuery = await context.env.VECTOR_INDEX.query(embeddings.data[0], {
-      topK: 1,
-      returnMetadata: true,
-    });
-
-    const threshold = Number.parseFloat(context.env.SIMILARITY_THRESHOLD || "0.70");
-    const topMatch = vectorQuery.matches[0];
-
-    if (!topMatch || topMatch.score < threshold) {
-      logStructuredEvent(requestId, "similarity_refusal", 200, Date.now() - startTime);
-      return new Response(
-        "I do not have access to that information in Satyajit's verified portfolio.",
-        { status: 200, headers: corsHeaders }
-      );
+    // 4. Assemble the prompt context
+    let contextStr = "";
+    if (vectorMatches.matches && vectorMatches.matches.length > 0) {
+      contextStr = vectorMatches.matches
+        .map((match: any) => match.metadata?.text || "")
+        .join("\n\n");
     }
 
-    const groundedText = topMatch.metadata?.content || topMatch.id;
-    const systemInstruction = `You are Satyajit's portfolio AI. Answer using ONLY this verified context: ${groundedText}. If the answer is not in the context, refuse. Do not hallucinate.`;
+    const systemPrompt = `You are a helpful MLOps AI assistant for Satyajit's portfolio project. 
+Answer the user's question using ONLY the provided context. If the answer is not in the context, say so.
+Context:\n${contextStr}`;
 
-    const aiStream = await context.env.AI.run(context.env.MODEL_ID, {
+    // 5. Generate the LLM response using the high-speed int4 AWQ model
+    const llmResponse = await env.AI.run(DEFAULT_LLM, {
       messages: [
-        { role: "system", content: systemInstruction },
-        { role: "user", content: cleanedPrompt },
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt },
       ],
-      stream: true,
-      temperature: 0.0,
-      max_tokens: 256,
     });
 
-    logStructuredEvent(requestId, "rag_stream_started", 200, Date.now() - startTime);
-    return new Response(aiStream, {
-      status: 200,
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-store",
-      },
+    return new Response(JSON.stringify({ response: llmResponse.response }), {
+      status: HTTP_OK,
+      headers: { "Content-Type": "application/json" },
     });
-  } catch {
-    logStructuredEvent(requestId, "edge_execution_error", 500, Date.now() - startTime);
-    return new Response("Internal Edge Error", {
-      status: 500,
-      headers: corsHeaders,
+    
+  } catch (error: any) {
+    console.error("RAG Worker Error:", error.message);
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+      status: HTTP_INTERNAL_ERROR,
+      headers: { "Content-Type": "application/json" },
     });
   }
 };

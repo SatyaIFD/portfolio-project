@@ -1,0 +1,17 @@
+name = "vraidaten-portfolio"
+compatibility_date = "2026-11-13"
+pages_build_output_dir = "./dist"
+
+[ai]
+binding = "AI"
+
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "vraidaten-index"
+
+# Protect the 10,000 daily Neuron budget against scrapers
+[[ratelimits]]
+binding = "RATE_LIMITER"
+[ratelimits.simple]
+limit = 5
+period = 60
