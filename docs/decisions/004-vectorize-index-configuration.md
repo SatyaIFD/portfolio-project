@@ -6,4 +6,4 @@
 - **Decision:**
   1. Provision a Cloudflare Vectorize index (`vraidaten-index`) configured with `dimensions=384` and `metric=cosine` to match the exact output tensor shape of `@cf/baai/bge-small-en-v1.5`.
   2. Bind both Workers AI (`env.AI`) and Vectorize (`env.VECTOR_INDEX` pointing to `vraidaten-index`) inside `site/wrangler.jsonc` so edge functions authenticate via Cloudflare IAM bindings rather than static secrets.
-  3. Generate embeddings for `rag_pipeline/vectorize_payload.jsonl` before batch-inserting vectors into the index.
+  3. Generate embeddings for `rag_pipeline/vectorize_payload.jsonl` and batch-upload vectors using `wrangler vectorize upsert` so updated documentation chunks overwrite existing chunk IDs idempotently.
