@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "vraidaten-portfolio",
-  "compatibility_date": "2026-11-01",
+  "compatibility_date": "2026-11-13",
   "pages_build_output_dir": "./dist",
   "ai": {
     "binding": "AI"
@@ -9,14 +9,16 @@
   "vectorize": [
     {
       "binding": "VECTOR_INDEX",
-      "index_name": "vraidaten-knowledge-index"
+      "index_name": "vraidaten-index"
     }
   ],
   "vars": {
-    "MODEL_ID": "@cf/meta/llama-3.2-1b-instruct",
+    "MODEL_ID": "@cf/meta/llama-3.1-8b-instruct-fp8-fast",
     "EMBEDDING_MODEL_ID": "@cf/baai/bge-small-en-v1.5",
     "SIMILARITY_THRESHOLD": "0.70",
     "MAX_PROMPT_LENGTH": "500",
+    "MAX_OUTPUT_TOKENS": "256",
+    "VECTOR_TOP_K": "3",
     "ALLOWED_ORIGIN": "https://vraidaten.com"
   }
 }
