@@ -48,6 +48,26 @@ def get_current_git_commit() -> str:
     return head_content[:SHORT_SHA_LENGTH]
 
 
+def merge_heading_blocks(raw_blocks: list[str]) -> list[str]:
+    """Merges standalone single-line Markdown headings into the following paragraph."""
+    merged_chunks: list[str] = []
+    pending_header = ""
+
+    for block in raw_blocks:
+        if block.startswith("#") and "\n" not in block:
+            pending_header = f"{pending_header}\n\n{block}" if pending_header else block
+        elif pending_header:
+            merged_chunks.append(f"{pending_header}\n\n{block}")
+            pending_header = ""
+        else:
+            merged_chunks.append(block)
+
+    if pending_header:
+        merged_chunks.append(pending_header)
+
+    return merged_chunks
+
+
 def chunk_markdown_file(file_path: Path, commit_sha: str) -> list[KnowledgeChunk]:
     """Reads a Markdown file and splits it into validated KnowledgeChunks."""
     if not file_path.exists():
@@ -56,8 +76,9 @@ def chunk_markdown_file(file_path: Path, commit_sha: str) -> list[KnowledgeChunk
 
     content = file_path.read_text(encoding="utf-8")
 
-    # Heuristic: Split content by double newlines to isolate logical paragraphs
-    raw_chunks = [c.strip() for c in content.split("\n\n") if c.strip()]
+    # Split content by double newlines and attach standalone headings to body blocks
+    raw_blocks = [c.strip() for c in content.split("\n\n") if c.strip()]
+    raw_chunks = merge_heading_blocks(raw_blocks)
 
     validated_chunks: list[KnowledgeChunk] = []
     for idx, text in enumerate(raw_chunks):

@@ -65,7 +65,8 @@ function logStructuredEvent(
   requestId: string,
   event: string,
   status: number,
-  latencyMs: number
+  latencyMs: number,
+  metrics?: { match_count?: number; top_score?: number | null }
 ): void {
   console.info(
     JSON.stringify({
@@ -74,6 +75,7 @@ function logStructuredEvent(
       event,
       status,
       latency_ms: latencyMs,
+      ...metrics,
     })
   );
 }
@@ -180,19 +182,20 @@ export const POST: APIRoute = async ({ request }) => {
       returnMetadata: "all",
     });
 
+    const matches = vectorQuery.matches || [];
+    const topScore = matches[0]?.score ?? null;
     const threshold = Number.parseFloat(
-      runtimeEnv.SIMILARITY_THRESHOLD || "0.70"
+      runtimeEnv.SIMILARITY_THRESHOLD || "0.60"
     );
-    const validMatches = (vectorQuery.matches || []).filter(
-      (match) => match.score >= threshold
-    );
+    const validMatches = matches.filter((match) => match.score >= threshold);
 
     if (validMatches.length === 0) {
       logStructuredEvent(
         requestId,
         "similarity_refusal",
         HTTP_OK,
-        Date.now() - startTime
+        Date.now() - startTime,
+        { match_count: matches.length, top_score: topScore }
       );
       return new Response(
         "I do not have access to that information in Satyajit's verified portfolio.",
@@ -224,7 +227,8 @@ export const POST: APIRoute = async ({ request }) => {
       requestId,
       "rag_stream_started",
       HTTP_OK,
-      Date.now() - startTime
+      Date.now() - startTime,
+      { match_count: validMatches.length, top_score: topScore }
     );
     return new Response(aiStream, {
       status: HTTP_OK,
