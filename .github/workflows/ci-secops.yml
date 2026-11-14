@@ -47,8 +47,10 @@ jobs:
       - name: Run Bandit Security Scan
         run: uv run bandit -c pyproject.toml -r rag_pipeline
 
-      - name: Run pip-audit Dependency Vulnerability Scan
-        run: uv run pip-audit
+      - name: Run Python & NPM Dependency Vulnerability Scans
+        run: |
+          uv run pip-audit
+          npm --prefix site audit --audit-level=moderate
 
       - name: Run detect-secrets Check
         run: uv run detect-secrets-hook --baseline .secrets.baseline $(git ls-files | grep -vE 'site/package-lock.json|uv.lock')
