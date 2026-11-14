@@ -1,7 +1,11 @@
 /**
- * Hardened Edge RAG endpoint with schema parity, similarity gating,
- * GDPR-compliant structured telemetry, and bounded FP8-fast streaming.
+ * Hardened Astro Edge RAG endpoint (/api/chat) with schema parity,
+ * similarity gating, GDPR-compliant structured telemetry, and FP8-fast streaming.
  */
+import type { APIRoute } from "astro";
+import { env as cfEnv } from "cloudflare:workers";
+
+export const prerender = false;
 
 export interface VectorizeMatchMetadata {
   text?: string;
@@ -20,7 +24,7 @@ export interface AiEmbeddingResponse {
   data?: number[][];
 }
 
-export interface Env {
+export interface RuntimeEnv {
   AI: {
     run: (
       model: string,
@@ -83,30 +87,25 @@ function buildCorsHeaders(allowedOrigin: string, requestId: string): Record<stri
   };
 }
 
-export const onRequestOptions = async (context: {
-  request: Request;
-  env: Env;
-}): Promise<Response> => {
+export const OPTIONS: APIRoute = async () => {
+  const runtimeEnv = cfEnv as unknown as RuntimeEnv;
   const requestId = crypto.randomUUID();
   return new Response(null, {
     status: HTTP_NO_CONTENT,
-    headers: buildCorsHeaders(context.env.ALLOWED_ORIGIN, requestId),
+    headers: buildCorsHeaders(runtimeEnv.ALLOWED_ORIGIN, requestId),
   });
 };
 
-export const onRequestPost = async (context: {
-  request: Request;
-  env: Env;
-}): Promise<Response> => {
+export const POST: APIRoute = async ({ request }) => {
+  const runtimeEnv = cfEnv as unknown as RuntimeEnv;
   const startTime = Date.now();
   const requestId = crypto.randomUUID();
-  const corsHeaders = buildCorsHeaders(context.env.ALLOWED_ORIGIN, requestId);
+  const corsHeaders = buildCorsHeaders(runtimeEnv.ALLOWED_ORIGIN, requestId);
 
   try {
-    if (context.env.RATE_LIMITER) {
-      const clientKey =
-        context.request.headers.get("CF-Connecting-IP") || "anonymous";
-      const { success } = await context.env.RATE_LIMITER.limit({ key: clientKey });
+    if (runtimeEnv.RATE_LIMITER) {
+      const clientKey = request.headers.get("CF-Connecting-IP") || "anonymous";
+      const { success } = await runtimeEnv.RATE_LIMITER.limit({ key: clientKey });
       if (!success) {
         logStructuredEvent(
           requestId,
@@ -121,7 +120,7 @@ export const onRequestPost = async (context: {
       }
     }
 
-    const body = (await context.request.json()) as { prompt?: unknown };
+    const body = (await request.json()) as { prompt?: unknown };
     if (typeof body.prompt !== "string") {
       logStructuredEvent(
         requestId,
@@ -136,7 +135,7 @@ export const onRequestPost = async (context: {
     }
 
     const cleanedPrompt = body.prompt.trim();
-    const maxLen = Number.parseInt(context.env.MAX_PROMPT_LENGTH || "500", 10);
+    const maxLen = Number.parseInt(runtimeEnv.MAX_PROMPT_LENGTH || "500", 10);
 
     if (cleanedPrompt.length === 0 || cleanedPrompt.length > maxLen) {
       logStructuredEvent(
@@ -164,8 +163,8 @@ export const onRequestPost = async (context: {
       });
     }
 
-    const embedResult = (await context.env.AI.run(
-      context.env.EMBEDDING_MODEL_ID,
+    const embedResult = (await runtimeEnv.AI.run(
+      runtimeEnv.EMBEDDING_MODEL_ID,
       { text: [cleanedPrompt] }
     )) as AiEmbeddingResponse;
 
@@ -174,15 +173,15 @@ export const onRequestPost = async (context: {
       throw new Error("Embedding generation returned empty vector.");
     }
 
-    const topK = Number.parseInt(context.env.VECTOR_TOP_K || "3", 10);
-    const vectorQuery = await context.env.VECTOR_INDEX.query(queryVector, {
+    const topK = Number.parseInt(runtimeEnv.VECTOR_TOP_K || "3", 10);
+    const vectorQuery = await runtimeEnv.VECTOR_INDEX.query(queryVector, {
       topK,
       returnValues: false,
       returnMetadata: "all",
     });
 
     const threshold = Number.parseFloat(
-      context.env.SIMILARITY_THRESHOLD || "0.70"
+      runtimeEnv.SIMILARITY_THRESHOLD || "0.70"
     );
     const validMatches = (vectorQuery.matches || []).filter(
       (match) => match.score >= threshold
@@ -207,11 +206,11 @@ export const onRequestPost = async (context: {
 
     const systemInstruction = `You are Satyajit's portfolio AI. Answer using ONLY this verified context:\n${groundedText}\nIf the answer is not in the context, refuse. Do not hallucinate.`;
     const maxTokens = Number.parseInt(
-      context.env.MAX_OUTPUT_TOKENS || "256",
+      runtimeEnv.MAX_OUTPUT_TOKENS || "256",
       10
     );
 
-    const aiStream = (await context.env.AI.run(context.env.MODEL_ID, {
+    const aiStream = (await runtimeEnv.AI.run(runtimeEnv.MODEL_ID, {
       messages: [
         { role: "system", content: systemInstruction },
         { role: "user", content: cleanedPrompt },
