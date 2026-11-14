@@ -8,18 +8,20 @@
     "directory": "./dist"
   },
   "ai": {
-    "binding": "AI"
+    "binding": "AI",
+    "remote": true
   },
   "vectorize": [
     {
       "binding": "VECTOR_INDEX",
-      "index_name": "vraidaten-index"
+      "index_name": "vraidaten-index",
+      "remote": true
     }
   ],
   "vars": {
     "MODEL_ID": "@cf/meta/llama-3.1-8b-instruct-fp8-fast",
     "EMBEDDING_MODEL_ID": "@cf/baai/bge-small-en-v1.5",
-    "SIMILARITY_THRESHOLD": "0.70",
+    "SIMILARITY_THRESHOLD": "0.60",
     "MAX_PROMPT_LENGTH": "500",
     "MAX_OUTPUT_TOKENS": "256",
     "VECTOR_TOP_K": "3",
