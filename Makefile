@@ -16,6 +16,7 @@ typecheck:
 security:
 > uv run --isolated bandit -c pyproject.toml -r rag_pipeline
 > uv run --isolated pip-audit
+> npm --prefix site audit --audit-level=moderate
 > detect-secrets scan --exclude-files 'site/package-lock.json|uv.lock' > .secrets.baseline
 
 test:
