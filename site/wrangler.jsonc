@@ -1,8 +1,12 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "vraidaten-portfolio",
-  "compatibility_date": "2026-11-13",
-  "pages_build_output_dir": "./dist",
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "compatibility_date": "2026-11-08",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
   "ai": {
     "binding": "AI"
   },
