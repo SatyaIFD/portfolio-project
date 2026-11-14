@@ -4,13 +4,18 @@ repos:
     hooks:
       - id: ruff
         args: ["--fix"]
+        pass_filenames: false
+        always_run: true
       - id: ruff-format
+        pass_filenames: false
+        always_run: true
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.8
     hooks:
       - id: bandit
         args: ["-c", "pyproject.toml", "-r", "rag_pipeline"]
         pass_filenames: false
+        always_run: true
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.5.0
     hooks:

@@ -11,6 +11,7 @@ lint:
 
 typecheck:
 > uv run --isolated mypy rag_pipeline tests
+> npm --prefix site run typecheck
 
 security:
 > uv run --isolated bandit -c pyproject.toml -r rag_pipeline
