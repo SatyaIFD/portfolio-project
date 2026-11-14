@@ -18,7 +18,17 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Sync Dependencies
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: site/package-lock.json
+
+      - name: Install Site Dependencies
+        run: npm --prefix site ci
+
+      - name: Sync Python Dependencies
         run: uv sync --dev
 
       - name: Run Ruff Linter & Format Check
@@ -26,8 +36,10 @@ jobs:
           uv run ruff check .
           uv run ruff format --check .
 
-      - name: Run Mypy Static Type Checker
-        run: uv run mypy rag_pipeline tests
+      - name: Run Mypy & TypeScript Static Type Checkers
+        run: |
+          uv run mypy rag_pipeline tests
+          npm --prefix site run typecheck
 
       - name: Run Bandit Security Scan
         run: uv run bandit -c pyproject.toml -r rag_pipeline
