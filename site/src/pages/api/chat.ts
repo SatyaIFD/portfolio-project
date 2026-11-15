@@ -234,7 +234,7 @@ export const POST: APIRoute = async ({ request }) => {
       throw new Error("Embedding generation returned empty vector.");
     }
 
-    const topK = Number.parseInt(runtimeEnv.VECTOR_TOP_K || "3", 10);
+    const topK = Number.parseInt(runtimeEnv.VECTOR_TOP_K || "4", 10);
     const vectorQuery = await runtimeEnv.VECTOR_INDEX.query(queryVector, {
       topK,
       returnValues: false,
