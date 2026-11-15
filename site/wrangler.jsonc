@@ -3,6 +3,17 @@
   "name": "vraidaten-portfolio",
   "main": "@astrojs/cloudflare/entrypoints/server",
   "compatibility_date": "2026-11-08",
+  "workers_dev": true,
+  "routes": [
+    {
+      "pattern": "vraidaten.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.vraidaten.com",
+      "custom_domain": true
+    }
+  ],
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1,
