@@ -1,7 +1,7 @@
 # Requirements & Engineering Specifications
 
 ## 1. Business Problem & Intended Outcome
-Provide recruiters and engineering leads with a fast (<200ms TTFT), verified portfolio and interactive AI assistant powered by Cloudflare Workers AI (`@cf/ibm-granite/granite-4.0-h-micro` primary with `@cf/google/gemma-4-26b-a4b-it` automatic fallback) and Cloudflare Vectorize (`vraidaten-index`) that answers questions strictly from grounded Markdown documentation without hallucination, operating at $0/month beyond the base domain registration cost.
+Provide recruiters and engineering leads with a fast (<200ms TTFT), verified portfolio and interactive AI assistant powered by Cloudflare Workers AI (`@cf/ibm-granite/granite-4.0-h-micro` primary with `@cf/google/gemma-4-26b-a4b-it` automatic fallback) and the Cloudflare Vectorize (`vraidaten-index`) vector database that answers questions strictly from grounded Markdown documentation without hallucination, operating at $0/month beyond the base domain registration cost.
 
 ## 2. Functional Requirements
 - **FR1:** Serve static portfolio pages and architectural logs globally via Cloudflare Workers with Static Assets.
