@@ -48,7 +48,7 @@
     "SIMILARITY_THRESHOLD": "0.60",
     "MAX_PROMPT_LENGTH": "500",
     "MAX_OUTPUT_TOKENS": "256",
-    "VECTOR_TOP_K": "3",
+    "VECTOR_TOP_K": "4",
     "ALLOWED_ORIGIN": "https://vraidaten.com"
   }
 }

@@ -26,7 +26,7 @@ Provide recruiters and engineering leads with a fast (<200ms TTFT), verified por
 - **Rate Limit Exceeded (>10 req/60s):** Return HTTP 429 before invoking Workers AI or Vectorize.
 - **PII Detected in Prompt:** Return HTTP 403 without calling embedding or LLM APIs.
 - **Payload Empty or >500 Chars:** Return HTTP 400 validation error.
-- **Vector Similarity < 0.60:** Return HTTP 200 deterministic refusal message (0 LLM tokens used).
+- **Vector Similarity < 0.60 in Cloudflare Vectorize (`vraidaten-index`) Vector Database:** Return HTTP 200 deterministic refusal message without calling the `@cf/ibm-granite/granite-4.0-h-micro` LLM (0 LLM tokens used).
 - **Primary LLM Deprecated (HTTP 410) or Transiently Unavailable:** Log `model_fallback_triggered` and automatically stream from `FALLBACK_MODEL_ID`.
 - **Downstream AI/Vector Timeout:** Catch exception, log structured event ID, return generic HTTP 500 without leaking stack traces.
 

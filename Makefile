@@ -1,6 +1,6 @@
 .RECIPEPREFIX = >
 
-.PHONY: format lint typecheck security test sync-vectors all
+.PHONY: format lint typecheck security test sync-vectors deploy all
 
 format:
 > uv run --isolated ruff format .
@@ -26,5 +26,9 @@ sync-vectors:
 > uv run --isolated python -m rag_pipeline.ingest
 > CLOUDFLARE_ACCOUNT_ID="$$(secret-tool lookup project vraidaten-portfolio key cloudflare_account_id)" CF_AI_CREDENTIAL="$$(secret-tool lookup project vraidaten-portfolio key cf_ai_credential)" uv run --isolated python -m rag_pipeline.embed
 > CLOUDFLARE_ACCOUNT_ID="$$(secret-tool lookup project vraidaten-portfolio key cloudflare_account_id)" CLOUDFLARE_API_TOKEN="$$(secret-tool lookup project vraidaten-portfolio key cf_ai_credential)" npx --prefix site wrangler vectorize upsert vraidaten-index --file="$$(pwd)/rag_pipeline/vectorize_vectors.ndjson"
+
+deploy:
+> npm --prefix site run build
+> CLOUDFLARE_ACCOUNT_ID="$$(secret-tool lookup project vraidaten-portfolio key cloudflare_account_id)" CLOUDFLARE_API_TOKEN="$$(secret-tool lookup project vraidaten-portfolio key cf_ai_credential)" ./site/node_modules/.bin/wrangler deploy --config site/dist/server/wrangler.json
 
 all: format lint typecheck security test
