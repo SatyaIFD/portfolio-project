@@ -7,5 +7,5 @@
 
 ## 2. External Dependencies & Integration Points
 - **Cloudflare Workers with Static Assets & Observability:** Static asset hosting (`ASSETS`), serverless edge SSR execution, native rate limiting (`ratelimits`), and 100% sampled structured Logs & Traces (`observability`) configured via `site/wrangler.jsonc`.
-- **Cloudflare Vectorize & Workers AI:** Managed 384-dimension cosine vector index (`vraidaten-index`) and resilient Primary/Fallback LLM inference.
+- **Cloudflare Vectorize & Workers AI:** Managed 384-dimension cosine serverless vector database and index (`vraidaten-index`) and resilient Primary/Fallback LLM inference.
 - **GitHub Actions & Dependabot:** Automated CI/CD, DevSecOps enforcement, and continuous vulnerability patching.

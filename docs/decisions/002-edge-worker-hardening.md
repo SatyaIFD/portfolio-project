@@ -6,4 +6,4 @@
 - **Decision:**
   1. Externalize all primary/fallback model IDs (`MODEL_ID`, `FALLBACK_MODEL_ID`), similarity thresholds (`SIMILARITY_THRESHOLD = "0.60"`), and CORS origins to `site/wrangler.jsonc`.
   2. Enforce strict TypeScript type checking, native edge rate limiting (`RATE_LIMITER`, 10 req/60s), 1-500 character bounds, and PII regex blocking before calling Workers AI.
-  3. Emit structured JSON logs containing `request_id`, `event`, `status`, `latency_ms`, and non-PII retrieval/inference metrics (`match_count`, `top_score`, `model_used`) while never logging user prompts or IP addresses (GDPR compliance).
+  3. Emit structured JSON logs containing `request_id`, `event`, `status`, `latency_ms`, and non-PII retrieval/inference metrics (`match_count`, `top_score`, `matched_ids`, `model_used`) while never logging user prompts or IP addresses (GDPR compliance).

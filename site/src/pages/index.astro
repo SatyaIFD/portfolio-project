@@ -1,16 +1,268 @@
 ---
+import "../styles/global.css";
+
+const architectureHighlights = [
+  {
+    metric: "1.48 Neurons",
+    label: "Per RAG Turn (~6,700 Daily Free Chats)",
+    detail: "Powered by @cf/ibm-granite/granite-4.0-h-micro with automatic HTTP 410 / 5xx failover to @cf/google/gemma-4-26b-a4b-it.",
+  },
+  {
+    metric: "384-Dim Cosine",
+    label: "Cloudflare Vectorize (vraidaten-index)",
+    detail: "Embedded via @cf/baai/bge-small-en-v1.5 with heading-merged Markdown chunks, Git SHA lineage metadata, and a calibrated 0.60 cutoff.",
+  },
+  {
+    metric: "Zero PII / $0 Ops",
+    label: "GDPR & EU AI Act Art. 50 Compliant",
+    detail: "Edge regex PII blocking (HTTP 403), native PoP rate limiting (10 req/60s), and 100% sampled non-PII structured JSON telemetry.",
+  },
+];
+
+const engineeringProjects = [
+  {
+    title: "Zero-Cost Edge RAG Portfolio & DevSecOps Platform",
+    domain: "vraidaten.com",
+    stack: ["Astro 7", "Cloudflare Workers", "Vectorize", "Workers AI", "Python 3.13", "uv"],
+    summary:
+      "Serverless hybrid RAG architecture with deterministic Markdown ingestion, OS Keyring (libsecret) credential injection, and a 9-gate CI/CD DevSecOps pipeline (Ruff, Mypy, tsc, Bandit, pip-audit, npm audit, detect-secrets, Pytest 98.8% coverage, and Trivy).",
+  },
+  {
+    title: "Real-Time Banking Fraud Detection MVP",
+    domain: "bankingfrauddetection.v-d.com",
+    stack: ["Google Cloud Platform", "MLOps", "Python", "Real-Time Inference"],
+    summary:
+      "Production-grade Minimum Viable Product for real-time Credit Card, Debit Card, and Netbanking fraud detection engineered on Google Cloud Platform with low-latency scoring.",
+  },
+  {
+    title: "Deterministic Python Text Analysis & Quality Suite",
+    domain: "Local / CI Pipeline",
+    stack: ["Python 3.13", "Pytest", "Mypy", "Ruff", "Bandit"],
+    summary:
+      "Modular Python text analysis and schema validation engineering with isolated virtual environments, strict static typing, and automated security scanning.",
+  },
+];
+
+const starterPrompts = [
+  "Which LLM model and vector database power this portfolio?",
+  "How does ADR 006 protect the 10,000 daily free Neurons budget?",
+  "How are credentials managed securely via ADR 007?",
+  "What DevSecOps gates run in CI before merging to main?",
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+<!doctype html>
+<html lang="en" class="dark scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Satyajit — MLOps, Cloud Architecture & DevSecOps Portfolio powered by Cloudflare Workers AI and Vectorize Edge RAG."
+    />
+    <meta name="generator" content={Astro.generator} />
+    <title>Satyajit | MLOps & Edge AI Architecture (vraidaten.com)</title>
+  </head>
+  <body class="min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-cyan-500/30 selection:text-cyan-200">
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-30 border-b border-slate-800/80 bg-slate-950/85 backdrop-blur-md">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-6">
+        <div class="flex items-center gap-3">
+          <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-500/15 border border-cyan-500/40 font-mono text-sm font-bold text-cyan-400">
+            V
+          </span>
+          <div>
+            <span class="font-semibold tracking-tight text-slate-100">vraidaten.com</span>
+            <span class="hidden sm:inline-block ml-2 rounded-md bg-slate-900 border border-slate-800 px-2 py-0.5 font-mono text-xs text-slate-400">
+              Satyajit · MLOps &amp; Cloud Architecture
+            </span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2 rounded-full border border-slate-800 bg-slate-900/90 px-3 py-1 text-xs text-slate-300">
+            <span id="health-dot" class="h-2.5 w-2.5 rounded-full bg-slate-500"></span>
+            <span id="health-text" class="font-mono">Checking Edge AI...</span>
+          </div>
+          <a
+            href="#edge-rag-assistant"
+            class="rounded-lg bg-cyan-500 px-3.5 py-1.5 text-xs font-semibold text-slate-950 transition hover:bg-cyan-400"
+          >
+            Ask Edge AI
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-6xl px-4 py-10 sm:px-6 space-y-16">
+      <!-- Hero + Interactive RAG Split Section -->
+      <section class="grid gap-10 lg:grid-cols-12 lg:items-start">
+        <!-- Left Column: Engineering Profile & Architecture Specs -->
+        <div class="lg:col-span-6 space-y-6">
+          <div class="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-300">
+            <span>Production Edge RAG · Zero Hallucination Architecture</span>
+          </div>
+
+          <h1 class="text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl leading-tight">
+            Verifiable MLOps, Cloud &amp; Edge AI Engineering.
+          </h1>
+
+          <p class="text-base text-slate-300 leading-relaxed">
+            Welcome to Satyajit&apos;s engineering portfolio. Every architectural decision record (ADR), security gate, and operational hurdle powering this platform is embedded with Git commit SHA lineage in Cloudflare Vectorize (<code class="font-mono text-cyan-300">vraidaten-index</code>) and queryable in real time.
+          </p>
+
+          <div class="grid gap-3.5 sm:grid-cols-1">
+            {architectureHighlights.map((item) => (
+              <div class="rounded-xl border border-slate-800/90 bg-slate-900/60 p-4">
+                <div class="flex items-baseline justify-between gap-2">
+                  <span class="font-mono text-sm font-bold text-cyan-400">{item.metric}</span>
+                  <span class="text-xs font-medium text-slate-300">{item.label}</span>
+                </div>
+                <p class="mt-1.5 text-xs text-slate-400 leading-relaxed">{item.detail}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Right Column: Interactive Edge RAG Assistant -->
+        <div
+          id="edge-rag-assistant"
+          class="lg:col-span-6 rounded-2xl border border-slate-800 bg-slate-900/80 shadow-2xl shadow-cyan-950/20 overflow-hidden"
+        >
+          <!-- Assistant Header with EU AI Act Article 50 Disclosure -->
+          <div class="border-b border-slate-800 bg-slate-900 px-5 py-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="font-mono text-xs uppercase tracking-wider text-cyan-400 font-semibold">
+                  Grounded Portfolio RAG Assistant
+                </span>
+              </div>
+              <span class="rounded bg-slate-800 px-2 py-0.5 font-mono text-[11px] text-slate-300">
+                Cosine &ge; 0.60
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400 leading-normal">
+              <strong class="text-slate-300">EU AI Act Art. 50 Transparency Notice:</strong> You are interacting with an automated AI system (<code class="font-mono text-cyan-300">@cf/ibm-granite/granite-4.0-h-micro</code> with <code class="font-mono text-cyan-300">@cf/google/gemma-4-26b-a4b-it</code> failover) grounded strictly in Satyajit&apos;s verified documentation. Do not submit sensitive PII.
+            </p>
+          </div>
+
+          <!-- Starter Prompt Chips -->
+          <div class="border-b border-slate-800/70 bg-slate-950/40 px-5 py-3">
+            <p class="mb-2 text-[11px] font-medium uppercase tracking-wider text-slate-400">
+              Verified Starter Queries:
+            </p>
+            <div class="flex flex-wrap gap-1.5">
+              {starterPrompts.map((prompt) => (
+                <button
+                  type="button"
+                  data-starter-prompt={prompt}
+                  class="rounded-lg border border-slate-800 bg-slate-900/90 px-2.5 py-1 text-left text-xs text-slate-300 transition hover:border-cyan-500/50 hover:text-cyan-300"
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <!-- Conversation Stream Log -->
+          <div
+            id="chat-messages"
+            aria-live="polite"
+            class="h-80 overflow-y-auto p-5 space-y-3 bg-slate-950/50"
+          >
+            <div class="flex justify-start">
+              <div class="max-w-[85%] rounded-2xl rounded-bl-sm bg-slate-800/90 border border-slate-700 px-4 py-3 text-sm text-slate-200 leading-relaxed">
+                Ask any question about Satyajit&apos;s MLOps architecture, ADRs 001–009, Hurdles 001–014, or DevSecOps CI gates. Out-of-scope queries below 0.60 cosine similarity are deterministically refused at zero LLM token cost.
+              </div>
+            </div>
+          </div>
+
+          <!-- Prompt Input Form -->
+          <form id="chat-form" class="border-t border-slate-800 bg-slate-900 p-4 space-y-3">
+            <div>
+              <label for="chat-input" class="sr-only">Ask a question about Satyajit&apos;s portfolio</label>
+              <textarea
+                id="chat-input"
+                name="prompt"
+                rows="2"
+                maxlength="500"
+                required
+                placeholder="Ask about the RAG architecture, Vectorize index, Neuron budget, or CI security gates..."
+                class="w-full resize-none rounded-xl border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:border-cyan-400 focus:outline-none"
+              ></textarea>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <span id="char-count" class="font-mono text-xs text-slate-400">
+                0 / 500
+              </span>
+              <div class="flex items-center gap-3">
+                <span class="hidden sm:inline text-[11px] text-slate-400">
+                  Zero IP/Prompt Logging (GDPR)
+                </span>
+                <button
+                  id="chat-submit"
+                  type="submit"
+                  class="rounded-xl bg-cyan-500 px-4 py-2 text-xs font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:opacity-50"
+                >
+                  Send Query
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Featured Engineering Systems Section -->
+      <section class="space-y-6">
+        <div class="border-b border-slate-800 pb-4">
+          <h2 class="text-2xl font-bold tracking-tight text-white">
+            Featured Production Systems &amp; MLOps Engineering
+          </h2>
+          <p class="mt-1 text-sm text-slate-400">
+            End-to-end systems engineered with strict type safety, automated vulnerability gates, and cost-bounded cloud infrastructure.
+          </p>
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-3">
+          {engineeringProjects.map((project) => (
+            <article class="flex flex-col justify-between rounded-2xl border border-slate-800 bg-slate-900/50 p-6 transition hover:border-slate-700">
+              <div class="space-y-3">
+                <span class="inline-block font-mono text-xs text-cyan-400">
+                  {project.domain}
+                </span>
+                <h3 class="text-lg font-semibold text-white leading-snug">
+                  {project.title}
+                </h3>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  {project.summary}
+                </p>
+              </div>
+              <div class="mt-5 flex flex-wrap gap-1.5 pt-4 border-t border-slate-800/80">
+                {project.stack.map((tech) => (
+                  <span class="rounded-md bg-slate-800/90 px-2 py-0.5 font-mono text-[11px] text-slate-300">
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    </main>
+
+    <footer class="mt-16 border-t border-slate-800/80 bg-slate-950 py-8 text-center text-xs text-slate-500">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p>
+          &copy; {new Date().getFullYear()} Satyajit (vraidaten.com). Built with Astro 7 on Cloudflare Workers.
+        </p>
+        <p class="font-mono text-[11px] text-slate-400">
+          EU AI Act Art. 50 Disclosed · GDPR Zero-PII Telemetry · $0/mo Free-Tier Bound
+        </p>
+      </div>
+    </footer>
+
+    <script src="../scripts/chat-client.ts"></script>
+  </body>
 </html>

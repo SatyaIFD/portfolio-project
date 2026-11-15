@@ -59,6 +59,7 @@ export interface RuntimeEnv {
 interface TelemetryMetrics {
   match_count?: number;
   top_score?: number | null;
+  matched_ids?: string[];
   model_used?: string;
 }
 
@@ -292,6 +293,7 @@ export const POST: APIRoute = async ({ request }) => {
       {
         match_count: validMatches.length,
         top_score: topScore,
+        matched_ids: validMatches.map((match) => match.id),
         model_used: modelUsed,
       }
     );
