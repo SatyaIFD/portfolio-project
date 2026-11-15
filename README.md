@@ -1,20 +1,16 @@
-# VraiDaten (vraidaten.com) — Edge RAG Portfolio
+# Vraidaten Portfolio & Edge RAG Platform (`vraidaten.com`)
 
-Zero-cost, GDPR and EU AI Act compliant MLOps engineering portfolio powered by Astro, Cloudflare Pages, Cloudflare Workers AI, and Vectorize.
+Production MLOps, Cloud Architecture, and DevSecOps portfolio engineered by **Satyajit**. Built with **Astro 7**, **Tailwind CSS v4**, **Cloudflare Workers with Static Assets**, **Cloudflare Vectorize (`vraidaten-index`)**, and **Cloudflare Workers AI** operating at **$0/month** within Cloudflare free-tier quotas.
 
-## Documentation Index
-- [Requirements & Schemas](docs/requirements.md)
-- [System Architecture](docs/architecture.md)
-- [Engineering Decisions (ADRs)](docs/decisions/001-edge-rag-slm.md)
-- [Known Limitations](docs/known-limitations.md)
-- [Engineering Hurdles Log](docs/hurdles/)
+## Architecture Highlights
+- **Resilient Edge RAG (`/api/chat`):** Powered by `@cf/ibm-granite/granite-4.0-h-micro` (~1.61 Neurons/turn) with automatic failover to `@cf/google/gemma-4-26b-a4b-it` against `HTTP 410 Gone` model retirements or transient upstream errors.
+- **384-Dim Vectorize Index (`vraidaten-index`):** Local Markdown ingestion (`rag_pipeline/ingest.py`) merges standalone headings into section bodies (`merge_heading_blocks`), stamps Git commit SHA lineage metadata, and embeds via `@cf/baai/bge-small-en-v1.5` with a calibrated `0.60` cosine similarity cutoff (`VECTOR_TOP_K = 4`).
+- **Security, Privacy & Compliance:**
+  - **GDPR Zero-PII Telemetry:** Blocks PII inputs via regex (`HTTP 403`) and logs 100% sampled structured JSON metrics (`request_id`, `event`, `status`, `latency_ms`, `match_count`, `top_score`, `matched_ids`, `model_used`) with zero raw prompt or client IP logging.
+  - **EU AI Act Article 50:** Explicit in-UI transparency disclosure and live `/api/health` zero-Neuron binding status indicator.
+  - **OS Keyring Secret Management:** Uses Ubuntu `libsecret` (`secret-tool`) for process-scoped credential injection with zero plaintext `.env` files.
 
-## Developer Workflows
-
-A `Makefile` is provided to standardize local DevSecOps tasks:
-- `make format`: Auto-formats code and applies safe linting fixes.
-- `make lint`: Checks for styling and AST errors.
-- `make typecheck`: Runs strict static typing.
-- `make security`: Runs Bandit, pip-audit, and detect-secrets.
-- `make test`: Runs the pytest suite and coverage.
-- `make all`: Runs the entire pipeline sequentially.
+## Developer & Operations Commands
+- `make all` — Run Ruff format/check, Mypy, TypeScript (`wrangler types && astro sync && tsc --noEmit`), Bandit, pip-audit, npm audit, detect-secrets, and Pytest (98.78% coverage achieved).
+- `make sync-vectors` — Ingest `docs/**/*.md`, embed via OS keyring credentials, and upsert vectors into `vraidaten-index`.
+- `make deploy` — Build the Astro 7 static + server Worker bundle and deploy to Cloudflare Edge (`vraidaten.com` & `www.vraidaten.com`).
