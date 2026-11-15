@@ -1,6 +1,6 @@
 /**
- * Hardened Astro Edge RAG endpoint (/api/chat) with schema parity,
- * similarity gating, GDPR-compliant structured telemetry, and FP8-fast streaming.
+ * Hardened Astro Edge RAG endpoint (/api/chat) with Primary + Fallback model failover,
+ * similarity gating, native edge rate limiting, and GDPR-compliant structured telemetry.
  */
 import type { APIRoute } from "astro";
 import { env as cfEnv } from "cloudflare:workers";
@@ -34,7 +34,11 @@ export interface RuntimeEnv {
   VECTOR_INDEX: {
     query: (
       vector: number[],
-      options: { topK: number; returnValues?: boolean; returnMetadata?: "all" | boolean }
+      options: {
+        topK: number;
+        returnValues?: boolean;
+        returnMetadata?: "all" | boolean;
+      }
     ) => Promise<{
       matches: VectorizeMatch[];
     }>;
@@ -43,12 +47,19 @@ export interface RuntimeEnv {
     limit: (options: { key: string }) => Promise<{ success: boolean }>;
   };
   MODEL_ID: string;
+  FALLBACK_MODEL_ID?: string;
   EMBEDDING_MODEL_ID: string;
   SIMILARITY_THRESHOLD: string;
   MAX_PROMPT_LENGTH: string;
   MAX_OUTPUT_TOKENS: string;
   VECTOR_TOP_K: string;
   ALLOWED_ORIGIN: string;
+}
+
+interface TelemetryMetrics {
+  match_count?: number;
+  top_score?: number | null;
+  model_used?: string;
 }
 
 const PII_REGEX =
@@ -66,7 +77,7 @@ function logStructuredEvent(
   event: string,
   status: number,
   latencyMs: number,
-  metrics?: { match_count?: number; top_score?: number | null }
+  metrics?: TelemetryMetrics
 ): void {
   console.info(
     JSON.stringify({
@@ -80,13 +91,58 @@ function logStructuredEvent(
   );
 }
 
-function buildCorsHeaders(allowedOrigin: string, requestId: string): Record<string, string> {
+function buildCorsHeaders(
+  allowedOrigin: string,
+  requestId: string
+): Record<string, string> {
   return {
     "Access-Control-Allow-Origin": allowedOrigin || "https://vraidaten.com",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "X-Request-Id": requestId,
   };
+}
+
+async function runChatStreamWithFallback(
+  runtimeEnv: RuntimeEnv,
+  messages: Array<{ role: string; content: string }>,
+  maxTokens: number,
+  requestId: string,
+  startTime: number
+): Promise<{ stream: ReadableStream; modelUsed: string }> {
+  const payload = {
+    messages,
+    stream: true,
+    temperature: 0.0,
+    max_tokens: maxTokens,
+  };
+
+  try {
+    const stream = (await runtimeEnv.AI.run(
+      runtimeEnv.MODEL_ID,
+      payload
+    )) as ReadableStream;
+    return { stream, modelUsed: runtimeEnv.MODEL_ID };
+  } catch (primaryError) {
+    const fallbackModel = runtimeEnv.FALLBACK_MODEL_ID;
+    if (!fallbackModel || fallbackModel === runtimeEnv.MODEL_ID) {
+      throw primaryError;
+    }
+
+    logStructuredEvent(
+      requestId,
+      "model_fallback_triggered",
+      HTTP_OK,
+      Date.now() - startTime,
+      { model_used: fallbackModel }
+    );
+
+    const fallbackStream = (await runtimeEnv.AI.run(
+      fallbackModel,
+      payload
+    )) as ReadableStream;
+    return { stream: fallbackStream, modelUsed: fallbackModel };
+  }
 }
 
 export const OPTIONS: APIRoute = async () => {
@@ -107,7 +163,9 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     if (runtimeEnv.RATE_LIMITER) {
       const clientKey = request.headers.get("CF-Connecting-IP") || "anonymous";
-      const { success } = await runtimeEnv.RATE_LIMITER.limit({ key: clientKey });
+      const { success } = await runtimeEnv.RATE_LIMITER.limit({
+        key: clientKey,
+      });
       if (!success) {
         logStructuredEvent(
           requestId,
@@ -204,7 +262,9 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const groundedText = validMatches
-      .map((match) => match.metadata?.text || match.metadata?.content || match.id)
+      .map(
+        (match) => match.metadata?.text || match.metadata?.content || match.id
+      )
       .join("\n\n");
 
     const systemInstruction = `You are Satyajit's portfolio AI. Answer using ONLY this verified context:\n${groundedText}\nIf the answer is not in the context, refuse. Do not hallucinate.`;
@@ -213,22 +273,27 @@ export const POST: APIRoute = async ({ request }) => {
       10
     );
 
-    const aiStream = (await runtimeEnv.AI.run(runtimeEnv.MODEL_ID, {
-      messages: [
+    const { stream: aiStream, modelUsed } = await runChatStreamWithFallback(
+      runtimeEnv,
+      [
         { role: "system", content: systemInstruction },
         { role: "user", content: cleanedPrompt },
       ],
-      stream: true,
-      temperature: 0.0,
-      max_tokens: maxTokens,
-    })) as ReadableStream;
+      maxTokens,
+      requestId,
+      startTime
+    );
 
     logStructuredEvent(
       requestId,
       "rag_stream_started",
       HTTP_OK,
       Date.now() - startTime,
-      { match_count: validMatches.length, top_score: topScore }
+      {
+        match_count: validMatches.length,
+        top_score: topScore,
+        model_used: modelUsed,
+      }
     );
     return new Response(aiStream, {
       status: HTTP_OK,
