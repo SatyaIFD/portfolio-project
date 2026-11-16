@@ -1,1 +1,19 @@
 @import "tailwindcss";
+
+@theme {
+  --color-brand-paper: #F4F2EC;
+  --color-brand-slate: #0F1115;
+  --color-brand-ink: #1E252B;
+  --color-brand-cream: #EAE6DF;
+  --color-brand-accent-light: #D9534F;
+  --color-brand-accent-dark: #E87A5D;
+}
+
+@layer base {
+  body {
+    @apply bg-brand-paper text-brand-ink dark:bg-brand-slate dark:text-brand-cream antialiased transition-colors duration-300;
+  }
+  ::selection {
+    @apply bg-brand-accent-light/20 text-brand-accent-light dark:bg-brand-accent-dark/20 dark:text-brand-accent-dark;
+  }
+}
