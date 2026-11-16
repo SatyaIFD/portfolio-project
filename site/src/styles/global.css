@@ -5,8 +5,10 @@
   --color-brand-slate: #0F1115;
   --color-brand-ink: #1E252B;
   --color-brand-cream: #EAE6DF;
-  --color-brand-accent-light: #D9534F;
-  --color-brand-accent-dark: #E87A5D;
+  --color-brand-accent-light: #003399;
+  --color-brand-accent-dark: #5B8DEF;
+  --color-brand-forest-light: #006400;
+  --color-brand-forest-dark: #4E9F6E;
 }
 
 @layer base {
@@ -14,6 +16,6 @@
     @apply bg-brand-paper text-brand-ink dark:bg-brand-slate dark:text-brand-cream antialiased transition-colors duration-300;
   }
   ::selection {
-    @apply bg-brand-accent-light/20 text-brand-accent-light dark:bg-brand-accent-dark/20 dark:text-brand-accent-dark;
+    @apply bg-brand-accent-light/15 text-brand-accent-light dark:bg-brand-accent-dark/20 dark:text-brand-accent-dark;
   }
 }

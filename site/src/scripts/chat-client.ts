@@ -90,7 +90,7 @@ function appendMessageBubble(
   const bubble = document.createElement("div");
   bubble.className =
     role === "user"
-      ? "max-w-[85%] rounded-2xl rounded-br-sm bg-[#D9534F]/15 dark:bg-[#E87A5D]/20 border border-[#D9534F]/30 dark:border-[#E87A5D]/40 px-4 py-3 text-sm text-[#1E252B] dark:text-[#EAE6DF] whitespace-pre-wrap"
+      ? "max-w-[85%] rounded-2xl rounded-br-sm bg-[#003399]/10 dark:bg-[#5B8DEF]/20 border border-[#003399]/30 dark:border-[#5B8DEF]/40 px-4 py-3 text-sm text-[#1E252B] dark:text-[#EAE6DF] whitespace-pre-wrap"
       : "max-w-[85%] rounded-2xl rounded-bl-sm bg-slate-100 dark:bg-[#1E252B] border border-[#E0DCD3] dark:border-slate-700 px-4 py-3 text-sm text-slate-800 dark:text-slate-200 whitespace-pre-wrap leading-relaxed";
 
   bubble.textContent = initialText;
