@@ -6,68 +6,98 @@ const tcsExperience = [
     role: "Senior Associate – Information Process Enabler",
     project: "UK National Employment Savings Trust (NEST) Pension Administration",
     highlights: [
-      "Validated and processed employer and employee pension contributions, transfers, withdrawals, and fund allocations.",
-      "Investigated operational errors, identified data discrepancies, and performed validation and reconciliation within defined turnaround times (TAT).",
-      "Ensured strict compliance with GDPR data privacy requirements and verified supporting authorization documentation.",
-      "Collaborated with the Robotic Process Automation (RPA) team by explaining existing business workflows and documenting step-by-step transaction procedures.",
+      "Validated and processed employer and employee pension contributions, pension transfers, withdrawals, and related account updates.",
+      "Ensured accurate allocation of funds into members' pension accounts and verified supporting documentation before proceeding with transactions.",
+      "Investigated operational errors, identified data discrepancies, and performed validation and reconciliation within defined turnaround times (TAT) while maintaining process accuracy and quality.",
+      "Communicated with customers regarding outstanding information and documentation, using predefined email templates and coordinating with internal teams to obtain and validate authorisation documents before processing transactions.",
+      "Ensured strict compliance with GDPR and maintained data confidentiality.",
+      "Collaborated with the Robotic Process Automation (RPA) team by explaining existing business workflows, documenting process steps, and sharing operational knowledge on how transactions were handled.",
     ],
   },
   {
     role: "Process Associate",
     project: "Bank of America & US Healthcare Operations",
     highlights: [
-      "Reviewed, validated, and evaluated US healthcare claims and Explanation of Benefits (EOBs) against policy guidelines.",
-      "Worked on manual-to-digital validation of medical billing data while maintaining strict HIPAA privacy compliance.",
-      "Performed quality assurance checks and supported new joiners post-training to resolve workflow queries.",
+      "Handled healthcare claims, member services, and support activities, reviewing, validating, and evaluating claims according to applicable US healthcare policies.",
+      "Worked on manual-to-digital processing and validation of medical billing data and Explanation of Benefits (EOBs).",
+      "Performed quality checks, identified discrepancies in processed information, and adhered strictly to HIPAA privacy requirements.",
+      "Supported new joiners after their initial training across both projects, helping them understand workflows, resolve process-related queries, and become familiar with operational procedures.",
     ],
   },
 ];
 
-const learningMilestones = [
+const tcsAwards = [
   {
-    date: "17 Nov 2026",
-    title: "Linux Essentials Badge",
-    issuer: "Cisco Networking Academy",
-    note: "Formal milestone in Linux command-line operations and operating system fundamentals.",
+    title: "BPS Star Performance Award",
+    detail: "Recognised for consistent operational excellence, process accuracy, and quality delivery.",
   },
   {
-    date: "Target: Dec 2026",
-    title: "Google Cloud Professional ML Engineer (Studying)",
-    issuer: "Google Cloud",
-    note: "Currently building conceptual and practical understanding prior to attempting the exam.",
+    title: "Service and Commitment Award",
+    detail: "Honoured for long-term dedication, reliability, and service tenure at Tata Consultancy Services.",
   },
   {
-    date: "Dec 2024 – Present",
-    title: "First-Principles Technical Upskilling Break",
-    issuer: "Independent Study & Practical Implementation",
-    note: "Revisited math & statistics (Khan Academy, StatQuest, Paul's Online Math Notes) and transitioned toward Cloud Engineering & MLOps.",
+    title: "Xcelerate Warrior Award",
+    detail: "Awarded for proactive upskilling and commitment to continuous professional learning.",
   },
   {
-    date: "2022 – 2023",
-    title: "Machine Learning with Python & Master of Data Science Bootcamp",
-    issuer: "Cognitive Class (July 2022) & Simplilearn",
-    note: "Built foundational knowledge in Python, data analysis, and machine learning concepts.",
+    title: "Internal Dedication Award",
+    detail: "Project recognition received on the Bank of America HIPPS healthcare operations engagement.",
   },
 ];
 
-const currentFocusAreas = [
+const skillTiers = [
   {
-    area: "Programming & Tooling",
-    items: ["Python scripting & modern packaging", "Astral's uv package & project manager", "Git version control & automated testing (pytest)"],
+    tier: "Tier 1 · Completed / Demonstrated",
+    meaning: "Skills used in completed coursework, formal learning badges, or implemented in this repository",
+    badgeClass: "text-brand-forest-light dark:text-brand-forest-dark",
+    items: [
+      "Linux fundamentals & CLI operations (Cisco Networking Academy Linux Essentials badge, 17 Nov 2026)",
+      "Python scripting, Markdown processing & automated unit testing (pytest)",
+      "Modern Python project & dependency management with Astral's uv",
+      "Git version control, branching & GitHub pull request workflows",
+      "Automated code quality & security hygiene (ruff, mypy, bandit, pip-audit, detect-secrets, OS Keyring libsecret)",
+      "Foundational Data Science & Machine Learning with Python (Cognitive Class, July 2022 & Simplilearn Bootcamp)",
+      "First-principles Mathematics & Statistics refresher (Khan Academy, StatQuest, Paul's Online Math Notes)",
+    ],
   },
   {
-    area: "OS, Cloud & Infrastructure",
-    items: ["Linux CLI & system administration", "Google Cloud Platform (IAM, resource management, logging)", "Networking fundamentals & troubleshooting"],
+    tier: "Tier 2 · Currently Practising",
+    meaning: "Technologies I am actively using, studying, and experimenting with in current work",
+    badgeClass: "text-brand-accent-light dark:text-brand-accent-dark",
+    items: [
+      "Google Cloud Platform (GCP) core infrastructure, resource management, IAM, monitoring & logging",
+      "Google Cloud Professional Machine Learning Engineer study track (Target: December 2026; not yet attempted)",
+      "Application deployment, DNS configuration & Cloudflare Workers / Vectorize / Workers AI (vraidaten.com)",
+      "CI/CD pipeline concepts and GitHub Actions automation",
+      "Troubleshooting build, networking, and runtime configuration issues",
+    ],
   },
   {
-    area: "Automation & MLOps Direction",
-    items: ["CI/CD concepts & GitHub Actions pipelines", "Docker & Infrastructure as Code fundamentals", "ML model deployment, serving, pipelines & monitoring"],
+    tier: "Tier 3 · Planned Learning",
+    meaning: "Technologies I intend to explore next for my upcoming Google Cloud end-to-end project",
+    badgeClass: "text-brand-ink-muted dark:text-brand-cream-muted",
+    items: [
+      "Docker and containerization workflows",
+      "Infrastructure as Code (IaC) fundamentals",
+      "Machine learning model deployment, model serving & inference on Google Cloud",
+      "End-to-end ML pipelines, workflow automation & model lifecycle monitoring",
+    ],
   },
+];
+
+const targetRoles = [
+  "Junior Cloud ML Engineer",
+  "Junior Cloud Engineer",
+  "Cloud Operations Associate",
+  "Cloud Support Engineer",
+  "ML Platform Support / Operations",
+  "Junior Machine Learning Engineer",
+  "Junior MLOps Engineer",
 ];
 ---
 
 <Layout title="Satyajit Chakraborty | Business Operations to Cloud Engineering & MLOps">
-  <!-- Hero / Professional Summary -->
+  <!-- Hero / Refined Homepage Introduction -->
   <section class="py-6 md:py-10 space-y-6">
     <div class="inline-flex items-center gap-2 rounded-md border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-3 py-1 text-xs font-mono text-brand-accent-light dark:text-brand-accent-dark">
       <span>Career Transition · 9 Yrs 5 Mos at TCS BPS → Cloud Engineering &amp; MLOps</span>
@@ -77,20 +107,48 @@ const currentFocusAreas = [
       <h1 class="text-3xl md:text-5xl font-bold tracking-tight text-brand-ink dark:text-brand-cream leading-tight">
         Satyajit Chakraborty <br />
         <span class="text-xl md:text-2xl font-semibold text-brand-accent-light dark:text-brand-accent-dark">
-          Operational Discipline Meets Cloud &amp; MLOps Engineering
+          Business Operations to Cloud Engineering, Cloud ML &amp; MLOps
         </span>
       </h1>
 
-      <p class="text-sm md:text-base text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">
-        I am a business operations professional with <strong class="font-semibold text-brand-ink dark:text-brand-cream">9 years and 5 months of experience at Tata Consultancy Services (TCS BPS)</strong> across financial services, UK pension administration (NEST), US healthcare operations, data validation, and quality assurance. After collaborating with RPA automation teams in 2021 and taking a dedicated technical upskilling break in December 2024, I am transitioning into a <strong class="font-semibold text-brand-ink dark:text-brand-cream">junior-level Cloud Engineering, Cloud ML, or MLOps role</strong> where I can combine my operational reliability with developing engineering skills inside a collaborative team.
-      </p>
+      <div class="space-y-3 text-sm md:text-base text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">
+        <p>
+          I am a business operations professional with <strong class="font-semibold text-brand-ink dark:text-brand-cream">9 years and 5 months of experience at Tata Consultancy Services (TCS BPS)</strong>, working across financial services, UK pension administration (NEST), US healthcare operations, data validation, and quality assurance.
+        </p>
+        <p>
+          My interest in technology began in 2021 through collaboration with <strong class="font-semibold text-brand-ink dark:text-brand-cream">Robotic Process Automation (RPA)</strong> teams, where I shared operational workflows and helped explain existing business processes. Since then, I have progressively developed an interest in Python, Machine Learning, and Cloud technologies. After completing my professional tenure at TCS in December 2024, I dedicated time to strengthening my technical foundations through structured learning and practical development.
+        </p>
+        <p>
+          I am now pursuing opportunities in <strong class="font-semibold text-brand-ink dark:text-brand-cream">Junior Cloud Engineering, Cloud ML, Cloud Operations, and MLOps</strong>, where I can combine my professional experience in operational reliability, troubleshooting, data integrity, and stakeholder communication with my developing engineering capabilities. I believe in being transparent about my current technical capabilities, continuously learning, and demonstrating progress through practical projects.
+        </p>
+      </div>
 
-      <div class="flex flex-wrap items-center gap-3 pt-2">
+      <!-- Target Roles Pills -->
+      <div class="pt-2 space-y-2">
+        <p class="font-mono text-[11px] uppercase tracking-wider font-semibold text-brand-forest-light dark:text-brand-forest-dark">
+          Open to Collaborative Junior &amp; Transition-Friendly Roles (Domestic / Global EOR / B2B Team Member):
+        </p>
+        <div class="flex flex-wrap gap-1.5">
+          {targetRoles.map((role) => (
+            <span class="rounded-md border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-2.5 py-1 text-xs font-mono text-brand-ink dark:text-brand-cream">
+              {role}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3 pt-3">
         <a
           href="/projects"
-          class="inline-flex items-center justify-center rounded-md bg-brand-accent-light dark:bg-brand-accent-dark px-4 py-2 text-xs sm:text-sm font-semibold text-[#E7E2D6] dark:text-brand-slate transition-transform hover:scale-[1.02]"
+          class="inline-flex items-center justify-center rounded-md bg-brand-accent-light dark:bg-brand-accent-dark px-4 py-2 text-xs sm:text-sm font-semibold text-[#F1E6C8] dark:text-brand-slate transition-transform hover:scale-[1.02]"
         >
-          Current &amp; Planned Projects
+          View Projects
+        </a>
+        <a
+          href="/logbook"
+          class="inline-flex items-center justify-center rounded-md border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-4 py-2 text-xs sm:text-sm font-semibold text-brand-ink dark:text-brand-cream hover:border-brand-accent-light transition-colors"
+        >
+          Engineering Logbook (11 ADRs · 18 Hurdles)
         </a>
         <button
           type="button"
@@ -99,14 +157,6 @@ const currentFocusAreas = [
         >
           Ask Edge AI Assistant
         </button>
-        <a
-          href="https://www.linkedin.com/in/satyajitchakraborty91"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center justify-center rounded-md border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-4 py-2 text-xs sm:text-sm font-medium text-brand-ink dark:text-brand-cream hover:border-brand-accent-light transition-colors"
-        >
-          LinkedIn Profile
-        </a>
       </div>
     </div>
   </section>
@@ -117,13 +167,13 @@ const currentFocusAreas = [
   <section class="space-y-6">
     <div class="space-y-2">
       <p class="font-mono text-xs uppercase tracking-wider text-brand-accent-light dark:text-brand-accent-dark">
-        01 · Enterprise Foundation (July 2015 – December 2024)
+        01 · Enterprise Experience (July 2015 – December 2024)
       </p>
       <h2 class="text-2xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">
-        Professional Experience — Tata Consultancy Services (TCS BPS)
+        Tata Consultancy Services (TCS BPS) — 9 Years &amp; 5 Months
       </h2>
       <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted max-w-3xl leading-relaxed">
-        Academic Qualification: <strong class="font-semibold text-brand-ink dark:text-brand-cream">B.Com (Honours), Accounting and Finance — University of Calcutta</strong>. Across nearly a decade at TCS, my work centered on data integrity, root-cause discrepancy investigation, regulatory compliance (GDPR &amp; HIPAA), and process documentation.
+        Academic Qualification: <strong class="font-semibold text-brand-ink dark:text-brand-cream">Bachelor of Commerce (Honours) in Accounting and Finance — University of Calcutta</strong>.
       </p>
     </div>
 
@@ -146,40 +196,63 @@ const currentFocusAreas = [
 
   <hr class="border-t border-brand-border dark:border-brand-slate-border my-10" />
 
-  <!-- Section 2: Journey into Tech & Learning Milestones -->
+  <!-- Section 2: Recognition & Professional Development -->
   <section class="space-y-6">
     <div class="space-y-2">
       <p class="font-mono text-xs uppercase tracking-wider text-brand-forest-light dark:text-brand-forest-dark">
-        02 · Transition Journey &amp; Structured Upskilling
+        02 · Recognition &amp; Professional Development
       </p>
       <h2 class="text-2xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">
-        From RPA Process Mapping to Cloud Engineering &amp; MLOps
+        Awards &amp; Recognition at Tata Consultancy Services
       </h2>
       <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted max-w-3xl leading-relaxed">
-        My interest in technology began in 2021 while explaining operational workflows to the RPA team at TCS and seeing bots clear high-volume queues. In December 2024, I took a dedicated career break to build my technical foundations from first principles rather than jumping superficially between tools.
+        During my 9 years and 5 months at Tata Consultancy Services, I received several recognitions for professional performance, service commitment, and continuous learning. These recognitions reflect my commitment to professional responsibilities, consistent performance, team contribution, and continuous development.
       </p>
     </div>
 
     <div class="grid gap-4 sm:grid-cols-2">
-      {learningMilestones.map((m) => (
-        <div class="rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface p-5 space-y-2">
-          <div class="flex items-center justify-between gap-2">
-            <span class="font-mono text-[11px] font-semibold text-brand-forest-light dark:text-brand-forest-dark">{m.date}</span>
-            <span class="font-mono text-[10px] text-brand-ink-muted dark:text-brand-cream-muted">{m.issuer}</span>
+      {tcsAwards.map((award) => (
+        <div class="rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface p-5 space-y-1.5">
+          <div class="flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-brand-forest-light dark:bg-brand-forest-dark"></span>
+            <h3 class="text-sm font-bold text-brand-ink dark:text-brand-cream">{award.title}</h3>
           </div>
-          <h3 class="text-sm font-bold text-brand-ink dark:text-brand-cream">{m.title}</h3>
-          <p class="text-xs text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">{m.note}</p>
+          <p class="text-xs text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed pl-4">
+            {award.detail}
+          </p>
         </div>
       ))}
     </div>
+  </section>
 
-    <div class="grid gap-5 md:grid-cols-3 pt-2">
-      {currentFocusAreas.map((group) => (
-        <div class="rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface p-5 space-y-3">
-          <h3 class="text-xs font-mono uppercase tracking-wider font-semibold text-brand-accent-light dark:text-brand-accent-dark">
-            {group.area}
-          </h3>
-          <ul class="space-y-1.5 text-xs text-brand-ink-muted dark:text-brand-cream-muted list-disc pl-4">
+  <hr class="border-t border-brand-border dark:border-brand-slate-border my-10" />
+
+  <!-- Section 3: Transparent 3-Tier Technical Skill Classification -->
+  <section class="space-y-6">
+    <div class="space-y-2">
+      <p class="font-mono text-xs uppercase tracking-wider text-brand-accent-light dark:text-brand-accent-dark">
+        03 · Transparent Technical Skill Classification
+      </p>
+      <h2 class="text-2xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">
+        What I Have Demonstrated, What I Am Practising &amp; What Is Next
+      </h2>
+      <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted max-w-3xl leading-relaxed">
+        I distinguish clearly between knowing a concept, implementing it independently, and maintaining it in a production environment. To ensure complete clarity for recruiters and engineering teams, my technical skills are organised into three transparent tiers:
+      </p>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-3">
+      {skillTiers.map((group) => (
+        <div class="rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface p-6 space-y-3 flex flex-col">
+          <div class="space-y-1 border-b border-brand-border/60 dark:border-brand-slate-border pb-3">
+            <h3 class={`text-xs font-mono uppercase tracking-wider font-bold ${group.badgeClass}`}>
+              {group.tier}
+            </h3>
+            <p class="text-[11px] text-brand-ink-muted dark:text-brand-cream-muted">
+              {group.meaning}
+            </p>
+          </div>
+          <ul class="space-y-2 text-xs text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed list-disc pl-4 flex-1">
             {group.items.map((item) => (
               <li>{item}</li>
             ))}
@@ -191,20 +264,20 @@ const currentFocusAreas = [
 
   <hr class="border-t border-brand-border dark:border-brand-slate-border my-10" />
 
-  <!-- Section 3: Honest Technical Comfort Level & Learning Philosophy -->
+  <!-- Section 4: Learning Approach & Honest Comfort Level -->
   <section class="space-y-6">
     <div class="rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface p-6 sm:p-8 space-y-4">
-      <p class="font-mono text-xs uppercase tracking-wider text-brand-accent-light dark:text-brand-accent-dark">
-        03 · Transparency &amp; Engineering Mindset
+      <p class="font-mono text-xs uppercase tracking-wider text-brand-forest-light dark:text-brand-forest-dark">
+        04 · Learning Approach &amp; Honest Technical Comfort Level
       </p>
       <h2 class="text-xl font-bold text-brand-ink dark:text-brand-cream">
-        Honest Technical Comfort Level
+        First-Principles Understanding &amp; Collaborative Growth
       </h2>
       <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">
-        I consider myself to be in the <strong class="font-semibold text-brand-ink dark:text-brand-cream">technical transition and skill-development stage</strong> rather than an experienced Cloud or MLOps engineer. I do not claim deep, independent production-level expertise across every tool listed. I understand that <em>knowing a concept</em>, <em>implementing it independently</em>, and <em>maintaining it in a production environment</em> are three distinct levels of capability—and my goal is to progressively develop all three.
+        I consider myself to be in the <strong class="font-semibold text-brand-ink dark:text-brand-cream">technical transition and skill-development stage</strong> rather than an experienced Cloud or MLOps engineer. While I do not claim senior production proficiency across every tool, I am confident in my ability to learn unfamiliar technologies, read technical documentation, investigate discrepancies systematically, and contribute reliably within a collaborative engineering team.
       </p>
       <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">
-        When exploring new tools—such as incorporating <strong class="font-semibold text-brand-ink dark:text-brand-cream">Astral&apos;s uv</strong> into my Python workflow or reading about computational efficiency research like <strong class="font-semibold text-brand-ink dark:text-brand-cream">Stanford&apos;s NCM project</strong>—my focus is on understanding <em>why</em> a technology exists, what problem it solves, and how to verify it. I use AI assistants transparently as learning and development force-multipliers, always paired with step-by-step verification, documentation, and automated checks.
+        My approach is to understand <em>why</em> a technology exists, what problem it solves, and where it is useful rather than collecting buzzwords—whether adopting <strong class="font-semibold text-brand-ink dark:text-brand-cream">Astral&apos;s uv</strong> for reproducible Python environments, studying for the <strong class="font-semibold text-brand-ink dark:text-brand-cream">Google Cloud Professional Machine Learning Engineer</strong> certification (targeted for December 2026), or following computational efficiency research such as <strong class="font-semibold text-brand-ink dark:text-brand-cream">Stanford&apos;s NCM project</strong>.
       </p>
     </div>
   </section>

@@ -1,8 +1,10 @@
-# ADR 009: Honest Career-Transition Positioning, Floating Edge RAG Widget & 4-Page Structure
+# ADR 009: Honest Career-Transition Positioning, 3-Tier Skill Transparency & Floating Edge RAG Widget
 
 - **Status:** Accepted (Updated 2026-11-18)
 - **Date:** 2026-11-18
-- **Context:** The portfolio (`vraidaten.com`) represents Satyajit Chakraborty (9 years 5 months at TCS BPS across UK NEST Pensions and Bank of America/US Healthcare; B.Com Hons, University of Calcutta), who is transitioning into Junior Cloud Engineering, Cloud ML, and MLOps roles. The site must present his credentials honestly without overclaiming, provide a low-glare reading experience, and make the Edge RAG assistant accessible from a floating corner button across all pages.
+- **Context:** The portfolio (`vraidaten.com`) represents Satyajit Chakraborty (9 years 5 months at TCS BPS across UK NEST Pensions and Bank of America/US Healthcare; B.Com Hons, University of Calcutta), who is transitioning into Junior Cloud Engineering, Cloud ML, Cloud Operations, and MLOps roles. The site must present his TCS awards, stakeholder communication experience, and technical capabilities transparently without overclaiming or mispositioning him as a DevSecOps specialist.
 - **Decision:**
-  1. Structure the site across 4 pages: `/` (Home — Professional Summary, TCS Operations-to-Cloud Journey, Technical Learning & Honest Comfort Level), `/projects` (Current Website Project & Planned GCP End-to-End Implementation), `/logbook` (Build-time ADR & Hurdle Archive), and `/contact` (Target Junior Roles, Collaborative Work Models & LinkedIn `linkedin.com/in/satyajitchakraborty91`).
-  2. Mount the Edge RAG Assistant as a viewport-fixed floating widget (`fixed bottom-6 right-6 z-50`) in `site/src/layouts/Layout.astro` so it floats in the bottom-right corner while scrolling on every page, complete with EU AI Act Article 50 disclosure.
+  1. Present Satyajit's refined introduction, NEST customer communication responsibilities, and 4 TCS awards (BPS Star Performance, Service and Commitment, Xcelerate Warrior, and Internal Dedication – Bank of America HIPPS) on the homepage.
+  2. Classify technical skills into three explicit tiers (*Completed / Demonstrated*, *Currently Practising*, and *Planned Learning*) so recruiters and interviewers have an accurate picture of current hands-on capability versus upcoming study areas.
+  3. Frame the current website project as *VraiDaten Portfolio & Edge AI Assistant* (treating automated security checks and keyring secret management as good engineering practices rather than a DevSecOps career title).
+  4. Mount the Edge RAG Assistant as a viewport-fixed floating widget (`fixed bottom-5 right-4 sm:right-6 z-50`) in `site/src/layouts/Layout.astro`.

@@ -1,6 +1,4 @@
 ---
-import fs from "node:fs";
-import path from "node:path";
 import Layout from "../layouts/Layout.astro";
 
 interface LogEntry {
@@ -9,58 +7,64 @@ interface LogEntry {
   body: string;
 }
 
-function loadMarkdownEntries(relativeDir: string): LogEntry[] {
-  const dirPath = path.resolve(process.cwd(), relativeDir);
-  if (!fs.existsSync(dirPath)) {
-    return [];
-  }
-  const files = fs
-    .readdirSync(dirPath)
-    .filter((file) => file.endsWith(".md"))
-    .sort();
+const rawDecisions = import.meta.glob<string>("../../../docs/decisions/*.md", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+});
 
-  return files.map((filename) => {
-    const raw = fs.readFileSync(path.join(dirPath, filename), "utf-8").trim();
-    const lines = raw.split("\n");
-    const firstLine = lines[0] ?? filename;
-    const title = firstLine.replace(/^#+\s*/, "").trim();
-    const body = lines.slice(1).join("\n").trim();
-    return {
-      id: filename.replace(/\.md$/, ""),
-      title,
-      body,
-    };
-  });
+const rawHurdles = import.meta.glob<string>("../../../docs/hurdles/*.md", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+});
+
+function parseGlobEntries(globMap: Record<string, string>): LogEntry[] {
+  return Object.entries(globMap)
+    .sort(([pathA], [pathB]) => pathA.localeCompare(pathB))
+    .map(([filePath, rawContent]) => {
+      const filename = filePath.split("/").pop() ?? filePath;
+      const raw = rawContent.trim();
+      const lines = raw.split("\n");
+      const firstLine = lines[0] ?? filename;
+      const title = firstLine.replace(/^#+\s*/, "").trim();
+      const body = lines.slice(1).join("\n").trim();
+      return {
+        id: filename.replace(/\.md$/, ""),
+        title,
+        body,
+      };
+    });
 }
 
-const decisions = loadMarkdownEntries("../docs/decisions");
-const hurdles = loadMarkdownEntries("../docs/hurdles");
+const decisions = parseGlobEntries(rawDecisions);
+const hurdles = parseGlobEntries(rawHurdles);
 ---
 
 <Layout
-  title="Engineering Logbook | Satyajit"
-  description="Architectural Decision Records (ADRs) and operational troubleshooting logs."
+  title="Engineering Logbook | Satyajit Chakraborty"
+  description="Architectural Decision Records (ADRs) and operational troubleshooting logs compiled from docs/."
 >
-  <section class="py-8 md:py-12 space-y-14">
-    <div class="space-y-4">
+  <section class="py-6 md:py-10 space-y-12">
+    <div class="space-y-3">
       <p class="font-mono text-xs uppercase tracking-wider text-brand-accent-light dark:text-brand-accent-dark">
-        Single Source of Truth · Compiled from docs/
+        Single Source of Truth · Bundled at Build Time via Vite import.meta.glob
       </p>
       <h1 class="text-3xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">
         Engineering Logbook
       </h1>
-      <p class="text-sm md:text-base text-brand-ink-muted dark:text-brand-cream-muted max-w-2xl leading-relaxed">
-        Every entry below is read directly from the repository&apos;s <code class="font-mono text-xs">docs/decisions/</code> and <code class="font-mono text-xs">docs/hurdles/</code> Markdown files at build time—the exact same files embedded into Cloudflare Vectorize (<code class="font-mono text-xs">vraidaten-index</code>).
+      <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted max-w-3xl leading-relaxed">
+        Every entry below is compiled directly from the repository&apos;s <code class="font-mono text-xs">docs/decisions/</code> ({decisions.length} ADRs) and <code class="font-mono text-xs">docs/hurdles/</code> ({hurdles.length} Hurdles) Markdown files—the exact same files embedded into Cloudflare Vectorize (<code class="font-mono text-xs">vraidaten-index</code>).
       </p>
     </div>
 
     <!-- Architectural Decision Records (ADRs) -->
-    <div class="space-y-6">
+    <div class="space-y-5">
       <div class="border-b border-brand-border dark:border-brand-slate-border pb-3 flex items-baseline justify-between">
         <h2 class="text-xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">
           Architectural Decision Records ({decisions.length})
         </h2>
-        <span class="font-mono text-xs text-slate-500">docs/decisions/*.md</span>
+        <span class="font-mono text-xs text-brand-ink-muted dark:text-brand-cream-muted">docs/decisions/*.md</span>
       </div>
 
       <div class="space-y-3">
@@ -75,31 +79,34 @@ const hurdles = loadMarkdownEntries("../docs/hurdles");
                 +
               </span>
             </summary>
-            <pre class="mt-4 overflow-x-auto whitespace-pre-wrap border-t border-[#E0DCD3]/60 dark:border-[#1E252B] pt-3 font-sans text-xs text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">{adr.body}</pre>
+            <pre class="mt-4 overflow-x-auto whitespace-pre-wrap border-t border-brand-border/60 dark:border-brand-slate-border pt-3 font-sans text-xs text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">{adr.body}</pre>
           </details>
         ))}
       </div>
     </div>
 
     <!-- Operational Hurdles & Post-Mortems -->
-    <div class="space-y-6">
+    <div class="space-y-5">
       <div class="border-b border-brand-border dark:border-brand-slate-border pb-3 flex items-baseline justify-between">
         <h2 class="text-xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">
           Operational Hurdles &amp; Root-Cause Logs ({hurdles.length})
         </h2>
-        <span class="font-mono text-xs text-slate-500">docs/hurdles/*.md</span>
+        <span class="font-mono text-xs text-brand-ink-muted dark:text-brand-cream-muted">docs/hurdles/*.md</span>
       </div>
 
       <div class="space-y-3">
-        {hurdles.map((hurdle) => (
-          <details class="group rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-5 py-4 transition-colors">
+        {hurdles.map((hurdle, index) => (
+          <details
+            open={index === hurdles.length - 1}
+            class="group rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-5 py-4 transition-colors"
+          >
             <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-sm text-brand-ink dark:text-brand-cream">
               <span>{hurdle.title}</span>
               <span class="font-mono text-xs text-brand-accent-light dark:text-brand-accent-dark group-open:rotate-45 transition-transform">
                 +
               </span>
             </summary>
-            <pre class="mt-4 overflow-x-auto whitespace-pre-wrap border-t border-[#E0DCD3]/60 dark:border-[#1E252B] pt-3 font-sans text-xs text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">{hurdle.body}</pre>
+            <pre class="mt-4 overflow-x-auto whitespace-pre-wrap border-t border-brand-border/60 dark:border-brand-slate-border pt-3 font-sans text-xs text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">{hurdle.body}</pre>
           </details>
         ))}
       </div>

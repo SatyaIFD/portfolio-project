@@ -1,8 +1,8 @@
-# ADR 010: Low-Glare Warm Stone & Dusk Palette, Custom Brand SVGs & Floating RAG UI
+# ADR 010: Warm Yellowish-Cream Book-Paper Palette, Custom Brand SVGs & Dusk Mode Toggle
 
 - **Status:** Accepted (Updated 2026-11-18)
 - **Date:** 2026-11-18
-- **Context:** Pure white (`#FFFFFF`) and high-luminance off-white (`#F4F2EC`) surfaces cause eye strain during extended reading. The visual design must pair Japanese structural clarity (*Ma* negative space, *Kanso* simplicity) with an eye-friendly European palette harmonized with `Favi2.svg` and `vraidaten-logo.svg` (`#003399` Royal Blue and `#006400` Forest Green).
+- **Context:** White (`#FFFFFF`) and cool/grey-beige surfaces retain high blue-channel luminance ($B > 200$ in sRGB), causing digital eye strain. A warm yellowish-cream book-paper palette (similar to vintage chamois paper or e-reader Sepia/Warm mode) significantly reduces blue-channel light emission while harmonizing with `Favi2.svg` and `vraidaten-logo.svg` (`#003399` Royal Blue and `#006400` Forest Green).
 - **Decision:**
-  1. Eliminate `#FFFFFF` across the entire UI. Use a Warm Washi Stone palette for Paper Mode (`#DED8CA` background, `#E7E2D6` card surfaces, `#D4CEBE` recessed headers, `#BDB5A2` borders, `#1E242B` ink) and a Soft European Dusk Slate for Dark Mode (`#15181E` background, `#1C2028` cards, `#2B313C` borders, `#DFDBD2` parchment text).
-  2. Serve `site/public/Favi2.svg` and `site/public/vraidaten-logo.svg` in the sticky header and use `@custom-variant dark (&:where(.dark, .dark *));` in `global.css` for instant Paper/Dusk theme switching.
+  1. Set Paper Mode to a warm yellowish-cream palette: `#EADCB8` page canvas ($R=234, G=220, B=184$), `#F1E6C8` soft cream cards, `#DECDA2` warm buff recessed headers/tags, `#C4B284` ochre-sand borders, `#231F18` warm espresso ink, and `#4A4235` umber secondary text.
+  2. Retain the optional Dusk Mode (`#15181E` canvas, `#1C2028` cards, `#DFDBD2` warm parchment text) via `@custom-variant dark (&:where(.dark, .dark *));` in `site/src/styles/global.css`.
