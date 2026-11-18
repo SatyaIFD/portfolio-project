@@ -1,9 +1,9 @@
-# ADR 009: Honest Portfolio Architecture, Japanese-European Aesthetic & 4-Page Structure
+# ADR 009: Honest Portfolio Architecture, Engineer Profile & 4-Page Structure
 
-- **Status:** Accepted (Updated 2026-11-16)
-- **Date:** 2026-11-16
-- **Context:** The portfolio needs to accurately reflect Satyajit's career transition into MLOps/Cloud Architecture without overclaiming. The UI must position him as a collaborative team member (Domestic/EOR/B2B), explicitly acknowledge the use of AI tools, and provide an eye-friendly reading experience grounded in Japanese structural minimalism (*Ma*, *Kanso*) and warm European color palettes.
+- **Status:** Accepted (Updated 2026-11-18)
+- **Date:** 2026-11-18
+- **Context:** The portfolio (`vraidaten.com`) represents Satyajit, a hands-on engineer focusing on Cloud Architecture, MLOps, and DevSecOps who is completing a ground-up refresher for the Google Cloud Professional Machine Learning Engineer certification. Beyond cloud engineering, Satyajit studies the German and Japanese languages (inspiring the name *VraiDaten*—"True Data"—and the Japanese *Ma*/*Kanso* layout paired with European Blue `#003399` and Forest Green `#006400`) and plays chess.
 - **Decision:**
-  1. Build a 4-page Astro 7 architecture: `/` (Honest Introduction & RAG Studio), `/projects` (Live DevSecOps Portfolio & Upcoming GCP Fraud Pipeline), `/logbook` (ADR & Hurdle Archive), and `/contact` (Reachability).
-  2. Implement an eye-friendly, low-contrast Tailwind CSS v4 palette (warm alabaster for light mode, deep ink slate for dark mode) matching the monochrome vector aesthetic of the custom SVG favicon.
-  3. Ensure the Edge RAG client (`site/src/scripts/chat-client.ts`) remains XSS-safe and includes the EU AI Act Article 50 transparency disclosure on the homepage.
+  1. Present Satyajit's background, technical stack (Python 3.13, Pytest, Ubuntu Linux, OS Keyring security, GCP MLOps, Cloudflare Workers AI/Vectorize), and honest AI-assisted workflow directly on the `/` Home page alongside the interactive Edge RAG Studio.
+  2. Position Satyajit clearly for Domestic (India), Global EOR, or B2B Contract roles as an integrated, collaborative team member rather than a detached consultant across `/`, `/projects`, `/logbook`, and `/contact`.
+  3. Include the EU AI Act Article 50 transparency disclosure and XSS-safe `textContent` rendering in `site/src/scripts/chat-client.ts`.
