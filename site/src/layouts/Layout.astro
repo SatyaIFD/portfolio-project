@@ -6,7 +6,17 @@ interface Props {
   description?: string;
 }
 
-const { title, description = "Satyajit — MLOps, Cloud Architecture & DevSecOps Portfolio" } = Astro.props;
+const {
+  title,
+  description = "Satyajit Chakraborty — Business Operations (9.5 yrs TCS) transitioning to Cloud Engineering & MLOps",
+} = Astro.props;
+
+const starterPrompts = [
+  "What is Satyajit's background at TCS and what roles is he targeting?",
+  "What certifications and learning milestones has Satyajit completed?",
+  "Which LLM model and vector database power this portfolio?",
+  "How are credentials and security gates managed in this repository?",
+];
 ---
 
 <!doctype html>
@@ -19,7 +29,6 @@ const { title, description = "Satyajit — MLOps, Cloud Architecture & DevSecOps
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <script is:inline>
-      // Default to the Warm European Paper (#F4F2EC) light theme unless the user explicitly selected dark
       if (localStorage.getItem("theme") === "dark") {
         document.documentElement.classList.add("dark");
       } else {
@@ -29,27 +38,27 @@ const { title, description = "Satyajit — MLOps, Cloud Architecture & DevSecOps
   </head>
   <body class="min-h-screen bg-brand-paper text-brand-ink antialiased transition-colors duration-300 dark:bg-brand-slate dark:text-brand-cream">
     
-    <!-- Navigation Header -->
-    <header class="sticky top-0 z-30 border-b border-[#E0DCD3] bg-[#F4F2EC]/90 backdrop-blur-md dark:border-[#1E252B] dark:bg-[#0F1115]/90">
-      <div class="mx-auto flex max-w-4xl items-center justify-between px-4 py-4 sm:px-6">
-        <a href="/" class="flex items-center gap-3 transition-opacity hover:opacity-80">
+    <!-- Sticky Navigation Header -->
+    <header class="sticky top-0 z-30 border-b border-brand-border bg-brand-paper/95 backdrop-blur-md dark:border-brand-slate-border dark:bg-brand-slate/95">
+      <div class="mx-auto flex max-w-4xl items-center justify-between px-4 py-3.5 sm:px-6">
+        <a href="/" class="flex items-center gap-3 transition-opacity hover:opacity-85">
           <img src="/Favi2.svg" alt="VD Monogram" class="h-7 w-7" />
           <img src="/vraidaten-logo.svg" alt="VraiDaten" class="h-5 w-auto dark:brightness-150 dark:contrast-125" />
         </a>
 
-        <nav class="flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm font-medium">
+        <nav class="flex flex-wrap items-center gap-4 sm:gap-6 text-xs sm:text-sm font-medium text-brand-ink dark:text-brand-cream">
           <a href="/" class="hover:text-brand-accent-light dark:hover:text-brand-accent-dark transition-colors">Home</a>
           <a href="/projects" class="hover:text-brand-accent-light dark:hover:text-brand-accent-dark transition-colors">Projects</a>
           <a href="/logbook" class="hover:text-brand-accent-light dark:hover:text-brand-accent-dark transition-colors">Logbook</a>
           <a href="/contact" class="hover:text-brand-accent-light dark:hover:text-brand-accent-dark transition-colors">Contact</a>
         </nav>
 
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2.5">
           <button
             id="theme-toggle"
             type="button"
-            class="flex items-center gap-1.5 rounded-md border border-[#E0DCD3] dark:border-[#1E252B] bg-white/70 dark:bg-[#13151A] px-2.5 py-1.5 text-xs font-mono text-brand-ink dark:text-brand-cream hover:border-brand-accent-light dark:hover:border-brand-accent-dark transition-colors cursor-pointer"
-            aria-label="Toggle color theme"
+            class="flex items-center gap-1.5 rounded-md border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-2.5 py-1.5 text-xs font-mono text-brand-ink dark:text-brand-cream hover:border-brand-accent-light dark:hover:border-brand-accent-dark transition-colors cursor-pointer"
+            aria-label="Toggle Paper or Dusk color theme"
           >
             <svg id="theme-toggle-dark-icon" class="hidden h-3.5 w-3.5 text-brand-accent-light" fill="currentColor" viewBox="0 0 20 20">
               <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
@@ -63,16 +72,109 @@ const { title, description = "Satyajit — MLOps, Cloud Architecture & DevSecOps
       </div>
     </header>
 
-    <main class="mx-auto max-w-4xl px-4 py-12 sm:px-6">
+    <main class="mx-auto max-w-4xl px-4 py-10 sm:px-6 pb-28">
       <slot />
     </main>
 
-    <footer class="mt-20 border-t border-[#E0DCD3] bg-brand-paper py-8 text-center text-[11px] text-[#5C656D] dark:border-[#1E252B] dark:bg-brand-slate dark:text-[#8B949E]">
+    <footer class="border-t border-brand-border bg-brand-recessed/60 py-8 text-center text-[11px] text-brand-ink-muted dark:border-brand-slate-border dark:bg-brand-slate-recessed dark:text-brand-cream-muted">
       <div class="mx-auto flex max-w-4xl flex-col items-center justify-between gap-3 sm:flex-row px-4 sm:px-6">
-        <p>&copy; {new Date().getFullYear()} Satyajit (VraiDaten). Built with Astro 7 &amp; Cloudflare Workers.</p>
-        <p class="font-mono">Open to Collaborative Team Roles (Domestic / EOR / B2B)</p>
+        <p>&copy; {new Date().getFullYear()} Satyajit Chakraborty (VraiDaten). Built with Astro 7 &amp; Cloudflare Workers.</p>
+        <div class="flex items-center gap-4 font-mono">
+          <a href="https://www.linkedin.com/in/satyajitchakraborty91" target="_blank" rel="noopener noreferrer" class="hover:underline">LinkedIn</a>
+          <span>·</span>
+          <a href="https://github.com/SatyaIFD/portfolio-project" target="_blank" rel="noopener noreferrer" class="hover:underline">GitHub</a>
+        </div>
       </div>
     </footer>
+
+    <!-- Floating Edge AI Chat Panel (Viewport-Fixed in Bottom-Right Corner) -->
+    <aside
+      id="ai-chat-panel"
+      aria-label="Grounded Edge AI Assistant"
+      class="fixed bottom-20 right-4 sm:right-6 z-50 hidden w-[calc(100vw-2rem)] sm:w-[410px] h-[510px] max-h-[75vh] rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface shadow-2xl flex-col overflow-hidden"
+    >
+      <!-- Panel Header -->
+      <div class="border-b border-brand-border dark:border-brand-slate-border bg-brand-recessed dark:bg-brand-slate-recessed px-4 py-3 flex items-center justify-between gap-2">
+        <div class="space-y-0.5">
+          <div class="flex items-center gap-2">
+            <span class="flex h-2 w-2 rounded-full bg-brand-forest-light dark:bg-brand-forest-dark animate-pulse"></span>
+            <span class="text-xs font-mono font-semibold text-brand-ink dark:text-brand-cream">
+              Ask Edge AI (Grounded RAG)
+            </span>
+          </div>
+          <p class="text-[10px] font-mono text-brand-ink-muted dark:text-brand-cream-muted">
+            EU AI Act Art. 50 Disclosed · GDPR Zero-PII
+          </p>
+        </div>
+        <button
+          id="ai-chat-close"
+          type="button"
+          class="rounded-md border border-brand-border dark:border-brand-slate-border bg-brand-paper dark:bg-brand-slate px-2 py-1 text-xs font-mono text-brand-ink dark:text-brand-cream hover:border-brand-accent-light cursor-pointer"
+          aria-label="Minimize AI Assistant"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Scrollable Messages -->
+      <div id="chat-messages" class="flex-1 overflow-y-auto p-3.5 space-y-3 bg-brand-paper/60 dark:bg-brand-slate/60">
+        <div class="flex justify-start">
+          <div class="max-w-[88%] rounded-xl rounded-bl-sm bg-brand-surface dark:bg-brand-slate-surface border border-brand-border dark:border-brand-slate-border px-3.5 py-2.5 text-xs text-brand-ink dark:text-brand-cream leading-relaxed">
+            Hi! I am grounded in Satyajit&apos;s verified profile, ADRs, and troubleshooting logs. Click a question below or ask anything about his 9.5 years at TCS, his Cloud/MLOps learning path, or this site&apos;s architecture.
+          </div>
+        </div>
+      </div>
+
+      <!-- Starter Prompts & Input Form -->
+      <div class="border-t border-brand-border dark:border-brand-slate-border bg-brand-recessed dark:bg-brand-slate-recessed p-3 space-y-2.5">
+        <div class="flex flex-wrap gap-1.5">
+          {starterPrompts.map((prompt) => (
+            <button
+              type="button"
+              data-starter-prompt={prompt}
+              class="rounded border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-2 py-1 text-left text-[10px] text-brand-ink-muted dark:text-brand-cream-muted transition hover:border-brand-accent-light dark:hover:border-brand-accent-dark hover:text-brand-ink dark:hover:text-brand-cream cursor-pointer"
+            >
+              {prompt}
+            </button>
+          ))}
+        </div>
+
+        <form id="chat-form" class="space-y-1.5">
+          <label for="chat-input" class="sr-only">Ask a question</label>
+          <textarea
+            id="chat-input"
+            name="prompt"
+            rows="2"
+            maxlength="500"
+            required
+            placeholder="Ask about Satyajit's background, skills, or architecture..."
+            class="w-full resize-none rounded-lg border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-3 py-2 text-xs text-brand-ink dark:text-brand-cream placeholder-brand-ink-muted/60 dark:placeholder-brand-cream-muted/60 focus:border-brand-accent-light dark:focus:border-brand-accent-dark focus:outline-none"
+          ></textarea>
+          <div class="flex items-center justify-between">
+            <span id="char-count" class="font-mono text-[10px] text-brand-ink-muted dark:text-brand-cream-muted">0 / 500</span>
+            <button
+              id="chat-submit"
+              type="submit"
+              class="rounded-md bg-brand-accent-light dark:bg-brand-accent-dark px-3.5 py-1 text-xs font-semibold text-[#DED8CA] dark:text-brand-slate transition-transform hover:scale-[1.02] disabled:opacity-50 cursor-pointer"
+            >
+              Send
+            </button>
+          </div>
+        </form>
+      </div>
+    </aside>
+
+    <!-- Floating Bottom-Right Launcher Button (Always Visible While Scrolling) -->
+    <button
+      id="ai-fab-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="ai-chat-panel"
+      class="fixed bottom-5 right-4 sm:right-6 z-50 flex items-center gap-2.5 rounded-full border border-brand-border dark:border-brand-slate-border bg-brand-accent-light dark:bg-brand-accent-dark px-4 py-2.5 text-xs font-mono font-semibold text-[#E7E2D6] dark:text-brand-slate shadow-lg transition-transform hover:scale-105 cursor-pointer"
+    >
+      <span class="flex h-2 w-2 rounded-full bg-[#7CFC00] dark:bg-brand-forest-light animate-pulse"></span>
+      <span>Ask Edge AI</span>
+    </button>
 
     <script is:inline>
       (function () {
@@ -109,5 +211,7 @@ const { title, description = "Satyajit — MLOps, Cloud Architecture & DevSecOps
         });
       })();
     </script>
+
+    <script src="../scripts/chat-client.ts"></script>
   </body>
 </html>

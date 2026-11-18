@@ -1,9 +1,8 @@
-# ADR 009: Honest Portfolio Architecture, Engineer Profile & 4-Page Structure
+# ADR 009: Honest Career-Transition Positioning, Floating Edge RAG Widget & 4-Page Structure
 
 - **Status:** Accepted (Updated 2026-11-18)
 - **Date:** 2026-11-18
-- **Context:** The portfolio (`vraidaten.com`) represents Satyajit, a hands-on engineer focusing on Cloud Architecture, MLOps, and DevSecOps who is completing a ground-up refresher for the Google Cloud Professional Machine Learning Engineer certification. Beyond cloud engineering, Satyajit studies the German and Japanese languages (inspiring the name *VraiDaten*—"True Data"—and the Japanese *Ma*/*Kanso* layout paired with European Blue `#003399` and Forest Green `#006400`) and plays chess.
+- **Context:** The portfolio (`vraidaten.com`) represents Satyajit Chakraborty (9 years 5 months at TCS BPS across UK NEST Pensions and Bank of America/US Healthcare; B.Com Hons, University of Calcutta), who is transitioning into Junior Cloud Engineering, Cloud ML, and MLOps roles. The site must present his credentials honestly without overclaiming, provide a low-glare reading experience, and make the Edge RAG assistant accessible from a floating corner button across all pages.
 - **Decision:**
-  1. Present Satyajit's background, technical stack (Python 3.13, Pytest, Ubuntu Linux, OS Keyring security, GCP MLOps, Cloudflare Workers AI/Vectorize), and honest AI-assisted workflow directly on the `/` Home page alongside the interactive Edge RAG Studio.
-  2. Position Satyajit clearly for Domestic (India), Global EOR, or B2B Contract roles as an integrated, collaborative team member rather than a detached consultant across `/`, `/projects`, `/logbook`, and `/contact`.
-  3. Include the EU AI Act Article 50 transparency disclosure and XSS-safe `textContent` rendering in `site/src/scripts/chat-client.ts`.
+  1. Structure the site across 4 pages: `/` (Home — Professional Summary, TCS Operations-to-Cloud Journey, Technical Learning & Honest Comfort Level), `/projects` (Current Website Project & Planned GCP End-to-End Implementation), `/logbook` (Build-time ADR & Hurdle Archive), and `/contact` (Target Junior Roles, Collaborative Work Models & LinkedIn `linkedin.com/in/satyajitchakraborty91`).
+  2. Mount the Edge RAG Assistant as a viewport-fixed floating widget (`fixed bottom-6 right-6 z-50`) in `site/src/layouts/Layout.astro` so it floats in the bottom-right corner while scrolling on every page, complete with EU AI Act Article 50 disclosure.

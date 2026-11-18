@@ -1,215 +1,211 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-const profilePillars = [
+const tcsExperience = [
   {
-    category: "Cloud & MLOps Focus",
-    title: "Google Cloud & Edge AI",
-    items: [
-      "Finalizing ground-up refresher for the Google Cloud Professional ML Engineer certification",
-      "Designing real-time fraud detection pipelines (Pub/Sub, Dataflow, BigQuery, Vertex AI)",
-      "Building zero-cost serverless RAG architectures on Cloudflare Workers AI & Vectorize",
+    role: "Senior Associate – Information Process Enabler",
+    project: "UK National Employment Savings Trust (NEST) Pension Administration",
+    highlights: [
+      "Validated and processed employer and employee pension contributions, transfers, withdrawals, and fund allocations.",
+      "Investigated operational errors, identified data discrepancies, and performed validation and reconciliation within defined turnaround times (TAT).",
+      "Ensured strict compliance with GDPR data privacy requirements and verified supporting authorization documentation.",
+      "Collaborated with the Robotic Process Automation (RPA) team by explaining existing business workflows and documenting step-by-step transaction procedures.",
     ],
   },
   {
-    category: "DevSecOps & Linux Craft",
-    title: "Verifiable Engineering",
-    items: [
-      "Test-driven Python 3.13 development (Pytest 98.78% coverage, Mypy, Ruff, Bandit, pip-audit)",
-      "Ubuntu Linux administration, OS Keyring (libsecret) secret injection, and rclone cron automation",
-      "Strict GitHub Actions CI/CD security gates with zero plaintext .env files",
-    ],
-  },
-  {
-    category: "AI Philosophy & Role Fit",
-    title: "Team Collaborator, Not a Consultant",
-    items: [
-      "Use AI assistants transparently as engineering force-multipliers backed by deterministic tests",
-      "Document every architectural decision (ADR) and operational hurdle openly",
-      "Seeking Domestic (India), Global EOR, or B2B roles as an integrated, hands-on team member",
+    role: "Process Associate",
+    project: "Bank of America & US Healthcare Operations",
+    highlights: [
+      "Reviewed, validated, and evaluated US healthcare claims and Explanation of Benefits (EOBs) against policy guidelines.",
+      "Worked on manual-to-digital validation of medical billing data while maintaining strict HIPAA privacy compliance.",
+      "Performed quality assurance checks and supported new joiners post-training to resolve workflow queries.",
     ],
   },
 ];
 
-const starterPrompts = [
-  "Who is Satyajit and what roles is he looking for?",
-  "Which LLM model and vector database power this portfolio?",
-  "How does ADR 006 protect the 10,000 daily free Neurons budget?",
-  "How are credentials managed securely without plaintext .env files?",
+const learningMilestones = [
+  {
+    date: "17 Nov 2026",
+    title: "Linux Essentials Badge",
+    issuer: "Cisco Networking Academy",
+    note: "Formal milestone in Linux command-line operations and operating system fundamentals.",
+  },
+  {
+    date: "Target: Dec 2026",
+    title: "Google Cloud Professional ML Engineer (Studying)",
+    issuer: "Google Cloud",
+    note: "Currently building conceptual and practical understanding prior to attempting the exam.",
+  },
+  {
+    date: "Dec 2024 – Present",
+    title: "First-Principles Technical Upskilling Break",
+    issuer: "Independent Study & Practical Implementation",
+    note: "Revisited math & statistics (Khan Academy, StatQuest, Paul's Online Math Notes) and transitioned toward Cloud Engineering & MLOps.",
+  },
+  {
+    date: "2022 – 2023",
+    title: "Machine Learning with Python & Master of Data Science Bootcamp",
+    issuer: "Cognitive Class (July 2022) & Simplilearn",
+    note: "Built foundational knowledge in Python, data analysis, and machine learning concepts.",
+  },
+];
+
+const currentFocusAreas = [
+  {
+    area: "Programming & Tooling",
+    items: ["Python scripting & modern packaging", "Astral's uv package & project manager", "Git version control & automated testing (pytest)"],
+  },
+  {
+    area: "OS, Cloud & Infrastructure",
+    items: ["Linux CLI & system administration", "Google Cloud Platform (IAM, resource management, logging)", "Networking fundamentals & troubleshooting"],
+  },
+  {
+    area: "Automation & MLOps Direction",
+    items: ["CI/CD concepts & GitHub Actions pipelines", "Docker & Infrastructure as Code fundamentals", "ML model deployment, serving, pipelines & monitoring"],
+  },
 ];
 ---
 
-<Layout title="Satyajit | MLOps, Cloud Architecture & DevSecOps (VraiDaten)">
-  <!-- Hero Section -->
-  <section class="py-10 md:py-16 space-y-6">
-    <div class="inline-flex items-center gap-2 rounded-md border border-[#003399]/25 dark:border-[#5B8DEF]/30 bg-[#003399]/5 dark:bg-[#5B8DEF]/10 px-3 py-1 text-xs font-mono text-brand-accent-light dark:text-brand-accent-dark">
-      <span>VraiDaten (&ldquo;True Data&rdquo;) · Verifiable MLOps &amp; Cloud Engineering</span>
+<Layout title="Satyajit Chakraborty | Business Operations to Cloud Engineering & MLOps">
+  <!-- Hero / Professional Summary -->
+  <section class="py-6 md:py-10 space-y-6">
+    <div class="inline-flex items-center gap-2 rounded-md border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-3 py-1 text-xs font-mono text-brand-accent-light dark:text-brand-accent-dark">
+      <span>Career Transition · 9 Yrs 5 Mos at TCS BPS → Cloud Engineering &amp; MLOps</span>
     </div>
 
-    <div class="space-y-5 max-w-3xl">
+    <div class="space-y-4 max-w-3xl">
       <h1 class="text-3xl md:text-5xl font-bold tracking-tight text-brand-ink dark:text-brand-cream leading-tight">
-        Hi, I&apos;m Satyajit. <br class="hidden sm:block" />
-        <span class="text-brand-accent-light dark:text-brand-accent-dark">Building Reliable Cloud</span>
-        <span class="text-brand-forest-light dark:text-brand-forest-dark"> &amp; MLOps Systems.</span>
+        Satyajit Chakraborty <br />
+        <span class="text-xl md:text-2xl font-semibold text-brand-accent-light dark:text-brand-accent-dark">
+          Operational Discipline Meets Cloud &amp; MLOps Engineering
+        </span>
       </h1>
 
-      <p class="text-base md:text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
-        I am a hands-on engineer focused on <strong class="font-semibold text-brand-ink dark:text-brand-cream">Cloud Architecture, MLOps, and DevSecOps</strong>. Rather than claiming to know everything, I believe in learning from first principles, enforcing automated quality and security gates, and documenting every architectural trade-off and troubleshooting hurdle along the way.
+      <p class="text-sm md:text-base text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">
+        I am a business operations professional with <strong class="font-semibold text-brand-ink dark:text-brand-cream">9 years and 5 months of experience at Tata Consultancy Services (TCS BPS)</strong> across financial services, UK pension administration (NEST), US healthcare operations, data validation, and quality assurance. After collaborating with RPA automation teams in 2021 and taking a dedicated technical upskilling break in December 2024, I am transitioning into a <strong class="font-semibold text-brand-ink dark:text-brand-cream">junior-level Cloud Engineering, Cloud ML, or MLOps role</strong> where I can combine my operational reliability with developing engineering skills inside a collaborative team.
       </p>
 
-      <div class="flex flex-wrap items-center gap-4 pt-2">
-        <a href="#about-me" class="inline-flex items-center justify-center rounded-md bg-brand-accent-light dark:bg-brand-accent-dark px-5 py-2.5 text-sm font-semibold text-white dark:text-brand-slate transition-transform hover:scale-[1.02]">
-          About Me &amp; My Stack
+      <div class="flex flex-wrap items-center gap-3 pt-2">
+        <a
+          href="/projects"
+          class="inline-flex items-center justify-center rounded-md bg-brand-accent-light dark:bg-brand-accent-dark px-4 py-2 text-xs sm:text-sm font-semibold text-[#E7E2D6] dark:text-brand-slate transition-transform hover:scale-[1.02]"
+        >
+          Current &amp; Planned Projects
         </a>
-        <a href="#rag-studio" class="inline-flex items-center justify-center rounded-md border border-[#006400]/40 dark:border-[#4E9F6E]/40 bg-[#006400]/10 dark:bg-[#4E9F6E]/15 px-5 py-2.5 text-sm font-semibold text-brand-forest-light dark:text-brand-forest-dark transition-colors hover:bg-[#006400]/20">
-          Ask Edge AI
-        </a>
-        <a href="/projects" class="inline-flex items-center justify-center rounded-md border border-[#E0DCD3] dark:border-[#1E252B] bg-white/60 dark:bg-[#13151A] px-5 py-2.5 text-sm font-medium text-brand-ink dark:text-brand-cream hover:border-brand-accent-light transition-colors">
-          View Projects
+        <button
+          type="button"
+          data-open-ai-chat
+          class="inline-flex items-center justify-center rounded-md border border-brand-forest-light/50 dark:border-brand-forest-dark/50 bg-brand-surface dark:bg-brand-slate-surface px-4 py-2 text-xs sm:text-sm font-semibold text-brand-forest-light dark:text-brand-forest-dark hover:border-brand-forest-light cursor-pointer"
+        >
+          Ask Edge AI Assistant
+        </button>
+        <a
+          href="https://www.linkedin.com/in/satyajitchakraborty91"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center rounded-md border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-4 py-2 text-xs sm:text-sm font-medium text-brand-ink dark:text-brand-cream hover:border-brand-accent-light transition-colors"
+        >
+          LinkedIn Profile
         </a>
       </div>
     </div>
   </section>
 
-  <hr class="border-t border-[#E0DCD3] dark:border-[#1E252B] my-10" />
+  <hr class="border-t border-brand-border dark:border-brand-slate-border my-8" />
 
-  <!-- About Me, Background & Philosophy Section -->
-  <section id="about-me" class="scroll-mt-24 space-y-10">
-    <div class="space-y-3 max-w-3xl">
-      <p class="font-mono text-xs uppercase tracking-wider text-brand-forest-light dark:text-brand-forest-dark">
-        01 · Profile, Stack &amp; Working Style
+  <!-- Section 1: Professional Experience at TCS -->
+  <section class="space-y-6">
+    <div class="space-y-2">
+      <p class="font-mono text-xs uppercase tracking-wider text-brand-accent-light dark:text-brand-accent-dark">
+        01 · Enterprise Foundation (July 2015 – December 2024)
       </p>
       <h2 class="text-2xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">
-        About Me &amp; What I Bring to an Engineering Team
+        Professional Experience — Tata Consultancy Services (TCS BPS)
       </h2>
-      <p class="text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
-        I am currently completing a comprehensive ground-up refresher for the <strong class="font-semibold text-brand-ink dark:text-brand-cream">Google Cloud Professional Machine Learning Engineer</strong> certification and building production-grade MLOps pipelines. I am open to <strong class="font-semibold text-brand-ink dark:text-brand-cream">Domestic (India), Global EOR, or B2B Contract</strong> positions—specifically as an <strong class="font-semibold text-brand-accent-light dark:text-brand-accent-dark">integrated team collaborator</strong> working inside shared repositories, code reviews, and sprint cycles, rather than as an external consultant.
+      <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted max-w-3xl leading-relaxed">
+        Academic Qualification: <strong class="font-semibold text-brand-ink dark:text-brand-cream">B.Com (Honours), Accounting and Finance — University of Calcutta</strong>. Across nearly a decade at TCS, my work centered on data integrity, root-cause discrepancy investigation, regulatory compliance (GDPR &amp; HIPAA), and process documentation.
       </p>
     </div>
 
-    <!-- 3-Column Pillar Grid -->
-    <div class="grid gap-6 md:grid-cols-3">
-      {profilePillars.map((pillar) => (
-        <div class="rounded-xl border border-[#E0DCD3] dark:border-[#1E252B] bg-white/80 dark:bg-[#13151A] p-6 space-y-4">
+    <div class="grid gap-6 md:grid-cols-2">
+      {tcsExperience.map((exp) => (
+        <div class="rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface p-6 space-y-3">
           <div>
-            <span class="font-mono text-[11px] uppercase tracking-wider text-brand-accent-light dark:text-brand-accent-dark">
-              {pillar.category}
-            </span>
-            <h3 class="mt-1 text-base font-bold text-brand-ink dark:text-brand-cream">
-              {pillar.title}
-            </h3>
+            <h3 class="text-base font-bold text-brand-ink dark:text-brand-cream">{exp.role}</h3>
+            <p class="text-xs font-mono text-brand-accent-light dark:text-brand-accent-dark mt-0.5">{exp.project}</p>
           </div>
-          <ul class="space-y-2.5 text-xs text-slate-700 dark:text-slate-300 leading-relaxed list-disc pl-4">
-            {pillar.items.map((item) => (
+          <ul class="space-y-2 text-xs text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed list-disc pl-4">
+            {exp.highlights.map((item) => (
               <li>{item}</li>
             ))}
           </ul>
         </div>
       ))}
     </div>
-
-    <!-- Personal Context: Why VraiDaten, Languages & Chess -->
-    <div class="rounded-xl border border-[#E0DCD3] dark:border-[#1E252B] bg-white/60 dark:bg-[#13151A]/80 p-6 sm:p-8 grid gap-6 md:grid-cols-2">
-      <div class="space-y-2">
-        <h3 class="text-sm font-bold uppercase tracking-wider text-brand-accent-light dark:text-brand-accent-dark font-mono">
-          Why &ldquo;VraiDaten&rdquo; &amp; This Design?
-        </h3>
-        <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-          Outside of cloud engineering, I study the <strong class="font-semibold text-brand-ink dark:text-brand-cream">German and Japanese languages</strong> and play <strong class="font-semibold text-brand-ink dark:text-brand-cream">chess</strong>. <em>VraiDaten</em> blends European roots (<em>Vrai</em> + <em>Daten</em> — &ldquo;True Data&rdquo;), reflected in the Royal Blue (<code class="font-mono text-xs">#003399</code>) and Forest Green (<code class="font-mono text-xs">#006400</code>) palette, with Japanese structural minimalism (<em>Ma</em> negative space and <em>Kanso</em> simplicity) for an eye-friendly reading experience.
-        </p>
-      </div>
-      <div class="space-y-2">
-        <h3 class="text-sm font-bold uppercase tracking-wider text-brand-forest-light dark:text-brand-forest-dark font-mono">
-          Honest AI Collaboration
-        </h3>
-        <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-          I actively use AI tools as learning and productivity multipliers, but never as a substitute for understanding. Every component in this repository is built step-by-step, type-checked with <code class="font-mono text-xs">mypy</code> and <code class="font-mono text-xs">tsc</code>, scanned with <code class="font-mono text-xs">bandit</code> and <code class="font-mono text-xs">detect-secrets</code>, and validated with <code class="font-mono text-xs">pytest</code>.
-        </p>
-      </div>
-    </div>
   </section>
 
-  <hr class="border-t border-[#E0DCD3] dark:border-[#1E252B] my-12" />
+  <hr class="border-t border-brand-border dark:border-brand-slate-border my-10" />
 
-  <!-- RAG Studio Section -->
-  <section id="rag-studio" class="scroll-mt-24">
-    <div class="mb-6 space-y-2">
-      <p class="font-mono text-xs uppercase tracking-wider text-brand-accent-light dark:text-brand-accent-dark">
-        02 · Interactive Architecture Verification
+  <!-- Section 2: Journey into Tech & Learning Milestones -->
+  <section class="space-y-6">
+    <div class="space-y-2">
+      <p class="font-mono text-xs uppercase tracking-wider text-brand-forest-light dark:text-brand-forest-dark">
+        02 · Transition Journey &amp; Structured Upskilling
       </p>
       <h2 class="text-2xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">
-        Ask Edge AI About My Work
+        From RPA Process Mapping to Cloud Engineering &amp; MLOps
       </h2>
-      <p class="text-sm text-slate-700 dark:text-slate-300">
-        This RAG assistant (<code class="font-mono text-brand-accent-light dark:text-brand-accent-dark text-xs">@cf/ibm-granite/granite-4.0-h-micro</code>) is grounded strictly in my repository&apos;s verified documentation (ADRs 001–011 &amp; Hurdles 001–017) via Cloudflare Vectorize.
+      <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted max-w-3xl leading-relaxed">
+        My interest in technology began in 2021 while explaining operational workflows to the RPA team at TCS and seeing bots clear high-volume queues. In December 2024, I took a dedicated career break to build my technical foundations from first principles rather than jumping superficially between tools.
       </p>
     </div>
 
-    <!-- Chat Console -->
-    <div class="rounded-xl border border-[#E0DCD3] dark:border-[#1E252B] bg-white dark:bg-[#13151A] shadow-sm overflow-hidden flex flex-col h-[500px]">
-      
-      <!-- Transparency Header -->
-      <div class="border-b border-[#E0DCD3] dark:border-[#1E252B] bg-[#F4F2EC]/60 dark:bg-[#0F1115] px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-        <div class="flex items-center gap-2">
-          <span class="flex h-2 w-2 rounded-full bg-[#006400] dark:bg-[#4E9F6E] animate-pulse"></span>
-          <span class="text-[11px] font-mono font-medium uppercase tracking-wider text-slate-700 dark:text-slate-300">
-            Live Edge RAG Session (vraidaten-index)
-          </span>
-        </div>
-        <span class="text-[10px] font-mono text-slate-600 dark:text-slate-400">
-          EU AI Act Art. 50 Disclosed · GDPR Zero-PII
-        </span>
-      </div>
-
-      <!-- Scrollable Message Area -->
-      <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-transparent">
-        <div class="flex justify-start">
-          <div class="max-w-[85%] rounded-2xl rounded-bl-sm bg-[#F4F2EC] dark:bg-[#1E252B] border border-[#E0DCD3] dark:border-slate-700 px-4 py-3 text-sm text-brand-ink dark:text-slate-200 leading-relaxed">
-            Welcome! Click a starter prompt below or ask any question about Satyajit&apos;s background, target roles, MLOps architecture, or CI/CD security gates.
+    <div class="grid gap-4 sm:grid-cols-2">
+      {learningMilestones.map((m) => (
+        <div class="rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface p-5 space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <span class="font-mono text-[11px] font-semibold text-brand-forest-light dark:text-brand-forest-dark">{m.date}</span>
+            <span class="font-mono text-[10px] text-brand-ink-muted dark:text-brand-cream-muted">{m.issuer}</span>
           </div>
+          <h3 class="text-sm font-bold text-brand-ink dark:text-brand-cream">{m.title}</h3>
+          <p class="text-xs text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">{m.note}</p>
         </div>
-      </div>
+      ))}
+    </div>
 
-      <!-- Input Area & Starter Prompts -->
-      <div class="border-t border-[#E0DCD3] dark:border-[#1E252B] bg-[#F4F2EC]/60 dark:bg-[#0F1115] p-4">
-        <div class="mb-3 flex flex-wrap gap-2">
-          {starterPrompts.map((prompt) => (
-            <button
-              type="button"
-              data-starter-prompt={prompt}
-              class="rounded-md border border-[#E0DCD3] dark:border-[#1E252B] bg-white dark:bg-[#13151A] px-2.5 py-1 text-left text-[11px] text-slate-700 dark:text-slate-300 transition hover:border-brand-accent-light dark:hover:border-brand-accent-dark hover:text-brand-accent-light dark:hover:text-brand-accent-dark cursor-pointer"
-            >
-              {prompt}
-            </button>
-          ))}
+    <div class="grid gap-5 md:grid-cols-3 pt-2">
+      {currentFocusAreas.map((group) => (
+        <div class="rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface p-5 space-y-3">
+          <h3 class="text-xs font-mono uppercase tracking-wider font-semibold text-brand-accent-light dark:text-brand-accent-dark">
+            {group.area}
+          </h3>
+          <ul class="space-y-1.5 text-xs text-brand-ink-muted dark:text-brand-cream-muted list-disc pl-4">
+            {group.items.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
         </div>
-
-        <form id="chat-form" class="relative">
-          <label for="chat-input" class="sr-only">Ask a question</label>
-          <textarea
-            id="chat-input"
-            name="prompt"
-            rows="2"
-            maxlength="500"
-            required
-            placeholder="Ask about Satyajit, his GCP ML Engineer track, or how this platform is built..."
-            class="w-full resize-none rounded-lg border border-[#E0DCD3] dark:border-[#1E252B] bg-white dark:bg-[#13151A] px-3.5 py-2.5 text-sm text-brand-ink dark:text-brand-cream placeholder-slate-400 dark:placeholder-slate-500 focus:border-brand-accent-light dark:focus:border-brand-accent-dark focus:ring-1 focus:ring-brand-accent-light dark:focus:ring-brand-accent-dark focus:outline-none"
-          ></textarea>
-          
-          <div class="mt-2 flex items-center justify-between">
-            <span id="char-count" class="font-mono text-[10px] text-slate-600 dark:text-slate-400">0 / 500</span>
-            <button
-              id="chat-submit"
-              type="submit"
-              class="rounded-md bg-brand-accent-light dark:bg-brand-accent-dark px-4 py-1.5 text-xs font-semibold text-white dark:text-brand-slate transition-transform hover:scale-[1.02] disabled:opacity-50 cursor-pointer"
-            >
-              Send
-            </button>
-          </div>
-        </form>
-      </div>
+      ))}
     </div>
   </section>
 
-  <script src="../scripts/chat-client.ts"></script>
+  <hr class="border-t border-brand-border dark:border-brand-slate-border my-10" />
+
+  <!-- Section 3: Honest Technical Comfort Level & Learning Philosophy -->
+  <section class="space-y-6">
+    <div class="rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface p-6 sm:p-8 space-y-4">
+      <p class="font-mono text-xs uppercase tracking-wider text-brand-accent-light dark:text-brand-accent-dark">
+        03 · Transparency &amp; Engineering Mindset
+      </p>
+      <h2 class="text-xl font-bold text-brand-ink dark:text-brand-cream">
+        Honest Technical Comfort Level
+      </h2>
+      <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">
+        I consider myself to be in the <strong class="font-semibold text-brand-ink dark:text-brand-cream">technical transition and skill-development stage</strong> rather than an experienced Cloud or MLOps engineer. I do not claim deep, independent production-level expertise across every tool listed. I understand that <em>knowing a concept</em>, <em>implementing it independently</em>, and <em>maintaining it in a production environment</em> are three distinct levels of capability—and my goal is to progressively develop all three.
+      </p>
+      <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">
+        When exploring new tools—such as incorporating <strong class="font-semibold text-brand-ink dark:text-brand-cream">Astral&apos;s uv</strong> into my Python workflow or reading about computational efficiency research like <strong class="font-semibold text-brand-ink dark:text-brand-cream">Stanford&apos;s NCM project</strong>—my focus is on understanding <em>why</em> a technology exists, what problem it solves, and how to verify it. I use AI assistants transparently as learning and development force-multipliers, always paired with step-by-step verification, documentation, and automated checks.
+      </p>
+    </div>
+  </section>
 </Layout>
