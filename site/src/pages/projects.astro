@@ -3,26 +3,26 @@ import Layout from "../layouts/Layout.astro";
 
 const projects = [
   {
-    title: "Current Project: VraiDaten Portfolio & Edge RAG Website (vraidaten.com)",
+    title: "Current Project: VraiDaten Portfolio & Edge AI Assistant (vraidaten.com)",
     status: "Active Development & Live Deployment",
     timeline: "Current Priority",
-    role: "Cloud & DevSecOps Workflow Implementation",
+    role: "Cloud Engineering & Edge AI Implementation",
     stack: [
       "Python 3.13",
       "Astral uv",
-      "Pytest / Ruff / Mypy / Bandit",
-      "Astro",
-      "Tailwind CSS",
+      "Pytest / Ruff / Mypy",
+      "Astro 7",
+      "Tailwind CSS v4",
       "Cloudflare Workers & Vectorize",
       "GitHub Actions CI/CD",
       "Linux libsecret Keyring",
     ],
     description:
-      "My immediate practical priority: building, securing, and documenting this portfolio website while strengthening my understanding of modern development workflows. Implements a local Markdown ingestion pipeline, OS Keyring credential injection (zero plaintext .env files), automated CI security gates, and a floating Edge RAG assistant grounded in the repository's Architectural Decision Records (ADRs) and troubleshooting Hurdle logs.",
+      "My immediate practical priority is completing and documenting this portfolio website and grounded Edge AI assistant while strengthening my understanding of cloud deployment workflows. Implements a local Python Markdown ingestion pipeline, Cloudflare Vectorize (384-dim BGE embeddings), OS Keyring credential injection (zero plaintext .env files), automated code quality and security checks, and a compile-time synchronized Engineering Logbook.",
     goals: [
-      "Practice end-to-end Git branching, pull request checks, and automated CI/CD security scanning.",
-      "Document every architectural decision (ADRs 001–011) and operational hurdle (Hurdles 001–017) transparently.",
-      "Operate within strict $0/month free-tier resource boundaries using lightweight edge models.",
+      "Practise end-to-end Git branching, pull request reviews, automated testing (pytest), and CI/CD deployment workflows.",
+      "Document every architectural decision (ADRs 001–011) and operational troubleshooting hurdle (Hurdles 001–018) transparently in the Engineering Logbook.",
+      "Operate reliably within $0/month free-tier cloud boundaries using lightweight edge inference (@cf/ibm-granite/granite-4.0-h-micro).",
     ],
   },
   {
@@ -34,22 +34,22 @@ const projects = [
       "Google Cloud Platform (GCP)",
       "Cloud IAM & Resource Management",
       "Python Automation",
-      "Containerization (Docker)",
-      "Monitoring & Logging",
-      "ML Model Serving",
+      "Docker Containerization",
+      "Cloud Monitoring & Logging",
+      "ML Model Deployment & Serving",
     ],
     description:
-      "After completing this website project, I will undertake an end-to-end Google Cloud implementation. The exact use case and architecture are currently being evaluated so that the project genuinely demonstrates core competencies in cloud infrastructure provisioning, application deployment, automation, monitoring, and troubleshooting—incorporating a machine learning component to connect my Data Science foundation with Cloud ML operations.",
+      "After completing this website project, I intend to undertake an end-to-end Google Cloud project. The exact use case and architecture are currently being evaluated so that the project practically demonstrates cloud infrastructure management, application deployment, automation, monitoring, and troubleshooting—incorporating a machine learning component to connect my Data Science learning with my Cloud ML and MLOps interests.",
     goals: [
-      "Apply concepts from my Google Cloud Professional ML Engineer study track (targeted for December 2026) in a real GCP environment.",
-      "Demonstrate practical IAM least-privilege configuration, structured logging, and reproducible deployment.",
-      "Publish full architectural documentation and troubleshooting logs as the scope and implementation become concrete.",
+      "Reinforce concepts from my Google Cloud Professional Machine Learning Engineer study track (targeted for December 2026) through hands-on implementation.",
+      "Practice cloud resource provisioning, least-privilege IAM, containerization, and operational observability.",
+      "Update this page with concrete architecture diagrams, repository links, and troubleshooting logs as implementation progresses.",
     ],
   },
 ];
 ---
 
-<Layout title="Projects | Satyajit Chakraborty" description="Current and planned practical projects in Cloud Engineering and MLOps.">
+<Layout title="Projects | Satyajit Chakraborty" description="Current and planned practical projects in Cloud Engineering, Cloud ML, and MLOps.">
   <section class="py-6 md:py-10 space-y-10">
     <div class="space-y-3 max-w-3xl">
       <p class="font-mono text-xs uppercase tracking-wider text-brand-accent-light dark:text-brand-accent-dark">
@@ -59,7 +59,7 @@ const projects = [
         Current &amp; Planned Projects
       </h1>
       <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">
-        Rather than listing dozens of superficial tutorials, I focus on completing and thoroughly documenting one practical project at a time—recording both the architecture and the troubleshooting hurdles encountered along the way.
+        I focus on building and thoroughly documenting one practical project at a time—recording why each technology was selected, how it was implemented, what problems occurred, and how they were resolved.
       </p>
     </div>
 
