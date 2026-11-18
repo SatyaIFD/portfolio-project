@@ -1,212 +1,143 @@
 /**
- * Type-safe browser client for the Vraidaten Edge RAG Assistant.
- * Handles /api/health telemetry status, starter prompt chips,
- * character-bound validation, and dual-schema SSE token streaming.
+ * Browser client for the floating Vraidaten Edge RAG Assistant (/api/chat).
+ * Uses textContent exclusively to prevent DOM-based XSS.
  */
 
-interface SseDeltaChoice {
-  delta?: {
-    content?: string;
-  };
-}
-
-interface SseChunkPayload {
-  choices?: SseDeltaChoice[];
-  response?: string;
-}
-
-interface HealthResponsePayload {
-  status?: string;
-  config?: {
-    primary_model?: string;
-    similarity_threshold?: number;
-  };
-}
-
-export function extractTokenFromSseLine(rawLine: string): string {
-  const line = rawLine.trim();
-  if (!line.startsWith("data:")) {
-    return "";
-  }
-
-  const dataStr = line.slice(5).trim();
-  if (!dataStr || dataStr === "[DONE]") {
-    return "";
-  }
-
-  try {
-    const parsed = JSON.parse(dataStr) as SseChunkPayload;
-    const deltaContent = parsed.choices?.[0]?.delta?.content;
-    if (typeof deltaContent === "string") {
-      return deltaContent;
-    }
-    if (typeof parsed.response === "string") {
-      return parsed.response;
-    }
-  } catch {
-    return "";
-  }
-
-  return "";
-}
-
-async function updateHealthBadge(
-  dotEl: HTMLElement,
-  textEl: HTMLElement
-): Promise<void> {
-  try {
-    const response = await fetch("/api/health", {
-      method: "GET",
-      headers: { Accept: "application/json" },
-    });
-    if (!response.ok) {
-      throw new Error("Health check returned non-200 status");
-    }
-    const data = (await response.json()) as HealthResponsePayload;
-    if (data.status === "healthy") {
-      dotEl.className = "h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse";
-      const modelShort =
-        data.config?.primary_model?.split("/").pop() ?? "granite-4.0-h-micro";
-      textEl.textContent = `Edge AI Online · ${modelShort}`;
-      return;
-    }
-  } catch {
-    // Fall through to degraded indicator
-  }
-
-  dotEl.className = "h-2.5 w-2.5 rounded-full bg-amber-400";
-  textEl.textContent = "Edge AI Standby";
-}
-
-function appendMessageBubble(
-  container: HTMLElement,
-  role: "user" | "assistant",
-  initialText: string
-): HTMLElement {
+function appendMessageBubble(container: HTMLElement, role: "user" | "assistant"): HTMLDivElement {
   const wrapper = document.createElement("div");
-  wrapper.className =
-    role === "user" ? "flex justify-end" : "flex justify-start";
+  wrapper.className = role === "user" ? "flex justify-end" : "flex justify-start";
 
   const bubble = document.createElement("div");
   bubble.className =
     role === "user"
-      ? "max-w-[85%] rounded-2xl rounded-br-sm bg-[#003399]/10 dark:bg-[#5B8DEF]/20 border border-[#003399]/30 dark:border-[#5B8DEF]/40 px-4 py-3 text-sm text-[#1E252B] dark:text-[#EAE6DF] whitespace-pre-wrap"
-      : "max-w-[85%] rounded-2xl rounded-bl-sm bg-slate-100 dark:bg-[#1E252B] border border-[#E0DCD3] dark:border-slate-700 px-4 py-3 text-sm text-slate-800 dark:text-slate-200 whitespace-pre-wrap leading-relaxed";
+      ? "max-w-[88%] rounded-xl rounded-br-sm bg-brand-accent-light/15 dark:bg-brand-accent-dark/20 border border-brand-accent-light/35 dark:border-brand-accent-dark/40 px-3.5 py-2.5 text-xs text-brand-ink dark:text-brand-cream whitespace-pre-wrap"
+      : "max-w-[88%] rounded-xl rounded-bl-sm bg-brand-surface dark:bg-brand-slate-surface border border-brand-border dark:border-brand-slate-border px-3.5 py-2.5 text-xs text-brand-ink dark:text-brand-cream whitespace-pre-wrap leading-relaxed";
 
-  bubble.textContent = initialText;
   wrapper.appendChild(bubble);
   container.appendChild(wrapper);
   container.scrollTop = container.scrollHeight;
   return bubble;
 }
 
-async function consumeSseStream(
-  stream: ReadableStream<Uint8Array>,
-  bubbleEl: HTMLElement,
-  scrollContainer: HTMLElement
-): Promise<void> {
-  const reader = stream.getReader();
-  const decoder = new TextDecoder();
-  let buffer = "";
-  let accumulated = "";
-
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) {
-      break;
-    }
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split("\n");
-    buffer = lines.pop() ?? "";
-
-    for (const line of lines) {
-      const token = extractTokenFromSseLine(line);
-      if (token) {
-        accumulated += token;
-        bubbleEl.textContent = accumulated;
-        scrollContainer.scrollTop = scrollContainer.scrollHeight;
-      }
-    }
+function extractSseToken(rawLine: string): string {
+  const trimmed = rawLine.trim();
+  if (!trimmed.startsWith("data:")) {
+    return "";
   }
-
-  if (buffer.trim()) {
-    const trailingToken = extractTokenFromSseLine(buffer);
-    if (trailingToken) {
-      accumulated += trailingToken;
-      bubbleEl.textContent = accumulated;
+  const payload = trimmed.slice(5).trim();
+  if (!payload || payload === "[DONE]") {
+    return "";
+  }
+  try {
+    const parsed = JSON.parse(payload) as {
+      response?: string;
+      choices?: Array<{ delta?: { content?: string } }>;
+    };
+    if (typeof parsed.response === "string" && parsed.response.length > 0) {
+      return parsed.response;
     }
+    const deltaContent = parsed.choices?.[0]?.delta?.content;
+    if (typeof deltaContent === "string" && deltaContent.length > 0) {
+      return deltaContent;
+    }
+  } catch {
+    return "";
   }
-
-  if (!accumulated) {
-    bubbleEl.textContent =
-      "I do not have access to that information in Satyajit's verified portfolio.";
-  }
+  return "";
 }
 
-export function initPortfolioChat(): void {
-  const formEl = document.getElementById("chat-form");
-  const inputEl = document.getElementById("chat-input");
-  const submitBtn = document.getElementById("chat-submit");
-  const charCountEl = document.getElementById("char-count");
-  const messagesEl = document.getElementById("chat-messages");
-  const statusDotEl = document.getElementById("health-dot");
-  const statusTextEl = document.getElementById("health-text");
+function initFloatingRagAssistant(): void {
+  const fabBtn = document.getElementById("ai-fab-toggle") as HTMLButtonElement | null;
+  const chatPanel = document.getElementById("ai-chat-panel") as HTMLElement | null;
+  const closeBtn = document.getElementById("ai-chat-close") as HTMLButtonElement | null;
+  const form = document.getElementById("chat-form") as HTMLFormElement | null;
+  const input = document.getElementById("chat-input") as HTMLTextAreaElement | null;
+  const submitBtn = document.getElementById("chat-submit") as HTMLButtonElement | null;
+  const messages = document.getElementById("chat-messages") as HTMLElement | null;
+  const charCount = document.getElementById("char-count") as HTMLElement | null;
 
-  if (statusDotEl && statusTextEl) {
-    void updateHealthBadge(statusDotEl, statusTextEl);
+  function openPanel(): void {
+    if (!chatPanel || !fabBtn) return;
+    chatPanel.classList.remove("hidden");
+    chatPanel.classList.add("flex");
+    fabBtn.setAttribute("aria-expanded", "true");
+    input?.focus();
   }
 
-  if (
-    !(formEl instanceof HTMLFormElement) ||
-    !(inputEl instanceof HTMLTextAreaElement) ||
-    !(submitBtn instanceof HTMLButtonElement) ||
-    !(messagesEl instanceof HTMLElement)
-  ) {
-    return;
+  function closePanel(): void {
+    if (!chatPanel || !fabBtn) return;
+    chatPanel.classList.add("hidden");
+    chatPanel.classList.remove("flex");
+    fabBtn.setAttribute("aria-expanded", "false");
   }
 
-  inputEl.addEventListener("input", () => {
-    if (charCountEl) {
-      charCountEl.textContent = `${inputEl.value.length} / 500`;
+  fabBtn?.addEventListener("click", () => {
+    const isHidden = chatPanel?.classList.contains("hidden");
+    if (isHidden) {
+      openPanel();
+    } else {
+      closePanel();
     }
   });
 
-  const starterButtons = document.querySelectorAll<HTMLButtonElement>(
-    "[data-starter-prompt]"
-  );
-  for (const btn of starterButtons) {
+  closeBtn?.addEventListener("click", () => {
+    closePanel();
+  });
+
+  document.querySelectorAll<HTMLElement>("[data-open-ai-chat]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const promptText = btn.getAttribute("data-starter-prompt");
-      if (promptText && !submitBtn.disabled) {
-        inputEl.value = promptText;
-        if (charCountEl) {
-          charCountEl.textContent = `${inputEl.value.length} / 500`;
-        }
-        formEl.requestSubmit();
-      }
+      openPanel();
     });
+  });
+
+  document.addEventListener("keydown", (event: KeyboardEvent) => {
+    if (event.key === "Escape" && chatPanel && !chatPanel.classList.contains("hidden")) {
+      closePanel();
+    }
+  });
+
+  if (!form || !input || !submitBtn || !messages) {
+    return;
   }
 
-  formEl.addEventListener("submit", async (event: SubmitEvent) => {
+  input.addEventListener("input", () => {
+    if (charCount) {
+      charCount.textContent = `${input.value.length} / 500`;
+    }
+  });
+
+  document.querySelectorAll<HTMLButtonElement>("[data-starter-prompt]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const starter = btn.getAttribute("data-starter-prompt") ?? "";
+      if (starter) {
+        openPanel();
+        input.value = starter;
+        if (charCount) {
+          charCount.textContent = `${input.value.length} / 500`;
+        }
+        form.requestSubmit();
+      }
+    });
+  });
+
+  form.addEventListener("submit", async (event: SubmitEvent) => {
     event.preventDefault();
-    const prompt = inputEl.value.trim();
-    if (!prompt || prompt.length > 500 || submitBtn.disabled) {
+    const prompt = input.value.trim();
+    if (!prompt) {
       return;
     }
 
-    inputEl.value = "";
-    if (charCountEl) {
-      charCountEl.textContent = "0 / 500";
+    input.value = "";
+    if (charCount) {
+      charCount.textContent = "0 / 500";
     }
     submitBtn.disabled = true;
-    submitBtn.textContent = "Streaming...";
 
-    appendMessageBubble(messagesEl, "user", prompt);
-    const assistantBubble = appendMessageBubble(
-      messagesEl,
-      "assistant",
-      "Querying Vectorize (vraidaten-index)..."
-    );
+    const userBubble = appendMessageBubble(messages, "user");
+    userBubble.textContent = prompt;
+
+    const assistantBubble = appendMessageBubble(messages, "assistant");
+    assistantBubble.textContent = "Querying Vectorize & Edge SLM...";
 
     try {
       const response = await fetch("/api/chat", {
@@ -215,28 +146,59 @@ export function initPortfolioChat(): void {
         body: JSON.stringify({ prompt }),
       });
 
-      const contentType = response.headers.get("Content-Type") ?? "";
-      if (!response.ok) {
-        const errorText = await response.text();
+      const contentType = response.headers.get("content-type") ?? "";
+      if (!response.ok || contentType.includes("application/json")) {
+        const data = (await response.json()) as { answer?: string; error?: string };
         assistantBubble.textContent =
-          errorText || `Request failed (HTTP ${response.status}).`;
-      } else if (
-        contentType.includes("text/event-stream") &&
-        response.body !== null
-      ) {
-        await consumeSseStream(response.body, assistantBubble, messagesEl);
-      } else {
-        const plainText = await response.text();
-        assistantBubble.textContent = plainText;
+          data.answer ?? data.error ?? `Request failed with HTTP ${response.status}.`;
+        return;
+      }
+
+      if (!response.body) {
+        assistantBubble.textContent = "No response stream available.";
+        return;
+      }
+
+      assistantBubble.textContent = "";
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) {
+          break;
+        }
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? "";
+
+        for (const line of lines) {
+          const token = extractSseToken(line);
+          if (token) {
+            assistantBubble.textContent += token;
+            messages.scrollTop = messages.scrollHeight;
+          }
+        }
+      }
+
+      if (buffer.trim()) {
+        const finalToken = extractSseToken(buffer);
+        if (finalToken) {
+          assistantBubble.textContent += finalToken;
+        }
+      }
+
+      if (!assistantBubble.textContent) {
+        assistantBubble.textContent = "Stream completed with no output tokens.";
       }
     } catch {
-      assistantBubble.textContent =
-        "Network error while reaching the Cloudflare Edge Worker.";
+      assistantBubble.textContent = "Network error communicating with /api/chat.";
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = "Send Query";
+      input.focus();
     }
   });
 }
 
-initPortfolioChat();
+initFloatingRagAssistant();

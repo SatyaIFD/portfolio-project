@@ -1,9 +1,8 @@
-# ADR 010: Structural Layout, Custom Brand SVGs & European Blue/Green Theming
+# ADR 010: Low-Glare Warm Stone & Dusk Palette, Custom Brand SVGs & Floating RAG UI
 
-- **Status:** Accepted (Updated 2026-11-16)
-- **Date:** 2026-11-16
-- **Context:** To enforce the Japanese *Shibui* (understated craft) and *Ma* (intentional negative space) principles while harmonizing the UI palette with Satyajit's custom Inkscape brand assets (`assets/Favi2.svg` and `assets/vraidaten-logo.svg`), which pair European Royal Blue (`#003399` for `Vrai`) and Deep Forest Green (`#006400` for `Daten`).
+- **Status:** Accepted (Updated 2026-11-18)
+- **Date:** 2026-11-18
+- **Context:** Pure white (`#FFFFFF`) and high-luminance off-white (`#F4F2EC`) surfaces cause eye strain during extended reading. The visual design must pair Japanese structural clarity (*Ma* negative space, *Kanso* simplicity) with an eye-friendly European palette harmonized with `Favi2.svg` and `vraidaten-logo.svg` (`#003399` Royal Blue and `#006400` Forest Green).
 - **Decision:**
-  1. Define the European editorial palette in `site/src/styles/global.css` using warm Washi/Alabaster paper (`#F4F2EC`) and Deep Dusk Slate (`#0F1115`) paired with `#003399` / `#5B8DEF` (European Blue) and `#006400` / `#4E9F6E` (Forest Green) accents.
-  2. Copy `assets/Favi2.svg` (`viewBox="0 0 127.74231 147.2406"`) and `assets/vraidaten-logo.svg` verbatim into `site/public/Favi2.svg` and `site/public/vraidaten-logo.svg`, remove the starter `favicon.ico` and `favicon.svg` files to prevent browser cache collisions, and reference `/Favi2.svg` directly in `site/src/layouts/Layout.astro`.
-  3. Use strict 1px structural hairlines (`#E0DCD3` / `#1E252B`) across all 4 pages (`/`, `/projects`, `/logbook`, `/contact`).
+  1. Eliminate `#FFFFFF` across the entire UI. Use a Warm Washi Stone palette for Paper Mode (`#DED8CA` background, `#E7E2D6` card surfaces, `#D4CEBE` recessed headers, `#BDB5A2` borders, `#1E242B` ink) and a Soft European Dusk Slate for Dark Mode (`#15181E` background, `#1C2028` cards, `#2B313C` borders, `#DFDBD2` parchment text).
+  2. Serve `site/public/Favi2.svg` and `site/public/vraidaten-logo.svg` in the sticky header and use `@custom-variant dark (&:where(.dark, .dark *));` in `global.css` for instant Paper/Dusk theme switching.

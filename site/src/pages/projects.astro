@@ -3,109 +3,104 @@ import Layout from "../layouts/Layout.astro";
 
 const projects = [
   {
-    title: "Vraidaten Edge RAG & DevSecOps Platform",
-    status: "Live in Production",
-    timeline: "Nov 2026",
-    role: "Cloud Architecture & MLOps",
-    link: "https://vraidaten.com",
-    github: "https://github.com/SatyaIFD/portfolio-project",
+    title: "Current Project: VraiDaten Portfolio & Edge RAG Website (vraidaten.com)",
+    status: "Active Development & Live Deployment",
+    timeline: "Current Priority",
+    role: "Cloud & DevSecOps Workflow Implementation",
     stack: [
-      "Astro 7",
-      "Cloudflare Workers",
-      "Workers AI (@cf/ibm-granite)",
-      "Cloudflare Vectorize",
       "Python 3.13",
-      "Pytest",
-      "GitHub Actions"
+      "Astral uv",
+      "Pytest / Ruff / Mypy / Bandit",
+      "Astro",
+      "Tailwind CSS",
+      "Cloudflare Workers & Vectorize",
+      "GitHub Actions CI/CD",
+      "Linux libsecret Keyring",
     ],
-    description: "A zero-cost serverless Edge AI portfolio operating within strict Cloudflare free-tier quotas. Features a fully automated Python ingestion pipeline for Markdown ADRs, OS Keyring (libsecret) secure credential injection to eliminate plaintext `.env` files, and a 9-gate DevSecOps CI/CD pipeline achieving 98.78% test coverage.",
-    metrics: [
-      { label: "RAG Cost", value: "~1.6 Neurons / Query" },
-      { label: "Vector Dimension", value: "384 (Cosine)" },
-      { label: "Edge Latency", value: "< 50ms (Cache Hit)" }
-    ]
+    description:
+      "My immediate practical priority: building, securing, and documenting this portfolio website while strengthening my understanding of modern development workflows. Implements a local Markdown ingestion pipeline, OS Keyring credential injection (zero plaintext .env files), automated CI security gates, and a floating Edge RAG assistant grounded in the repository's Architectural Decision Records (ADRs) and troubleshooting Hurdle logs.",
+    goals: [
+      "Practice end-to-end Git branching, pull request checks, and automated CI/CD security scanning.",
+      "Document every architectural decision (ADRs 001–011) and operational hurdle (Hurdles 001–017) transparently.",
+      "Operate within strict $0/month free-tier resource boundaries using lightweight edge models.",
+    ],
   },
   {
-    title: "Real-Time Banking Fraud Detection Pipeline",
-    status: "In Development (Post-Certification)",
-    timeline: "Upcoming",
-    role: "GCP MLOps Engineer",
-    link: "#",
-    github: "#",
+    title: "Planned Project: Google Cloud End-to-End Implementation",
+    status: "Planned (Commencing After Website Completion)",
+    timeline: "Next Milestone",
+    role: "Cloud Engineering & Cloud ML Practice",
     stack: [
-      "Google Cloud Platform",
-      "Pub/Sub",
-      "Dataflow",
-      "BigQuery",
-      "Vertex AI",
-      "Terraform"
+      "Google Cloud Platform (GCP)",
+      "Cloud IAM & Resource Management",
+      "Python Automation",
+      "Containerization (Docker)",
+      "Monitoring & Logging",
+      "ML Model Serving",
     ],
-    description: "An end-to-end streaming architecture for detecting anomalous transaction patterns across Credit Card, Debit Card, and Netbanking networks. Designed to validate GCP Professional Machine Learning Engineer competencies through low-latency model inference, robust feature stores, and automated model monitoring.",
-    metrics: [
-      { label: "Target Latency", value: "< 200ms" },
-      { label: "Compliance", value: "GDPR & DORA" },
-      { label: "Infra as Code", value: "Terraform" }
-    ]
-  }
+    description:
+      "After completing this website project, I will undertake an end-to-end Google Cloud implementation. The exact use case and architecture are currently being evaluated so that the project genuinely demonstrates core competencies in cloud infrastructure provisioning, application deployment, automation, monitoring, and troubleshooting—incorporating a machine learning component to connect my Data Science foundation with Cloud ML operations.",
+    goals: [
+      "Apply concepts from my Google Cloud Professional ML Engineer study track (targeted for December 2026) in a real GCP environment.",
+      "Demonstrate practical IAM least-privilege configuration, structured logging, and reproducible deployment.",
+      "Publish full architectural documentation and troubleshooting logs as the scope and implementation become concrete.",
+    ],
+  },
 ];
 ---
 
-<Layout title="Projects | Satyajit" description="Production MLOps and Cloud Architecture engineering case studies.">
-  <section class="py-8 md:py-12">
-    <div class="space-y-4 mb-12">
-      <h1 class="text-3xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">Engineering Projects</h1>
-      <p class="text-sm md:text-base text-slate-600 dark:text-slate-400 max-w-2xl leading-relaxed">
-        Production systems engineered with strict typing, automated security gates, and cost-bounded infrastructure. I prioritize verifiable CI/CD workflows and architectural transparency over "black box" deployment.
+<Layout title="Projects | Satyajit Chakraborty" description="Current and planned practical projects in Cloud Engineering and MLOps.">
+  <section class="py-6 md:py-10 space-y-10">
+    <div class="space-y-3 max-w-3xl">
+      <p class="font-mono text-xs uppercase tracking-wider text-brand-accent-light dark:text-brand-accent-dark">
+        Practical Implementation &amp; Roadmap
+      </p>
+      <h1 class="text-3xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">
+        Current &amp; Planned Projects
+      </h1>
+      <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">
+        Rather than listing dozens of superficial tutorials, I focus on completing and thoroughly documenting one practical project at a time—recording both the architecture and the troubleshooting hurdles encountered along the way.
       </p>
     </div>
 
-    <div class="grid gap-12">
+    <div class="space-y-8">
       {projects.map((project) => (
-        <article class="flex flex-col md:flex-row gap-6 md:gap-10 items-start border-t border-[#E0DCD3] dark:border-[#1E252B] pt-8">
-          
-          <!-- Left Column: Meta -->
-          <div class="w-full md:w-1/4 space-y-4 shrink-0">
-            <div>
-              <span class={`inline-block px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider rounded-md border ${project.status === "Live in Production" ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : "border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400"}`}>
-                {project.status}
-              </span>
-            </div>
-            <div>
-              <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">{project.timeline}</p>
-              <p class="text-sm font-semibold text-brand-ink dark:text-brand-cream mt-1">{project.role}</p>
-            </div>
-            
-            <div class="pt-2">
-              <div class="flex flex-wrap gap-1.5">
-                {project.stack.map((tech) => (
-                  <span class="rounded bg-[#E0DCD3]/50 dark:bg-[#1E252B] px-2 py-0.5 text-[10px] font-mono text-slate-600 dark:text-slate-400">
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
+        <article class="rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface p-6 sm:p-8 space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="rounded-md border border-brand-border dark:border-brand-slate-border bg-brand-recessed dark:bg-brand-slate-recessed px-2.5 py-1 text-[11px] font-mono font-semibold text-brand-accent-light dark:text-brand-accent-dark">
+              {project.status}
+            </span>
+            <span class="font-mono text-xs text-brand-ink-muted dark:text-brand-cream-muted">
+              {project.timeline} · {project.role}
+            </span>
           </div>
 
-          <!-- Right Column: Content -->
-          <div class="w-full md:w-3/4 space-y-5">
-            <div>
-              <h2 class="text-xl font-bold text-brand-ink dark:text-brand-cream">{project.title}</h2>
-            </div>
-            
-            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-3xl">
-              {project.description}
-            </p>
+          <h2 class="text-xl font-bold text-brand-ink dark:text-brand-cream">
+            {project.title}
+          </h2>
 
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4 border-t border-[#E0DCD3]/50 dark:border-[#1E252B]/50">
-              {project.metrics.map((metric) => (
-                <div>
-                  <p class="text-[10px] uppercase tracking-wider font-medium text-slate-500">{metric.label}</p>
-                  <p class="text-sm font-mono font-semibold text-brand-accent-light dark:text-brand-accent-dark mt-1">{metric.value}</p>
-                </div>
+          <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">
+            {project.description}
+          </p>
+
+          <div class="space-y-2">
+            <h3 class="text-xs font-mono uppercase tracking-wider font-semibold text-brand-forest-light dark:text-brand-forest-dark">
+              Key Learning &amp; Engineering Objectives
+            </h3>
+            <ul class="space-y-1.5 text-xs text-brand-ink-muted dark:text-brand-cream-muted list-disc pl-4">
+              {project.goals.map((g) => (
+                <li>{g}</li>
               ))}
-            </div>
+            </ul>
           </div>
 
+          <div class="flex flex-wrap gap-1.5 pt-2 border-t border-brand-border/60 dark:border-brand-slate-border">
+            {project.stack.map((tech) => (
+              <span class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-2.5 py-1 text-[11px] font-mono text-brand-ink dark:text-brand-cream">
+                {tech}
+              </span>
+            ))}
+          </div>
         </article>
       ))}
     </div>

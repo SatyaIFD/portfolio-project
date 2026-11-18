@@ -49,14 +49,14 @@ const hurdles = loadMarkdownEntries("../docs/hurdles");
       <h1 class="text-3xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">
         Engineering Logbook
       </h1>
-      <p class="text-sm md:text-base text-slate-600 dark:text-slate-400 max-w-2xl leading-relaxed">
+      <p class="text-sm md:text-base text-brand-ink-muted dark:text-brand-cream-muted max-w-2xl leading-relaxed">
         Every entry below is read directly from the repository&apos;s <code class="font-mono text-xs">docs/decisions/</code> and <code class="font-mono text-xs">docs/hurdles/</code> Markdown files at build time—the exact same files embedded into Cloudflare Vectorize (<code class="font-mono text-xs">vraidaten-index</code>).
       </p>
     </div>
 
     <!-- Architectural Decision Records (ADRs) -->
     <div class="space-y-6">
-      <div class="border-b border-[#E0DCD3] dark:border-[#1E252B] pb-3 flex items-baseline justify-between">
+      <div class="border-b border-brand-border dark:border-brand-slate-border pb-3 flex items-baseline justify-between">
         <h2 class="text-xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">
           Architectural Decision Records ({decisions.length})
         </h2>
@@ -67,7 +67,7 @@ const hurdles = loadMarkdownEntries("../docs/hurdles");
         {decisions.map((adr, index) => (
           <details
             open={index < 2}
-            class="group rounded-xl border border-[#E0DCD3] dark:border-[#1E252B] bg-white/70 dark:bg-[#13151A] px-5 py-4 transition-colors"
+            class="group rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-5 py-4 transition-colors"
           >
             <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-sm text-brand-ink dark:text-brand-cream">
               <span>{adr.title}</span>
@@ -75,7 +75,7 @@ const hurdles = loadMarkdownEntries("../docs/hurdles");
                 +
               </span>
             </summary>
-            <pre class="mt-4 overflow-x-auto whitespace-pre-wrap border-t border-[#E0DCD3]/60 dark:border-[#1E252B] pt-3 font-sans text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{adr.body}</pre>
+            <pre class="mt-4 overflow-x-auto whitespace-pre-wrap border-t border-[#E0DCD3]/60 dark:border-[#1E252B] pt-3 font-sans text-xs text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">{adr.body}</pre>
           </details>
         ))}
       </div>
@@ -83,7 +83,7 @@ const hurdles = loadMarkdownEntries("../docs/hurdles");
 
     <!-- Operational Hurdles & Post-Mortems -->
     <div class="space-y-6">
-      <div class="border-b border-[#E0DCD3] dark:border-[#1E252B] pb-3 flex items-baseline justify-between">
+      <div class="border-b border-brand-border dark:border-brand-slate-border pb-3 flex items-baseline justify-between">
         <h2 class="text-xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">
           Operational Hurdles &amp; Root-Cause Logs ({hurdles.length})
         </h2>
@@ -92,14 +92,14 @@ const hurdles = loadMarkdownEntries("../docs/hurdles");
 
       <div class="space-y-3">
         {hurdles.map((hurdle) => (
-          <details class="group rounded-xl border border-[#E0DCD3] dark:border-[#1E252B] bg-white/70 dark:bg-[#13151A] px-5 py-4 transition-colors">
+          <details class="group rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-5 py-4 transition-colors">
             <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-sm text-brand-ink dark:text-brand-cream">
               <span>{hurdle.title}</span>
               <span class="font-mono text-xs text-brand-accent-light dark:text-brand-accent-dark group-open:rotate-45 transition-transform">
                 +
               </span>
             </summary>
-            <pre class="mt-4 overflow-x-auto whitespace-pre-wrap border-t border-[#E0DCD3]/60 dark:border-[#1E252B] pt-3 font-sans text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{hurdle.body}</pre>
+            <pre class="mt-4 overflow-x-auto whitespace-pre-wrap border-t border-[#E0DCD3]/60 dark:border-[#1E252B] pt-3 font-sans text-xs text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">{hurdle.body}</pre>
           </details>
         ))}
       </div>
