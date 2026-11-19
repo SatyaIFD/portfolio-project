@@ -1,7 +1,72 @@
 /**
  * Browser client for the floating Vraidaten Edge RAG Assistant (/api/chat).
- * Uses textContent exclusively to prevent DOM-based XSS.
+ * Renders streamed Markdown via structured DOM nodes (zero innerHTML) for XSS safety.
  */
+import { parseMarkdown, type InlineToken } from "../utils/markdown";
+
+function appendInlineTokens(parent: HTMLElement, tokens: InlineToken[]): void {
+  for (const tok of tokens) {
+    if (tok.type === "bold") {
+      const strong = document.createElement("strong");
+      strong.className = "font-semibold text-brand-ink dark:text-brand-cream";
+      strong.textContent = tok.value;
+      parent.appendChild(strong);
+    } else if (tok.type === "italic") {
+      const em = document.createElement("em");
+      em.className = "italic";
+      em.textContent = tok.value;
+      parent.appendChild(em);
+    } else if (tok.type === "code") {
+      const code = document.createElement("code");
+      code.className =
+        "rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark";
+      code.textContent = tok.value;
+      parent.appendChild(code);
+    } else {
+      parent.appendChild(document.createTextNode(tok.value));
+    }
+  }
+}
+
+function renderMarkdownIntoBubble(container: HTMLElement, rawText: string): void {
+  const fragment = document.createDocumentFragment();
+  const blocks = parseMarkdown(rawText);
+
+  for (const block of blocks) {
+    if (block.type === "heading") {
+      const h = document.createElement("p");
+      h.className = "font-semibold text-brand-ink dark:text-brand-cream mt-1";
+      appendInlineTokens(h, block.tokens);
+      fragment.appendChild(h);
+    } else if (block.type === "codeblock") {
+      const pre = document.createElement("pre");
+      pre.className =
+        "overflow-x-auto rounded border border-brand-border dark:border-brand-slate-border bg-brand-recessed dark:bg-brand-slate-recessed p-2 font-mono text-[10px]";
+      pre.textContent = block.content;
+      fragment.appendChild(pre);
+    } else if (block.type === "list") {
+      const listEl = document.createElement(block.ordered ? "ol" : "ul");
+      listEl.className = block.ordered
+        ? "list-decimal space-y-1 pl-4"
+        : "list-disc space-y-1 pl-4";
+      for (const item of block.items) {
+        const li = document.createElement("li");
+        if (item.indent > 0) {
+          li.className = "ml-3";
+        }
+        appendInlineTokens(li, item.tokens);
+        listEl.appendChild(li);
+      }
+      fragment.appendChild(listEl);
+    } else {
+      const p = document.createElement("p");
+      appendInlineTokens(p, block.tokens);
+      fragment.appendChild(p);
+    }
+  }
+
+  container.replaceChildren(fragment);
+}
 
 function appendMessageBubble(container: HTMLElement, role: "user" | "assistant"): HTMLDivElement {
   const wrapper = document.createElement("div");
@@ -11,7 +76,7 @@ function appendMessageBubble(container: HTMLElement, role: "user" | "assistant")
   bubble.className =
     role === "user"
       ? "max-w-[88%] rounded-xl rounded-br-sm bg-brand-accent-light/15 dark:bg-brand-accent-dark/20 border border-brand-accent-light/35 dark:border-brand-accent-dark/40 px-3.5 py-2.5 text-xs text-brand-ink dark:text-brand-cream whitespace-pre-wrap"
-      : "max-w-[88%] rounded-xl rounded-bl-sm bg-brand-surface dark:bg-brand-slate-surface border border-brand-border dark:border-brand-slate-border px-3.5 py-2.5 text-xs text-brand-ink dark:text-brand-cream whitespace-pre-wrap leading-relaxed";
+      : "max-w-[88%] rounded-xl rounded-bl-sm bg-brand-surface dark:bg-brand-slate-surface border border-brand-border dark:border-brand-slate-border px-3.5 py-2.5 text-xs text-brand-ink dark:text-brand-cream space-y-2 leading-relaxed";
 
   wrapper.appendChild(bubble);
   container.appendChild(wrapper);
@@ -149,8 +214,10 @@ function initFloatingRagAssistant(): void {
       const contentType = response.headers.get("content-type") ?? "";
       if (!response.ok || contentType.includes("application/json")) {
         const data = (await response.json()) as { answer?: string; error?: string };
-        assistantBubble.textContent =
-          data.answer ?? data.error ?? `Request failed with HTTP ${response.status}.`;
+        renderMarkdownIntoBubble(
+          assistantBubble,
+          data.answer ?? data.error ?? `Request failed with HTTP ${response.status}.`,
+        );
         return;
       }
 
@@ -159,6 +226,7 @@ function initFloatingRagAssistant(): void {
         return;
       }
 
+      let rawMarkdown = "";
       assistantBubble.textContent = "";
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -176,7 +244,8 @@ function initFloatingRagAssistant(): void {
         for (const line of lines) {
           const token = extractSseToken(line);
           if (token) {
-            assistantBubble.textContent += token;
+            rawMarkdown += token;
+            renderMarkdownIntoBubble(assistantBubble, rawMarkdown);
             messages.scrollTop = messages.scrollHeight;
           }
         }
@@ -185,11 +254,13 @@ function initFloatingRagAssistant(): void {
       if (buffer.trim()) {
         const finalToken = extractSseToken(buffer);
         if (finalToken) {
-          assistantBubble.textContent += finalToken;
+          rawMarkdown += finalToken;
         }
       }
 
-      if (!assistantBubble.textContent) {
+      if (rawMarkdown.trim()) {
+        renderMarkdownIntoBubble(assistantBubble, rawMarkdown);
+      } else {
         assistantBubble.textContent = "Stream completed with no output tokens.";
       }
     } catch {

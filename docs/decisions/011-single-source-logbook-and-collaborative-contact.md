@@ -1,9 +1,9 @@
-# ADR 011: Build-Time Markdown Logbook Synchronization & Collaborative Positioning
+# ADR 011: Build-Time Markdown AST Rendering, Dynamic Logbook Counts & Location Positioning
 
-- **Status:** Accepted
-- **Date:** 2026-11-16
-- **Context:** A technical portfolio must prevent documentation drift between what the Edge RAG assistant retrieves from Cloudflare Vectorize (`vraidaten-index`) and what human visitors read on the website. Additionally, career-transition framing must clearly specify preferred working arrangements (Domestic, EOR, or B2B team collaboration) and maintain accessible contrast across both Light and Dark themes.
+- **Status:** Accepted (Updated 2026-11-19)
+- **Date:** 2026-11-19
+- **Context:** A technical portfolio must prevent documentation drift between Cloudflare Vectorize (`vraidaten-index`) and the public `/logbook` page, render Markdown cleanly (rather than raw `**` or backtick syntax) in both `/logbook` and streamed Edge AI chat responses without introducing third-party XSS risks or npm supply-chain dependencies, and clearly state location and work-mode preferences while protecting personal privacy (omitting exact DOB from public pages).
 - **Decision:**
-  1. Implement `site/src/pages/logbook.astro` using Node.js `fs` and `path` at Astro build time to read `docs/decisions/*.md` and `docs/hurdles/*.md` directly from the repository into native HTML `<details>` disclosures—ensuring zero runtime latency and a single source of truth shared with `rag_pipeline/ingest.py`.
-  2. Implement `site/src/pages/contact.astro` and `site/src/pages/projects.astro` with explicit status badges (`Live in Production` vs. `In Development`) and clear collaborative role models (Domestic, Global EOR, and Embedded B2B).
-  3. Update `site/src/scripts/chat-client.ts` message bubbles and `site/src/layouts/Layout.astro` navigation so both Light Mode (`#F4F2EC`) and Dark Mode (`#0F1115`) maintain accessible typography and mobile reachability.
+  1. Implement a zero-dependency TypeScript Markdown AST parser (`site/src/utils/markdown.ts`) shared between `site/src/pages/logbook.astro` (rendered via auto-escaped Astro JSX) and `site/src/scripts/chat-client.ts` (rendered via `document.createElement` and `document.createTextNode`, with zero `innerHTML`).
+  2. Derive ADR and Hurdle counts dynamically at build time via Vite `import.meta.glob` across `/` and `/projects` so displayed counts never drift out of sync with `docs/`.
+  3. Communicate Satyajit's base location (**Born and raised in Kolkata, India · IST / UTC+5:30**) and explicit work modes—**Domestic:** Kolkata On-Site/Hybrid preferred, Rest of India Remote (flexible depending on offer); **Global EOR:** Remote; **B2B:** Remote team collaborator—while keeping exact DOB private for identity security and global anti-bias compliance.
