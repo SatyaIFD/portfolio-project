@@ -32,7 +32,7 @@ During my 9 years and 5 months at Tata Consultancy Services, I received several 
 - **BPS Star Performance Award**
 - **Service and Commitment Award**
 - **Xcelerate Warrior Award** – Upskilling and continuous learning
-- **Internal Dedication Award** – Bank of America HIPPS project
+- **Internal Dedication Award** – Bank of America HIPAA project
 
 ## Transparent Technical Skill Classification & Learning Milestones
 
