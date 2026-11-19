@@ -1,6 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
+const adrCount = Object.keys(import.meta.glob("../../../docs/decisions/*.md")).length;
+const hurdleCount = Object.keys(import.meta.glob("../../../docs/hurdles/*.md")).length;
+
 const tcsExperience = [
   {
     role: "Senior Associate – Information Process Enabler",
@@ -100,7 +103,7 @@ const targetRoles = [
   <!-- Hero / Refined Homepage Introduction -->
   <section class="py-6 md:py-10 space-y-6">
     <div class="inline-flex items-center gap-2 rounded-md border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-3 py-1 text-xs font-mono text-brand-accent-light dark:text-brand-accent-dark">
-      <span>Career Transition · 9 Yrs 5 Mos at TCS BPS → Cloud Engineering &amp; MLOps</span>
+      <span>Kolkata, India (IST) · 9 Yrs 5 Mos at TCS BPS → Cloud Engineering &amp; MLOps</span>
     </div>
 
     <div class="space-y-4 max-w-3xl">
@@ -126,7 +129,7 @@ const targetRoles = [
       <!-- Target Roles Pills -->
       <div class="pt-2 space-y-2">
         <p class="font-mono text-[11px] uppercase tracking-wider font-semibold text-brand-forest-light dark:text-brand-forest-dark">
-          Open to Collaborative Junior &amp; Transition-Friendly Roles (Domestic / Global EOR / B2B Team Member):
+          Open to Junior Roles — Kolkata On-Site/Hybrid · Rest of India Remote (Offer-Dependent) · Global EOR &amp; B2B Remote:
         </p>
         <div class="flex flex-wrap gap-1.5">
           {targetRoles.map((role) => (
@@ -148,7 +151,7 @@ const targetRoles = [
           href="/logbook"
           class="inline-flex items-center justify-center rounded-md border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-4 py-2 text-xs sm:text-sm font-semibold text-brand-ink dark:text-brand-cream hover:border-brand-accent-light transition-colors"
         >
-          Engineering Logbook (11 ADRs · 18 Hurdles)
+          Engineering Logbook ({adrCount} ADRs · {hurdleCount} Hurdles)
         </a>
         <button
           type="button"

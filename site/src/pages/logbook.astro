@@ -1,10 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { parseMarkdown, type MarkdownBlock, type InlineToken } from "../utils/markdown";
 
 interface LogEntry {
   id: string;
   title: string;
-  body: string;
+  blocks: MarkdownBlock[];
 }
 
 const rawDecisions = import.meta.glob<string>("../../../docs/decisions/*.md", {
@@ -32,7 +33,7 @@ function parseGlobEntries(globMap: Record<string, string>): LogEntry[] {
       return {
         id: filename.replace(/\.md$/, ""),
         title,
-        body,
+        blocks: parseMarkdown(body),
       };
     });
 }
@@ -41,20 +42,17 @@ const decisions = parseGlobEntries(rawDecisions);
 const hurdles = parseGlobEntries(rawHurdles);
 ---
 
-<Layout
-  title="Engineering Logbook | Satyajit Chakraborty"
-  description="Architectural Decision Records (ADRs) and operational troubleshooting logs compiled from docs/."
->
+<Layout description="Architectural Decision Records (ADRs) and operational troubleshooting logs compiled from docs/." title="Engineering Logbook | Satyajit Chakraborty">
   <section class="py-6 md:py-10 space-y-12">
     <div class="space-y-3">
       <p class="font-mono text-xs uppercase tracking-wider text-brand-accent-light dark:text-brand-accent-dark">
-        Single Source of Truth · Bundled at Build Time via Vite import.meta.glob
+        Single Source of Truth · Compiled from docs/ via Vite
       </p>
       <h1 class="text-3xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">
         Engineering Logbook
       </h1>
       <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted max-w-3xl leading-relaxed">
-        Every entry below is compiled directly from the repository&apos;s <code class="font-mono text-xs">docs/decisions/</code> ({decisions.length} ADRs) and <code class="font-mono text-xs">docs/hurdles/</code> ({hurdles.length} Hurdles) Markdown files—the exact same files embedded into Cloudflare Vectorize (<code class="font-mono text-xs">vraidaten-index</code>).
+        Every entry below is parsed and rendered directly from the repository&apos;s <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-ink dark:text-brand-cream">docs/decisions/</code> ({decisions.length} ADRs) and <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-ink dark:text-brand-cream">docs/hurdles/</code> ({hurdles.length} Hurdles) Markdown files—the exact same files embedded into Cloudflare Vectorize (<code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-ink dark:text-brand-cream">vraidaten-index</code>).
       </p>
     </div>
 
@@ -75,11 +73,64 @@ const hurdles = parseGlobEntries(rawHurdles);
           >
             <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-sm text-brand-ink dark:text-brand-cream">
               <span>{adr.title}</span>
-              <span class="font-mono text-xs text-brand-accent-light dark:text-brand-accent-dark group-open:rotate-45 transition-transform">
+              <span class="font-mono text-sm text-brand-accent-light dark:text-brand-accent-dark group-open:rotate-45 transition-transform">
                 +
               </span>
             </summary>
-            <pre class="mt-4 overflow-x-auto whitespace-pre-wrap border-t border-brand-border/60 dark:border-brand-slate-border pt-3 font-sans text-xs text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">{adr.body}</pre>
+
+            <div class="mt-4 space-y-3 border-t border-brand-border/60 dark:border-brand-slate-border pt-4 text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">
+              {adr.blocks.map((block) => (
+                block.type === "heading" ? (
+                  <h3 class="font-semibold text-brand-ink dark:text-brand-cream pt-1">
+                    {block.tokens.map((tok: InlineToken) => (
+                      tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
+                      tok.type === "italic" ? <em class="italic">{tok.value}</em> :
+                      tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
+                      tok.value
+                    ))}
+                  </h3>
+                ) : block.type === "codeblock" ? (
+                  <pre class="overflow-x-auto rounded-lg border border-brand-border dark:border-brand-slate-border bg-brand-recessed dark:bg-brand-slate-recessed p-3 font-mono text-[11px] text-brand-ink dark:text-brand-cream">{block.content}</pre>
+                ) : block.type === "list" ? (
+                  block.ordered ? (
+                    <ol class="list-decimal space-y-1.5 pl-5">
+                      {block.items.map((item) => (
+                        <li class={item.indent > 0 ? "ml-5 list-[lower-alpha]" : ""}>
+                          {item.tokens.map((tok: InlineToken) => (
+                            tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
+                            tok.type === "italic" ? <em class="italic text-brand-ink dark:text-brand-cream">{tok.value}</em> :
+                            tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
+                            tok.value
+                          ))}
+                        </li>
+                      ))}
+                    </ol>
+                  ) : (
+                    <ul class="list-disc space-y-1.5 pl-5">
+                      {block.items.map((item) => (
+                        <li class={item.indent > 0 ? "ml-5 list-[circle]" : ""}>
+                          {item.tokens.map((tok: InlineToken) => (
+                            tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
+                            tok.type === "italic" ? <em class="italic text-brand-ink dark:text-brand-cream">{tok.value}</em> :
+                            tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
+                            tok.value
+                          ))}
+                        </li>
+                      ))}
+                    </ul>
+                  )
+                ) : (
+                  <p>
+                    {block.tokens.map((tok: InlineToken) => (
+                      tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
+                      tok.type === "italic" ? <em class="italic text-brand-ink dark:text-brand-cream">{tok.value}</em> :
+                      tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
+                      tok.value
+                    ))}
+                  </p>
+                )
+              ))}
+            </div>
           </details>
         ))}
       </div>
@@ -102,11 +153,64 @@ const hurdles = parseGlobEntries(rawHurdles);
           >
             <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-sm text-brand-ink dark:text-brand-cream">
               <span>{hurdle.title}</span>
-              <span class="font-mono text-xs text-brand-accent-light dark:text-brand-accent-dark group-open:rotate-45 transition-transform">
+              <span class="font-mono text-sm text-brand-accent-light dark:text-brand-accent-dark group-open:rotate-45 transition-transform">
                 +
               </span>
             </summary>
-            <pre class="mt-4 overflow-x-auto whitespace-pre-wrap border-t border-brand-border/60 dark:border-brand-slate-border pt-3 font-sans text-xs text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">{hurdle.body}</pre>
+
+            <div class="mt-4 space-y-3 border-t border-brand-border/60 dark:border-brand-slate-border pt-4 text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">
+              {hurdle.blocks.map((block) => (
+                block.type === "heading" ? (
+                  <h3 class="font-semibold text-brand-ink dark:text-brand-cream pt-1">
+                    {block.tokens.map((tok: InlineToken) => (
+                      tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
+                      tok.type === "italic" ? <em class="italic">{tok.value}</em> :
+                      tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
+                      tok.value
+                    ))}
+                  </h3>
+                ) : block.type === "codeblock" ? (
+                  <pre class="overflow-x-auto rounded-lg border border-brand-border dark:border-brand-slate-border bg-brand-recessed dark:bg-brand-slate-recessed p-3 font-mono text-[11px] text-brand-ink dark:text-brand-cream">{block.content}</pre>
+                ) : block.type === "list" ? (
+                  block.ordered ? (
+                    <ol class="list-decimal space-y-1.5 pl-5">
+                      {block.items.map((item) => (
+                        <li class={item.indent > 0 ? "ml-5 list-[lower-alpha]" : ""}>
+                          {item.tokens.map((tok: InlineToken) => (
+                            tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
+                            tok.type === "italic" ? <em class="italic text-brand-ink dark:text-brand-cream">{tok.value}</em> :
+                            tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
+                            tok.value
+                          ))}
+                        </li>
+                      ))}
+                    </ol>
+                  ) : (
+                    <ul class="list-disc space-y-1.5 pl-5">
+                      {block.items.map((item) => (
+                        <li class={item.indent > 0 ? "ml-5 list-[circle]" : ""}>
+                          {item.tokens.map((tok: InlineToken) => (
+                            tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
+                            tok.type === "italic" ? <em class="italic text-brand-ink dark:text-brand-cream">{tok.value}</em> :
+                            tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
+                            tok.value
+                          ))}
+                        </li>
+                      ))}
+                    </ul>
+                  )
+                ) : (
+                  <p>
+                    {block.tokens.map((tok: InlineToken) => (
+                      tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
+                      tok.type === "italic" ? <em class="italic text-brand-ink dark:text-brand-cream">{tok.value}</em> :
+                      tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
+                      tok.value
+                    ))}
+                  </p>
+                )
+              ))}
+            </div>
           </details>
         ))}
       </div>

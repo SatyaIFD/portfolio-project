@@ -1,6 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
+const adrCount = Object.keys(import.meta.glob("../../../docs/decisions/*.md")).length;
+const hurdleCount = Object.keys(import.meta.glob("../../../docs/hurdles/*.md")).length;
+
 const projects = [
   {
     title: "Current Project: VraiDaten Portfolio & Edge AI Assistant (vraidaten.com)",
@@ -21,7 +24,7 @@ const projects = [
       "My immediate practical priority is completing and documenting this portfolio website and grounded Edge AI assistant while strengthening my understanding of cloud deployment workflows. Implements a local Python Markdown ingestion pipeline, Cloudflare Vectorize (384-dim BGE embeddings), OS Keyring credential injection (zero plaintext .env files), automated code quality and security checks, and a compile-time synchronized Engineering Logbook.",
     goals: [
       "Practise end-to-end Git branching, pull request reviews, automated testing (pytest), and CI/CD deployment workflows.",
-      "Document every architectural decision (ADRs 001–011) and operational troubleshooting hurdle (Hurdles 001–018) transparently in the Engineering Logbook.",
+      `Document every architectural decision (${adrCount} ADRs) and operational troubleshooting hurdle (${hurdleCount} Hurdles) transparently in the Engineering Logbook.`,
       "Operate reliably within $0/month free-tier cloud boundaries using lightweight edge inference (@cf/ibm-granite/granite-4.0-h-micro).",
     ],
   },
