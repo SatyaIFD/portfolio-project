@@ -1,0 +1,123 @@
+---
+import type { MarkdownBlock, InlineToken, LeafToken, ListItem } from "../utils/markdown";
+
+interface Props {
+  blocks: MarkdownBlock[];
+}
+
+const { blocks } = Astro.props;
+---
+
+<div class="mt-3 space-y-3 border-t border-brand-border/60 dark:border-brand-slate-border pt-3.5 text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">
+  {blocks.map((block: MarkdownBlock) => (
+    block.type === "heading" ? (
+      <h4 class="font-semibold text-brand-ink dark:text-brand-cream pt-1">
+        {block.tokens.map((tok: InlineToken) => (
+          tok.type === "bold" ? (
+            <strong class="font-semibold text-brand-ink dark:text-brand-cream">
+              {tok.children.map((leaf: LeafToken) => (
+                leaf.type === "code"
+                  ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] font-normal text-brand-accent-light dark:text-brand-accent-dark">{leaf.value}</code>
+                  : leaf.value
+              ))}
+            </strong>
+          ) : tok.type === "italic" ? (
+            <em class="italic">
+              {tok.children.map((leaf: LeafToken) => (
+                leaf.type === "code"
+                  ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] not-italic text-brand-accent-light dark:text-brand-accent-dark">{leaf.value}</code>
+                  : leaf.value
+              ))}
+            </em>
+          ) : tok.type === "code" ? (
+            <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code>
+          ) : tok.value
+        ))}
+      </h4>
+    ) : block.type === "codeblock" ? (
+      <pre class="overflow-x-auto rounded-lg border border-brand-border dark:border-brand-slate-border bg-brand-recessed dark:bg-brand-slate-recessed p-3 font-mono text-[11px] text-brand-ink dark:text-brand-cream">{block.content}</pre>
+    ) : block.type === "list" ? (
+      block.ordered ? (
+        <ol class="list-decimal space-y-1.5 pl-5">
+          {block.items.map((item: ListItem) => (
+            <li class={item.indent > 0 ? "ml-5 list-[lower-alpha]" : ""}>
+              {item.tokens.map((tok: InlineToken) => (
+                tok.type === "bold" ? (
+                  <strong class="font-semibold text-brand-ink dark:text-brand-cream">
+                    {tok.children.map((leaf: LeafToken) => (
+                      leaf.type === "code"
+                        ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] font-normal text-brand-accent-light dark:text-brand-accent-dark">{leaf.value}</code>
+                        : leaf.value
+                    ))}
+                  </strong>
+                ) : tok.type === "italic" ? (
+                  <em class="italic text-brand-ink dark:text-brand-cream">
+                    {tok.children.map((leaf: LeafToken) => (
+                      leaf.type === "code"
+                        ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] not-italic text-brand-accent-light dark:text-brand-accent-dark">{leaf.value}</code>
+                        : leaf.value
+                    ))}
+                  </em>
+                ) : tok.type === "code" ? (
+                  <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code>
+                ) : tok.value
+              ))}
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <ul class="list-disc space-y-1.5 pl-5">
+          {block.items.map((item: ListItem) => (
+            <li class={item.indent > 0 ? "ml-5 list-[circle]" : ""}>
+              {item.tokens.map((tok: InlineToken) => (
+                tok.type === "bold" ? (
+                  <strong class="font-semibold text-brand-ink dark:text-brand-cream">
+                    {tok.children.map((leaf: LeafToken) => (
+                      leaf.type === "code"
+                        ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] font-normal text-brand-accent-light dark:text-brand-accent-dark">{leaf.value}</code>
+                        : leaf.value
+                    ))}
+                  </strong>
+                ) : tok.type === "italic" ? (
+                  <em class="italic text-brand-ink dark:text-brand-cream">
+                    {tok.children.map((leaf: LeafToken) => (
+                      leaf.type === "code"
+                        ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] not-italic text-brand-accent-light dark:text-brand-accent-dark">{leaf.value}</code>
+                        : leaf.value
+                    ))}
+                  </em>
+                ) : tok.type === "code" ? (
+                  <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code>
+                ) : tok.value
+              ))}
+            </li>
+          ))}
+        </ul>
+      )
+    ) : (
+      <p>
+        {block.tokens.map((tok: InlineToken) => (
+          tok.type === "bold" ? (
+            <strong class="font-semibold text-brand-ink dark:text-brand-cream">
+              {tok.children.map((leaf: LeafToken) => (
+                leaf.type === "code"
+                  ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] font-normal text-brand-accent-light dark:text-brand-accent-dark">{leaf.value}</code>
+                  : leaf.value
+              ))}
+            </strong>
+          ) : tok.type === "italic" ? (
+            <em class="italic text-brand-ink dark:text-brand-cream">
+              {tok.children.map((leaf: LeafToken) => (
+                leaf.type === "code"
+                  ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] not-italic text-brand-accent-light dark:text-brand-accent-dark">{leaf.value}</code>
+                  : leaf.value
+              ))}
+            </em>
+          ) : tok.type === "code" ? (
+            <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code>
+          ) : tok.value
+        ))}
+      </p>
+    )
+  ))}
+</div>

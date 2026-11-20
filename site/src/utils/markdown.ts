@@ -3,11 +3,14 @@
  * and the floating Edge AI assistant (safe DOM node construction, zero innerHTML).
  */
 
-export type InlineToken =
+export type LeafToken =
   | { type: "text"; value: string }
-  | { type: "bold"; value: string }
-  | { type: "italic"; value: string }
   | { type: "code"; value: string };
+
+export type InlineToken =
+  | LeafToken
+  | { type: "bold"; children: LeafToken[] }
+  | { type: "italic"; children: LeafToken[] };
 
 export interface ListItem {
   indent: number;
@@ -20,8 +23,30 @@ export type MarkdownBlock =
   | { type: "list"; ordered: boolean; items: ListItem[] }
   | { type: "codeblock"; content: string };
 
+const CODE_SPAN_PATTERN = /(`[^`\n]+`)/g;
 const INLINE_PATTERN =
-  /(`[^`\n]+`|\*\*[^*\n]+\*\*|\*[^*\s](?:[^*\n]*[^*\s])?\*)/g;
+  /(`[^`\n]+`|\*\*(?:`[^`\n]+`|[^*`\n])+\*\*|\*[^*\s`](?:[^*\n`]*[^*\s`])?\*)/g;
+
+function parseCodeSpans(text: string): LeafToken[] {
+  const tokens: LeafToken[] = [];
+  let lastIndex = 0;
+
+  for (const match of text.matchAll(CODE_SPAN_PATTERN)) {
+    const matchIndex = match.index ?? 0;
+    if (matchIndex > lastIndex) {
+      tokens.push({ type: "text", value: text.slice(lastIndex, matchIndex) });
+    }
+    const raw = match[0];
+    tokens.push({ type: "code", value: raw.slice(1, -1) });
+    lastIndex = matchIndex + raw.length;
+  }
+
+  if (lastIndex < text.length) {
+    tokens.push({ type: "text", value: text.slice(lastIndex) });
+  }
+
+  return tokens.length > 0 ? tokens : [{ type: "text", value: text }];
+}
 
 export function parseInline(text: string): InlineToken[] {
   const tokens: InlineToken[] = [];
@@ -37,9 +62,9 @@ export function parseInline(text: string): InlineToken[] {
     if (raw.startsWith("`") && raw.endsWith("`")) {
       tokens.push({ type: "code", value: raw.slice(1, -1) });
     } else if (raw.startsWith("**") && raw.endsWith("**")) {
-      tokens.push({ type: "bold", value: raw.slice(2, -2) });
+      tokens.push({ type: "bold", children: parseCodeSpans(raw.slice(2, -2)) });
     } else if (raw.startsWith("*") && raw.endsWith("*")) {
-      tokens.push({ type: "italic", value: raw.slice(1, -1) });
+      tokens.push({ type: "italic", children: parseCodeSpans(raw.slice(1, -1)) });
     } else {
       tokens.push({ type: "text", value: raw });
     }
