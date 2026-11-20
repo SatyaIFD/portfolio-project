@@ -4,6 +4,31 @@ import Layout from "../layouts/Layout.astro";
 const adrCount = Object.keys(import.meta.glob("../../../docs/decisions/*.md")).length;
 const hurdleCount = Object.keys(import.meta.glob("../../../docs/hurdles/*.md")).length;
 
+interface CertificateAction {
+  label: string;
+  src: string;
+  title: string;
+}
+
+interface AwardItem {
+  title: string;
+  detail: string;
+  certificates: CertificateAction[];
+}
+
+interface SkillItem {
+  text: string;
+  verifyUrl?: string;
+  verifyLabel?: string;
+}
+
+interface SkillTier {
+  tier: string;
+  meaning: string;
+  badgeClass: string;
+  items: SkillItem[];
+}
+
 const tcsExperience = [
   {
     role: "Senior Associate – Information Process Enabler",
@@ -29,38 +54,79 @@ const tcsExperience = [
   },
 ];
 
-const tcsAwards = [
+const tcsAwards: AwardItem[] = [
   {
     title: "BPS Star Performance Award",
     detail: "Recognised for consistent operational excellence, process accuracy, and quality delivery.",
+    certificates: [
+      {
+        label: "View Certificate",
+        src: "/certificates/bps-star-performance.webp",
+        title: "TCS BPS Star Performance Award",
+      },
+    ],
   },
   {
     title: "Service and Commitment Award",
-    detail: "Honoured for long-term dedication, reliability, and service tenure at Tata Consultancy Services.",
+    detail:
+      "Honoured for long-term dedication and tenure at TCS—received at 3 years (post 1-year training period) and at the 5th year.",
+    certificates: [
+      {
+        label: "View 3-Yr Award",
+        src: "/certificates/service-and-commitment3.webp",
+        title: "TCS Service & Commitment Award (3 Years Post-Training)",
+      },
+      {
+        label: "View 5-Yr Award",
+        src: "/certificates/service-and-commitment5.webp",
+        title: "TCS Service & Commitment Award (5th Year)",
+      },
+    ],
   },
   {
     title: "Xcelerate Warrior Award",
     detail: "Awarded for proactive upskilling and commitment to continuous professional learning.",
+    certificates: [
+      {
+        label: "View Certificate",
+        src: "/certificates/xcelerate-warrior.webp",
+        title: "TCS Xcelerate Warrior Award",
+      },
+    ],
   },
   {
     title: "Internal Dedication Award",
     detail: "Project recognition received on the Bank of America HIPAA healthcare operations engagement.",
+    certificates: [],
   },
 ];
 
-const skillTiers = [
+const skillTiers: SkillTier[] = [
   {
     tier: "Tier 1 · Completed / Demonstrated",
-    meaning: "Skills used in completed coursework, formal learning badges, or implemented in this repository",
+    meaning: "Skills used in completed coursework, verified badges, or implemented in this repository",
     badgeClass: "text-brand-forest-light dark:text-brand-forest-dark",
     items: [
-      "Linux fundamentals & CLI operations (Cisco Networking Academy Linux Essentials badge, 17 Nov 2026)",
-      "Python scripting, Markdown processing & automated unit testing (pytest)",
-      "Modern Python project & dependency management with Astral's uv",
-      "Git version control, branching & GitHub pull request workflows",
-      "Automated code quality & security hygiene (ruff, mypy, bandit, pip-audit, detect-secrets, OS Keyring libsecret)",
-      "Foundational Data Science & Machine Learning with Python (Cognitive Class, July 2022 & Simplilearn Bootcamp)",
-      "First-principles Mathematics & Statistics refresher (Khan Academy, StatQuest, Paul's Online Math Notes)",
+      {
+        text: "Linux fundamentals & CLI operations (Cisco Networking Academy Linux Essentials, 17 Nov 2026)",
+        verifyUrl: "https://www.credly.com/badges/0713a5e5-070f-4150-8e08-a7e825ae60b6",
+        verifyLabel: "Verify on Credly ↗",
+      },
+      {
+        text: "IBM Machine Learning with Python (Cognitive Class, July 2022)",
+        verifyUrl: "https://courses.cognitiveclass.ai/certificates/78b296a49bd24d0e9e837efef775bca1",
+        verifyLabel: "Verify Certificate ↗",
+      },
+      {
+        text: "Master's Program for Data Scientist (Simplilearn)",
+        verifyUrl: "https://success.simplilearn.com/2568c26f-3d1b-4692-b9cd-87d2fd2bf7cc#acc.RwOUGiWj",
+        verifyLabel: "Verify Certificate ↗",
+      },
+      { text: "Python scripting, Markdown processing & automated unit testing (pytest)" },
+      { text: "Modern Python project & dependency management with Astral's uv" },
+      { text: "Git version control, branching & GitHub pull request workflows" },
+      { text: "Automated code quality & security hygiene (ruff, mypy, bandit, pip-audit, detect-secrets, OS Keyring libsecret)" },
+      { text: "First-principles Mathematics & Statistics refresher (Khan Academy, StatQuest, Paul's Online Math Notes)" },
     ],
   },
   {
@@ -68,11 +134,11 @@ const skillTiers = [
     meaning: "Technologies I am actively using, studying, and experimenting with in current work",
     badgeClass: "text-brand-accent-light dark:text-brand-accent-dark",
     items: [
-      "Google Cloud Platform (GCP) core infrastructure, resource management, IAM, monitoring & logging",
-      "Google Cloud Professional Machine Learning Engineer study track (Target: December 2026; not yet attempted)",
-      "Application deployment, DNS configuration & Cloudflare Workers / Vectorize / Workers AI (vraidaten.com)",
-      "CI/CD pipeline concepts and GitHub Actions automation",
-      "Troubleshooting build, networking, and runtime configuration issues",
+      { text: "Google Cloud Platform (GCP) core infrastructure, resource management, IAM, monitoring & logging" },
+      { text: "Google Cloud Professional Machine Learning Engineer study track (Target: December 2026; not yet attempted)" },
+      { text: "Application deployment, DNS configuration & Cloudflare Workers / Vectorize / Workers AI (vraidaten.com)" },
+      { text: "CI/CD pipeline concepts and GitHub Actions automation" },
+      { text: "Troubleshooting build, networking, and runtime configuration issues" },
     ],
   },
   {
@@ -80,10 +146,10 @@ const skillTiers = [
     meaning: "Technologies I intend to explore next for my upcoming Google Cloud end-to-end project",
     badgeClass: "text-brand-ink-muted dark:text-brand-cream-muted",
     items: [
-      "Docker and containerization workflows",
-      "Infrastructure as Code (IaC) fundamentals",
-      "Machine learning model deployment, model serving & inference on Google Cloud",
-      "End-to-end ML pipelines, workflow automation & model lifecycle monitoring",
+      { text: "Docker and containerization workflows" },
+      { text: "Infrastructure as Code (IaC) fundamentals" },
+      { text: "Machine learning model deployment, model serving & inference on Google Cloud" },
+      { text: "End-to-end ML pipelines, workflow automation & model lifecycle monitoring" },
     ],
   },
 ];
@@ -209,20 +275,37 @@ const targetRoles = [
         Awards &amp; Recognition at Tata Consultancy Services
       </h2>
       <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted max-w-3xl leading-relaxed">
-        During my 9 years and 5 months at Tata Consultancy Services, I received several recognitions for professional performance, service commitment, and continuous learning. These recognitions reflect my commitment to professional responsibilities, consistent performance, team contribution, and continuous development.
+        During my 9 years and 5 months at Tata Consultancy Services, I received several recognitions for professional performance, service commitment, and continuous learning. Certificate previews load strictly on demand when clicked.
       </p>
     </div>
 
     <div class="grid gap-4 sm:grid-cols-2">
       {tcsAwards.map((award) => (
-        <div class="rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface p-5 space-y-1.5">
-          <div class="flex items-center gap-2">
-            <span class="h-2 w-2 rounded-full bg-brand-forest-light dark:bg-brand-forest-dark"></span>
-            <h3 class="text-sm font-bold text-brand-ink dark:text-brand-cream">{award.title}</h3>
+        <div class="rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface p-5 flex flex-col justify-between gap-3">
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-2">
+              <span class="h-2 w-2 rounded-full bg-brand-forest-light dark:bg-brand-forest-dark"></span>
+              <h3 class="text-sm font-bold text-brand-ink dark:text-brand-cream">{award.title}</h3>
+            </div>
+            <p class="text-xs text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed pl-4">
+              {award.detail}
+            </p>
           </div>
-          <p class="text-xs text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed pl-4">
-            {award.detail}
-          </p>
+
+          {award.certificates.length > 0 && (
+            <div class="flex flex-wrap gap-2 pl-4 pt-1">
+              {award.certificates.map((cert) => (
+                <button
+                  type="button"
+                  data-cert-src={cert.src}
+                  data-cert-title={cert.title}
+                  class="inline-flex items-center rounded border border-brand-border dark:border-brand-slate-border bg-brand-recessed dark:bg-brand-slate-recessed px-2.5 py-1 font-mono text-[11px] font-medium text-brand-accent-light dark:text-brand-accent-dark hover:border-brand-accent-light dark:hover:border-brand-accent-dark transition-colors cursor-pointer"
+                >
+                  {cert.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       ))}
     </div>
@@ -234,13 +317,13 @@ const targetRoles = [
   <section class="space-y-6">
     <div class="space-y-2">
       <p class="font-mono text-xs uppercase tracking-wider text-brand-accent-light dark:text-brand-accent-dark">
-        03 · Transparent Technical Skill Classification
+        03 · Transparent Technical Skill Classification &amp; Verified Credentials
       </p>
       <h2 class="text-2xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">
         What I Have Demonstrated, What I Am Practising &amp; What Is Next
       </h2>
       <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted max-w-3xl leading-relaxed">
-        I distinguish clearly between knowing a concept, implementing it independently, and maintaining it in a production environment. To ensure complete clarity for recruiters and engineering teams, my technical skills are organised into three transparent tiers:
+        I distinguish clearly between knowing a concept, implementing it independently, and maintaining it in a production environment. External certifications link directly to their official issuer verification pages:
       </p>
     </div>
 
@@ -255,9 +338,21 @@ const targetRoles = [
               {group.meaning}
             </p>
           </div>
-          <ul class="space-y-2 text-xs text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed list-disc pl-4 flex-1">
+          <ul class="space-y-2.5 text-xs text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed list-disc pl-4 flex-1">
             {group.items.map((item) => (
-              <li>{item}</li>
+              <li>
+                <span>{item.text}</span>
+                {item.verifyUrl && (
+                  <a
+                    href={item.verifyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="ml-1.5 inline-block font-mono text-[11px] font-semibold text-brand-accent-light dark:text-brand-accent-dark underline decoration-brand-border dark:decoration-brand-slate-border underline-offset-2 hover:decoration-current"
+                  >
+                    {item.verifyLabel ?? "Verify ↗"}
+                  </a>
+                )}
+              </li>
             ))}
           </ul>
         </div>
@@ -284,4 +379,34 @@ const targetRoles = [
       </p>
     </div>
   </section>
+
+  <!-- On-Demand Certificate Preview Dialog (0 KB Loaded Until Clicked) -->
+  <dialog
+    id="cert-modal"
+    aria-labelledby="cert-modal-title"
+    class="m-auto w-[92vw] max-w-3xl rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface p-0 text-brand-ink dark:text-brand-cream shadow-2xl backdrop:bg-black/75"
+  >
+    <div class="flex items-center justify-between gap-4 border-b border-brand-border dark:border-brand-slate-border bg-brand-recessed dark:bg-brand-slate-recessed px-4 py-3">
+      <h3 id="cert-modal-title" class="font-mono text-xs sm:text-sm font-semibold text-brand-ink dark:text-brand-cream">
+        Certificate Preview
+      </h3>
+      <button
+        id="cert-modal-close"
+        type="button"
+        class="rounded border border-brand-border dark:border-brand-slate-border bg-brand-paper dark:bg-brand-slate px-2.5 py-1 font-mono text-xs text-brand-ink dark:text-brand-cream hover:border-brand-accent-light cursor-pointer"
+        aria-label="Close certificate preview"
+      >
+        Close ✕
+      </button>
+    </div>
+    <div class="flex items-center justify-center bg-brand-paper/70 dark:bg-brand-slate/70 p-4">
+      <img
+        id="cert-modal-img"
+        alt=""
+        class="max-h-[75vh] w-auto rounded-lg border border-brand-border dark:border-brand-slate-border object-contain"
+      />
+    </div>
+  </dialog>
+
+  <script src="../scripts/cert-lightbox.ts"></script>
 </Layout>
