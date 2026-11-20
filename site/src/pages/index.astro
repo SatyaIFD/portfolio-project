@@ -1,8 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-const adrCount = Object.keys(import.meta.glob("../../../docs/decisions/*.md")).length;
-const hurdleCount = Object.keys(import.meta.glob("../../../docs/hurdles/*.md")).length;
+const adrCount = Object.keys(import.meta.glob("../../../docs/projects/*/decisions/*.md")).length;
+const hurdleCount = Object.keys(import.meta.glob("../../../docs/projects/*/hurdles/*.md")).length;
 
 interface CertificateAction {
   label: string;

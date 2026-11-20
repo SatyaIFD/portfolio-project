@@ -29,3 +29,33 @@
     @apply bg-brand-accent-light/15 text-brand-accent-light dark:bg-brand-accent-dark/20 dark:text-brand-accent-dark;
   }
 }
+
+.ai-face-icon {
+  transition: transform 220ms ease;
+}
+
+.ai-face-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #ai-fab-toggle:hover .ai-face-icon,
+  #ai-fab-toggle:focus-visible .ai-face-icon {
+    transform: rotate(-6deg) scale(1.06);
+  }
+
+  #ai-fab-toggle:hover .ai-face-eye,
+  #ai-fab-toggle:focus-visible .ai-face-eye {
+    animation: ai-face-blink 0.42s ease-in-out 1;
+  }
+}
+
+@keyframes ai-face-blink {
+  0%, 100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.15);
+  }
+}
