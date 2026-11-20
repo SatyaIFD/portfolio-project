@@ -1,11 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import {
-  parseMarkdown,
-  type MarkdownBlock,
-  type InlineToken,
-  type ListItem,
-} from "../utils/markdown";
+import MarkdownBlocks from "../components/MarkdownBlocks.astro";
+import { parseMarkdown, type MarkdownBlock } from "../utils/markdown";
 
 interface LogEntry {
   id: string;
@@ -14,26 +10,40 @@ interface LogEntry {
   blocks: MarkdownBlock[];
 }
 
+interface LogCategory {
+  label: string;
+  pathHint: string;
+  entries: LogEntry[];
+}
+
 interface ProjectLogGroup {
   slug: string;
   name: string;
   subtitle: string;
+  summary: string;
   status: string;
   coreDocs: LogEntry[];
   decisions: LogEntry[];
   hurdles: LogEntry[];
 }
 
-const PROJECT_META: Record<string, { name: string; subtitle: string; status: string; order: number }> = {
+const PROJECT_META: Record<
+  string,
+  { name: string; subtitle: string; summary: string; status: string; order: number }
+> = {
   "vraidaten-portfolio": {
     name: "VraiDaten Portfolio & Edge AI Assistant",
     subtitle: "Astro 7 · Cloudflare Workers · Vectorize · Python 3.13 RAG Pipeline",
+    summary:
+      "Serverless edge RAG portfolio operating within $0/month free-tier boundaries, with OS Keyring secret injection and automated CI security gates.",
     status: "Active · Live at vraidaten.com",
     order: 1,
   },
   "gcp-end-to-end": {
     name: "Google Cloud End-to-End Implementation",
     subtitle: "Google Cloud Platform · IAM · Containerization · Cloud ML",
+    summary:
+      "End-to-end cloud infrastructure, deployment automation, monitoring, and ML integration project.",
     status: "Planned",
     order: 2,
   },
@@ -102,6 +112,7 @@ function ensureProject(slug: string): ProjectLogGroup {
     slug,
     name: meta?.name ?? formatSlugTitle(slug),
     subtitle: meta?.subtitle ?? `docs/projects/${slug}/`,
+    summary: meta?.summary ?? "Project engineering specifications, architectural decisions, and troubleshooting logs.",
     status: meta?.status ?? "Documented",
     coreDocs: [],
     decisions: [],
@@ -141,14 +152,31 @@ const projects: ProjectLogGroup[] = Array.from(projectMap.values())
 const totalCoreDocs = projects.reduce((sum, p) => sum + p.coreDocs.length, 0);
 const totalDecisions = projects.reduce((sum, p) => sum + p.decisions.length, 0);
 const totalHurdles = projects.reduce((sum, p) => sum + p.hurdles.length, 0);
+
+function getProjectCategories(proj: ProjectLogGroup): LogCategory[] {
+  return [
+    {
+      label: "Core Specifications",
+      pathHint: `docs/projects/${proj.slug}/*.md`,
+      entries: proj.coreDocs,
+    },
+    {
+      label: "Architectural Decision Records",
+      pathHint: `docs/projects/${proj.slug}/decisions/*.md`,
+      entries: proj.decisions,
+    },
+    {
+      label: "Operational Hurdles & Root-Cause Logs",
+      pathHint: `docs/projects/${proj.slug}/hurdles/*.md`,
+      entries: proj.hurdles,
+    },
+  ].filter((cat) => cat.entries.length > 0);
+}
 ---
 
-<Layout
-  description="Project-segregated Core Specifications, Architectural Decision Records (ADRs), and Operational Hurdles compiled from docs/projects/."
-  title="Engineering Logbook | Satyajit Chakraborty"
->
-  <section class="py-6 md:py-10 space-y-12">
-    <div class="space-y-4">
+<Layout description="Project-segregated Engineering Logbook with collapsible Core Specifications, ADRs, and Operational Hurdles." title="Engineering Logbook | Satyajit Chakraborty">
+  <section class="py-6 md:py-10 space-y-8">
+    <div class="space-y-3">
       <p class="font-mono text-xs uppercase tracking-wider text-brand-accent-light dark:text-brand-accent-dark">
         Project-Segregated Single Source of Truth · Compiled from docs/projects/
       </p>
@@ -156,285 +184,107 @@ const totalHurdles = projects.reduce((sum, p) => sum + p.hurdles.length, 0);
         Engineering Logbook
       </h1>
       <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted max-w-3xl leading-relaxed">
-        Documentation is segregated by project under <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-ink dark:text-brand-cream">docs/projects/&lt;project&gt;/</code> so upcoming cloud and MLOps builds remain cleanly separated. Currently indexing <strong class="font-semibold text-brand-ink dark:text-brand-cream">{totalCoreDocs} Core Specs</strong>, <strong class="font-semibold text-brand-ink dark:text-brand-cream">{totalDecisions} ADRs</strong>, and <strong class="font-semibold text-brand-ink dark:text-brand-cream">{totalHurdles} Hurdles</strong> across {projects.length} {projects.length === 1 ? "project" : "projects"}—the exact same Markdown files embedded into <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-ink dark:text-brand-cream">vraidaten-index</code>.
+        Select a project below to expand its documentation sections (<strong class="font-semibold text-brand-ink dark:text-brand-cream">{totalCoreDocs} Core Specs</strong>, <strong class="font-semibold text-brand-ink dark:text-brand-cream">{totalDecisions} ADRs</strong>, and <strong class="font-semibold text-brand-ink dark:text-brand-cream">{totalHurdles} Hurdles</strong> across {projects.length} {projects.length === 1 ? "project" : "projects"}). Every file is compiled directly from <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-ink dark:text-brand-cream">docs/projects/</code> and synchronized with <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-ink dark:text-brand-cream">vraidaten-index</code>.
       </p>
-
-      <!-- Project Jump Navigation -->
-      <div class="flex flex-wrap gap-2 pt-1">
-        {projects.map((proj) => (
-          <a
-            href={`#project-${proj.slug}`}
-            class="inline-flex items-center gap-2 rounded-md border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-3 py-1.5 text-xs font-mono text-brand-ink dark:text-brand-cream hover:border-brand-accent-light dark:hover:border-brand-accent-dark transition-colors"
-          >
-            <span class="font-semibold text-brand-accent-light dark:text-brand-accent-dark">{proj.name}</span>
-            <span class="text-[10px] text-brand-ink-muted dark:text-brand-cream-muted">
-              ({proj.coreDocs.length} Specs · {proj.decisions.length} ADRs · {proj.hurdles.length} Hurdles)
-            </span>
-          </a>
-        ))}
-      </div>
     </div>
 
-    <!-- Project Sections -->
-    {projects.map((proj) => (
-      <div id={`project-${proj.slug}`} class="scroll-mt-24 space-y-10 border-t-2 border-brand-border dark:border-brand-slate-border pt-8">
-        <div class="flex flex-wrap items-baseline justify-between gap-2">
-          <div class="space-y-1">
-            <span class="font-mono text-[11px] uppercase tracking-wider font-semibold text-brand-forest-light dark:text-brand-forest-dark">
-              Project · {proj.status}
-            </span>
-            <h2 class="text-2xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">
-              {proj.name}
-            </h2>
-            <p class="font-mono text-xs text-brand-ink-muted dark:text-brand-cream-muted">
-              {proj.subtitle}
-            </p>
-          </div>
-          <span class="rounded border border-brand-border dark:border-brand-slate-border bg-brand-recessed dark:bg-brand-slate-recessed px-2.5 py-1 font-mono text-[11px] text-brand-ink-muted dark:text-brand-cream-muted">
-            docs/projects/{proj.slug}/
-          </span>
-        </div>
+    <!-- Level 1: Collapsible Project Cards (All Collapsed by Default) -->
+    <div class="space-y-4">
+      {projects.map((proj) => {
+        const categories = getProjectCategories(proj);
+        return (
+          <details
+            id={`project-${proj.slug}`}
+            class="group/project scroll-mt-24 rounded-xl border-2 border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface overflow-hidden transition-colors"
+          >
+            <summary class="flex cursor-pointer list-none items-start justify-between gap-4 p-5 sm:p-6 hover:bg-brand-recessed/40 dark:hover:bg-brand-slate-recessed/40 transition-colors">
+              <div class="space-y-2">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-mono text-[11px] uppercase tracking-wider font-semibold text-brand-forest-light dark:text-brand-forest-dark">
+                    {proj.status}
+                  </span>
+                  <span class="rounded border border-brand-border dark:border-brand-slate-border bg-brand-recessed dark:bg-brand-slate-recessed px-2 py-0.5 font-mono text-[10px] text-brand-ink-muted dark:text-brand-cream-muted">
+                    docs/projects/{proj.slug}/
+                  </span>
+                </div>
 
-        <!-- 1. Core Specifications -->
-        {proj.coreDocs.length > 0 && (
-          <div class="space-y-4">
-            <div class="border-b border-brand-border dark:border-brand-slate-border pb-2.5 flex items-baseline justify-between">
-              <h3 class="text-lg font-bold tracking-tight text-brand-ink dark:text-brand-cream">
-                Core Specifications ({proj.coreDocs.length})
-              </h3>
-              <span class="font-mono text-xs text-brand-ink-muted dark:text-brand-cream-muted">
-                docs/projects/{proj.slug}/*.md
+                <h2 class="text-lg sm:text-xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">
+                  {proj.name}
+                </h2>
+
+                <p class="font-mono text-xs text-brand-accent-light dark:text-brand-accent-dark">
+                  {proj.subtitle}
+                </p>
+
+                <p class="text-xs text-brand-ink-muted dark:text-brand-cream-muted max-w-2xl leading-relaxed">
+                  {proj.summary}
+                </p>
+
+                <div class="flex flex-wrap gap-2 pt-1 font-mono text-[11px] text-brand-ink dark:text-brand-cream">
+                  <span class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-2 py-0.5">
+                    {proj.coreDocs.length} Core Specs
+                  </span>
+                  <span class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-2 py-0.5">
+                    {proj.decisions.length} ADRs
+                  </span>
+                  <span class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-2 py-0.5">
+                    {proj.hurdles.length} Hurdles
+                  </span>
+                </div>
+              </div>
+
+              <span
+                aria-hidden="true"
+                class="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-brand-border dark:border-brand-slate-border bg-brand-recessed dark:bg-brand-slate-recessed font-mono text-lg font-semibold text-brand-accent-light dark:text-brand-accent-dark transition-transform duration-200 group-open/project:rotate-45"
+              >
+                +
               </span>
-            </div>
+            </summary>
 
-            <div class="space-y-3">
-              {proj.coreDocs.map((doc) => (
-                <details class="group rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-5 py-4 transition-colors">
-                  <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-sm text-brand-ink dark:text-brand-cream">
-                    <span>{doc.title}</span>
-                    <span class="font-mono text-sm text-brand-accent-light dark:text-brand-accent-dark group-open:rotate-45 transition-transform">+</span>
+            <!-- Level 2: Collapsible Category Sections inside Project -->
+            <div class="border-t border-brand-border dark:border-brand-slate-border bg-brand-paper/50 dark:bg-brand-slate/50 p-4 sm:p-5 space-y-3">
+              {categories.map((cat) => (
+                <details class="group/category rounded-lg border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface overflow-hidden">
+                  <summary class="flex cursor-pointer list-none items-center justify-between gap-4 px-4 py-3.5 hover:bg-brand-recessed/40 dark:hover:bg-brand-slate-recessed/40 transition-colors">
+                    <div class="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+                      <h3 class="text-sm sm:text-base font-bold text-brand-ink dark:text-brand-cream">
+                        {cat.label} ({cat.entries.length})
+                      </h3>
+                      <span class="font-mono text-[11px] text-brand-ink-muted dark:text-brand-cream-muted">
+                        {cat.pathHint}
+                      </span>
+                    </div>
+                    <span
+                      aria-hidden="true"
+                      class="flex h-6 w-6 shrink-0 items-center justify-center rounded border border-brand-border dark:border-brand-slate-border bg-brand-recessed dark:bg-brand-slate-recessed font-mono text-sm font-semibold text-brand-accent-light dark:text-brand-accent-dark transition-transform duration-200 group-open/category:rotate-45"
+                    >
+                      +
+                    </span>
                   </summary>
-                  <div class="mt-4 space-y-3 border-t border-brand-border/60 dark:border-brand-slate-border pt-4 text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">
-                    {doc.blocks.map((block: MarkdownBlock) => (
-                      block.type === "heading" ? (
-                        <h4 class="font-semibold text-brand-ink dark:text-brand-cream pt-1">
-                          {block.tokens.map((tok: InlineToken) => (
-                            tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
-                            tok.type === "italic" ? <em class="italic">{tok.value}</em> :
-                            tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
-                            tok.value
-                          ))}
-                        </h4>
-                      ) : block.type === "codeblock" ? (
-                        <pre class="overflow-x-auto rounded-lg border border-brand-border dark:border-brand-slate-border bg-brand-recessed dark:bg-brand-slate-recessed p-3 font-mono text-[11px] text-brand-ink dark:text-brand-cream">{block.content}</pre>
-                      ) : block.type === "list" ? (
-                        block.ordered ? (
-                          <ol class="list-decimal space-y-1.5 pl-5">
-                            {block.items.map((item: ListItem) => (
-                              <li class={item.indent > 0 ? "ml-5 list-[lower-alpha]" : ""}>
-                                {item.tokens.map((tok: InlineToken) => (
-                                  tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
-                                  tok.type === "italic" ? <em class="italic text-brand-ink dark:text-brand-cream">{tok.value}</em> :
-                                  tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
-                                  tok.value
-                                ))}
-                              </li>
-                            ))}
-                          </ol>
-                        ) : (
-                          <ul class="list-disc space-y-1.5 pl-5">
-                            {block.items.map((item: ListItem) => (
-                              <li class={item.indent > 0 ? "ml-5 list-[circle]" : ""}>
-                                {item.tokens.map((tok: InlineToken) => (
-                                  tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
-                                  tok.type === "italic" ? <em class="italic text-brand-ink dark:text-brand-cream">{tok.value}</em> :
-                                  tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
-                                  tok.value
-                                ))}
-                              </li>
-                            ))}
-                          </ul>
-                        )
-                      ) : (
-                        <p>
-                          {block.tokens.map((tok: InlineToken) => (
-                            tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
-                            tok.type === "italic" ? <em class="italic text-brand-ink dark:text-brand-cream">{tok.value}</em> :
-                            tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
-                            tok.value
-                          ))}
-                        </p>
-                      )
+
+                  <!-- Level 3: Collapsible Individual Markdown Files -->
+                  <div class="border-t border-brand-border/70 dark:border-brand-slate-border bg-brand-paper/40 dark:bg-brand-slate/40 p-3 space-y-2">
+                    {cat.entries.map((entry) => (
+                      <details class="group/doc rounded-lg border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-4 py-3">
+                        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-xs sm:text-sm text-brand-ink dark:text-brand-cream">
+                          <span>{entry.title}</span>
+                          <span
+                            aria-hidden="true"
+                            class="shrink-0 font-mono text-sm text-brand-accent-light dark:text-brand-accent-dark transition-transform duration-200 group-open/doc:rotate-45"
+                          >
+                            +
+                          </span>
+                        </summary>
+                        <MarkdownBlocks blocks={entry.blocks} />
+                      </details>
                     ))}
                   </div>
                 </details>
               ))}
             </div>
-          </div>
-        )}
-
-        <!-- 2. Architectural Decision Records -->
-        {proj.decisions.length > 0 && (
-          <div class="space-y-4">
-            <div class="border-b border-brand-border dark:border-brand-slate-border pb-2.5 flex items-baseline justify-between">
-              <h3 class="text-lg font-bold tracking-tight text-brand-ink dark:text-brand-cream">
-                Architectural Decision Records ({proj.decisions.length})
-              </h3>
-              <span class="font-mono text-xs text-brand-ink-muted dark:text-brand-cream-muted">
-                docs/projects/{proj.slug}/decisions/*.md
-              </span>
-            </div>
-
-            <div class="space-y-3">
-              {proj.decisions.map((adr, index) => (
-                <details
-                  open={index < 2}
-                  class="group rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-5 py-4 transition-colors"
-                >
-                  <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-sm text-brand-ink dark:text-brand-cream">
-                    <span>{adr.title}</span>
-                    <span class="font-mono text-sm text-brand-accent-light dark:text-brand-accent-dark group-open:rotate-45 transition-transform">+</span>
-                  </summary>
-                  <div class="mt-4 space-y-3 border-t border-brand-border/60 dark:border-brand-slate-border pt-4 text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">
-                    {adr.blocks.map((block: MarkdownBlock) => (
-                      block.type === "heading" ? (
-                        <h4 class="font-semibold text-brand-ink dark:text-brand-cream pt-1">
-                          {block.tokens.map((tok: InlineToken) => (
-                            tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
-                            tok.type === "italic" ? <em class="italic">{tok.value}</em> :
-                            tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
-                            tok.value
-                          ))}
-                        </h4>
-                      ) : block.type === "codeblock" ? (
-                        <pre class="overflow-x-auto rounded-lg border border-brand-border dark:border-brand-slate-border bg-brand-recessed dark:bg-brand-slate-recessed p-3 font-mono text-[11px] text-brand-ink dark:text-brand-cream">{block.content}</pre>
-                      ) : block.type === "list" ? (
-                        block.ordered ? (
-                          <ol class="list-decimal space-y-1.5 pl-5">
-                            {block.items.map((item: ListItem) => (
-                              <li class={item.indent > 0 ? "ml-5 list-[lower-alpha]" : ""}>
-                                {item.tokens.map((tok: InlineToken) => (
-                                  tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
-                                  tok.type === "italic" ? <em class="italic text-brand-ink dark:text-brand-cream">{tok.value}</em> :
-                                  tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
-                                  tok.value
-                                ))}
-                              </li>
-                            ))}
-                          </ol>
-                        ) : (
-                          <ul class="list-disc space-y-1.5 pl-5">
-                            {block.items.map((item: ListItem) => (
-                              <li class={item.indent > 0 ? "ml-5 list-[circle]" : ""}>
-                                {item.tokens.map((tok: InlineToken) => (
-                                  tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
-                                  tok.type === "italic" ? <em class="italic text-brand-ink dark:text-brand-cream">{tok.value}</em> :
-                                  tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
-                                  tok.value
-                                ))}
-                              </li>
-                            ))}
-                          </ul>
-                        )
-                      ) : (
-                        <p>
-                          {block.tokens.map((tok: InlineToken) => (
-                            tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
-                            tok.type === "italic" ? <em class="italic text-brand-ink dark:text-brand-cream">{tok.value}</em> :
-                            tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
-                            tok.value
-                          ))}
-                        </p>
-                      )
-                    ))}
-                  </div>
-                </details>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <!-- 3. Operational Hurdles & Post-Mortems -->
-        {proj.hurdles.length > 0 && (
-          <div class="space-y-4">
-            <div class="border-b border-brand-border dark:border-brand-slate-border pb-2.5 flex items-baseline justify-between">
-              <h3 class="text-lg font-bold tracking-tight text-brand-ink dark:text-brand-cream">
-                Operational Hurdles &amp; Root-Cause Logs ({proj.hurdles.length})
-              </h3>
-              <span class="font-mono text-xs text-brand-ink-muted dark:text-brand-cream-muted">
-                docs/projects/{proj.slug}/hurdles/*.md
-              </span>
-            </div>
-
-            <div class="space-y-3">
-              {proj.hurdles.map((hurdle, index) => (
-                <details
-                  open={index === proj.hurdles.length - 1}
-                  class="group rounded-xl border border-brand-border dark:border-brand-slate-border bg-brand-surface dark:bg-brand-slate-surface px-5 py-4 transition-colors"
-                >
-                  <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-sm text-brand-ink dark:text-brand-cream">
-                    <span>{hurdle.title}</span>
-                    <span class="font-mono text-sm text-brand-accent-light dark:text-brand-accent-dark group-open:rotate-45 transition-transform">+</span>
-                  </summary>
-                  <div class="mt-4 space-y-3 border-t border-brand-border/60 dark:border-brand-slate-border pt-4 text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">
-                    {hurdle.blocks.map((block: MarkdownBlock) => (
-                      block.type === "heading" ? (
-                        <h4 class="font-semibold text-brand-ink dark:text-brand-cream pt-1">
-                          {block.tokens.map((tok: InlineToken) => (
-                            tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
-                            tok.type === "italic" ? <em class="italic">{tok.value}</em> :
-                            tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
-                            tok.value
-                          ))}
-                        </h4>
-                      ) : block.type === "codeblock" ? (
-                        <pre class="overflow-x-auto rounded-lg border border-brand-border dark:border-brand-slate-border bg-brand-recessed dark:bg-brand-slate-recessed p-3 font-mono text-[11px] text-brand-ink dark:text-brand-cream">{block.content}</pre>
-                      ) : block.type === "list" ? (
-                        block.ordered ? (
-                          <ol class="list-decimal space-y-1.5 pl-5">
-                            {block.items.map((item: ListItem) => (
-                              <li class={item.indent > 0 ? "ml-5 list-[lower-alpha]" : ""}>
-                                {item.tokens.map((tok: InlineToken) => (
-                                  tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
-                                  tok.type === "italic" ? <em class="italic text-brand-ink dark:text-brand-cream">{tok.value}</em> :
-                                  tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
-                                  tok.value
-                                ))}
-                              </li>
-                            ))}
-                          </ol>
-                        ) : (
-                          <ul class="list-disc space-y-1.5 pl-5">
-                            {block.items.map((item: ListItem) => (
-                              <li class={item.indent > 0 ? "ml-5 list-[circle]" : ""}>
-                                {item.tokens.map((tok: InlineToken) => (
-                                  tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
-                                  tok.type === "italic" ? <em class="italic text-brand-ink dark:text-brand-cream">{tok.value}</em> :
-                                  tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
-                                  tok.value
-                                ))}
-                              </li>
-                            ))}
-                          </ul>
-                        )
-                      ) : (
-                        <p>
-                          {block.tokens.map((tok: InlineToken) => (
-                            tok.type === "bold" ? <strong class="font-semibold text-brand-ink dark:text-brand-cream">{tok.value}</strong> :
-                            tok.type === "italic" ? <em class="italic text-brand-ink dark:text-brand-cream">{tok.value}</em> :
-                            tok.type === "code" ? <code class="rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1.5 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark">{tok.value}</code> :
-                            tok.value
-                          ))}
-                        </p>
-                      )
-                    ))}
-                  </div>
-                </details>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    ))}
+          </details>
+        );
+      })}
+    </div>
   </section>
 </Layout>

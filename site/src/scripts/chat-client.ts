@@ -2,28 +2,36 @@
  * Browser client for the floating Vraidaten Edge RAG Assistant (/api/chat).
  * Renders streamed Markdown via structured DOM nodes (zero innerHTML) for XSS safety.
  */
-import { parseMarkdown, type InlineToken } from "../utils/markdown";
+import { parseMarkdown, type InlineToken, type LeafToken } from "../utils/markdown";
+
+function appendLeafTokens(parent: HTMLElement, leaves: LeafToken[]): void {
+  for (const leaf of leaves) {
+    if (leaf.type === "code") {
+      const code = document.createElement("code");
+      code.className =
+        "rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1 py-0.5 font-mono text-[11px] font-normal not-italic text-brand-accent-light dark:text-brand-accent-dark";
+      code.textContent = leaf.value;
+      parent.appendChild(code);
+    } else {
+      parent.appendChild(document.createTextNode(leaf.value));
+    }
+  }
+}
 
 function appendInlineTokens(parent: HTMLElement, tokens: InlineToken[]): void {
   for (const tok of tokens) {
     if (tok.type === "bold") {
       const strong = document.createElement("strong");
       strong.className = "font-semibold text-brand-ink dark:text-brand-cream";
-      strong.textContent = tok.value;
+      appendLeafTokens(strong, tok.children);
       parent.appendChild(strong);
     } else if (tok.type === "italic") {
       const em = document.createElement("em");
       em.className = "italic";
-      em.textContent = tok.value;
+      appendLeafTokens(em, tok.children);
       parent.appendChild(em);
-    } else if (tok.type === "code") {
-      const code = document.createElement("code");
-      code.className =
-        "rounded bg-brand-recessed dark:bg-brand-slate-recessed px-1 py-0.5 font-mono text-[11px] text-brand-accent-light dark:text-brand-accent-dark";
-      code.textContent = tok.value;
-      parent.appendChild(code);
     } else {
-      parent.appendChild(document.createTextNode(tok.value));
+      appendLeafTokens(parent, [tok]);
     }
   }
 }
