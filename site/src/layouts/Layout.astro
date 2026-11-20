@@ -164,16 +164,25 @@ const starterPrompts = [
       </div>
     </aside>
 
-    <!-- Floating Bottom-Right Launcher Button (Always Visible While Scrolling) -->
+    <!-- Floating Bottom-Right Launcher Button (Calm Minimalist Face Emblem, Hover-Only Micro-Interaction) -->
     <button
       id="ai-fab-toggle"
       type="button"
       aria-expanded="false"
       aria-controls="ai-chat-panel"
-      class="fixed bottom-5 right-4 sm:right-6 z-50 flex items-center gap-2.5 rounded-full border border-brand-border dark:border-brand-slate-border bg-brand-accent-light dark:bg-brand-accent-dark px-4 py-2.5 text-xs font-mono font-semibold text-[#E7E2D6] dark:text-brand-slate shadow-lg transition-transform hover:scale-105 cursor-pointer"
+      aria-label="Ask me — open grounded Edge AI assistant"
+      class="fixed bottom-5 right-4 sm:right-6 z-50 flex items-center gap-2.5 rounded-full border border-brand-border dark:border-brand-slate-border bg-brand-accent-light dark:bg-brand-accent-dark pl-2.5 pr-4 py-2 text-xs font-mono font-semibold text-[#F1E6C8] dark:text-brand-slate shadow-lg transition-transform hover:scale-[1.03] cursor-pointer"
     >
-      <span class="flex h-2 w-2 rounded-full bg-[#7CFC00] dark:bg-brand-forest-light animate-pulse"></span>
-      <span>Ask Edge AI</span>
+      <span class="relative flex h-7 w-7 items-center justify-center rounded-full bg-[#F1E6C8]/15 dark:bg-brand-slate/15">
+        <svg class="ai-face-icon h-5 w-5" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="4" y="5" width="20" height="18" rx="6" stroke="currentColor" stroke-width="2" />
+          <circle class="ai-face-eye" cx="10.5" cy="12.5" r="1.5" fill="currentColor" />
+          <circle class="ai-face-eye" cx="17.5" cy="12.5" r="1.5" fill="currentColor" />
+          <path d="M10.5 17.2C11.5 18.6 12.7 19.2 14 19.2C15.3 19.2 16.5 18.6 17.5 17.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
+        <span class="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border border-brand-accent-light dark:border-brand-accent-dark bg-[#52B778] dark:bg-brand-forest-light"></span>
+      </span>
+      <span>Ask me</span>
     </button>
 
     <script is:inline>

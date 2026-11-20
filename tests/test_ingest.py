@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from rag_pipeline.ingest import (
+    build_chunk_id,
     chunk_markdown_file,
     get_current_git_commit,
     main,
@@ -13,6 +14,7 @@ from rag_pipeline.ingest import (
 )
 
 EXPECTED_CHUNK_COUNT = 3
+MAX_VECTORIZE_ID_BYTES = 64
 
 
 def test_get_current_git_commit_branch_ref(
@@ -67,6 +69,19 @@ def test_merge_heading_blocks() -> None:
     ]
 
 
+def test_build_chunk_id_collision_and_length() -> None:
+    id_portfolio = build_chunk_id("projects/vraidaten-portfolio/architecture.md", 0)
+    id_gcp = build_chunk_id("projects/gcp-end-to-end/architecture.md", 0)
+
+    assert id_portfolio != id_gcp
+    assert id_portfolio.endswith("-000")
+    assert id_gcp.endswith("-000")
+
+    long_rel_path = f"projects/{'a' * 95}.md"
+    long_id = build_chunk_id(long_rel_path, 0)
+    assert len(long_id.encode("utf-8")) <= MAX_VECTORIZE_ID_BYTES
+
+
 def test_chunk_markdown_file(tmp_path: Path) -> None:
     md_file = tmp_path / "test.md"
     md_file.write_text(
@@ -76,8 +91,24 @@ def test_chunk_markdown_file(tmp_path: Path) -> None:
 
     assert len(chunks) == EXPECTED_CHUNK_COUNT
     assert chunks[0].content == "# Doc Title\n\nChunk 1"
-    assert chunks[0].chunk_id == "test-000"
+    assert chunks[0].chunk_id == build_chunk_id("test.md", 0)
+    assert chunks[0].source_file == "test.md"
     assert chunks[0].git_commit == "1234567"
+
+
+def test_chunk_markdown_file_with_docs_dir(tmp_path: Path) -> None:
+    rel_file = Path("projects") / "gcp-end-to-end" / "architecture.md"
+    md_file = tmp_path / rel_file
+    md_file.parent.mkdir(parents=True, exist_ok=True)
+    md_file.write_text("# GCP Architecture\n\nOverview paragraph.", encoding="utf-8")
+
+    chunks = chunk_markdown_file(md_file, "1234567", docs_dir=tmp_path)
+
+    assert len(chunks) == 1
+    assert chunks[0].source_file == "projects/gcp-end-to-end/architecture.md"
+    assert chunks[0].chunk_id == build_chunk_id(
+        "projects/gcp-end-to-end/architecture.md", 0
+    )
 
 
 def test_chunk_markdown_file_not_found(tmp_path: Path) -> None:
@@ -110,10 +141,12 @@ def test_main_dynamic_discovery_and_env(
     assert len(lines) == EXPECTED_CHUNK_COUNT
 
     first_record = json.loads(lines[0])
-    assert first_record["id"] == "architecture-000"
+    assert first_record["id"] == build_chunk_id("architecture.md", 0)
+    assert first_record["metadata"]["source_file"] == "architecture.md"
     assert first_record["text"] == "Arch 1"
     assert first_record["metadata"]["git_commit"] == "1234567"
 
     last_record = json.loads(lines[-1])
-    assert last_record["id"] == "001-adr-000"
+    assert last_record["id"] == build_chunk_id("decisions/001-adr.md", 0)
+    assert last_record["metadata"]["source_file"] == "decisions/001-adr.md"
     assert last_record["text"] == "# ADR Title\n\nADR 1"

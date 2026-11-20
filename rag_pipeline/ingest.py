@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import os
@@ -68,11 +69,41 @@ def merge_heading_blocks(raw_blocks: list[str]) -> list[str]:
     return merged_chunks
 
 
-def chunk_markdown_file(file_path: Path, commit_sha: str) -> list[KnowledgeChunk]:
+MAX_CHUNK_ID_BYTES = 64
+MAX_STEM_CHARS = 45
+PATH_HASH_CHARS = 10
+
+
+def build_chunk_id(rel_path: str, idx: int) -> str:
+    """Builds a deterministic, Vectorize-safe chunk ID from a relative doc path."""
+    stem = Path(rel_path).stem.strip("-")[:MAX_STEM_CHARS].rstrip("-")
+    prefix = stem or "doc"
+    path_hash = hashlib.sha256(rel_path.encode("utf-8")).hexdigest()[:PATH_HASH_CHARS]
+    chunk_id = f"{prefix}-{path_hash}-{idx:03d}"
+
+    # Guard against multi-byte UTF-8 characters pushing byte length past 64 bytes
+    while len(chunk_id.encode("utf-8")) > MAX_CHUNK_ID_BYTES and len(prefix) > 1:
+        prefix = prefix[:-1].rstrip("-") or "doc"
+        chunk_id = f"{prefix}-{path_hash}-{idx:03d}"
+
+    return chunk_id
+
+
+def chunk_markdown_file(
+    file_path: Path,
+    commit_sha: str,
+    docs_dir: Path | None = None,
+) -> list[KnowledgeChunk]:
     """Reads a Markdown file and splits it into validated KnowledgeChunks."""
     if not file_path.exists():
         logger.error(f"File not found: {file_path}")
         raise FileNotFoundError(f"{file_path} does not exist.")
+
+    rel_path = (
+        file_path.relative_to(docs_dir).as_posix()
+        if docs_dir is not None
+        else file_path.name
+    )
 
     content = file_path.read_text(encoding="utf-8")
 
@@ -82,19 +113,17 @@ def chunk_markdown_file(file_path: Path, commit_sha: str) -> list[KnowledgeChunk
 
     validated_chunks: list[KnowledgeChunk] = []
     for idx, text in enumerate(raw_chunks):
-        chunk_id = f"{file_path.stem}-{idx:03d}"
+        chunk_id = build_chunk_id(rel_path, idx)
         chunk = KnowledgeChunk(
             chunk_id=chunk_id,
-            source_file=file_path.name,
+            source_file=rel_path,
             content=text,
             git_commit=commit_sha,
         )
         chunk.validate()
         validated_chunks.append(chunk)
 
-    logger.info(
-        f"Processed {file_path.name}: {len(validated_chunks)} chunks generated."
-    )
+    logger.info(f"Processed {rel_path}: {len(validated_chunks)} chunks generated.")
     return validated_chunks
 
 
@@ -108,7 +137,7 @@ def main() -> None:
 
     # Dynamically discover all Markdown files across docs/ and subdirectories
     for filepath in sorted(docs_dir.rglob("*.md")):
-        all_chunks.extend(chunk_markdown_file(filepath, commit_sha))
+        all_chunks.extend(chunk_markdown_file(filepath, commit_sha, docs_dir))
 
     output_file.parent.mkdir(parents=True, exist_ok=True)
     with output_file.open("w", encoding="utf-8") as f:
