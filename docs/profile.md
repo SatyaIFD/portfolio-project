@@ -29,17 +29,17 @@ I am now pursuing opportunities in Junior Cloud Engineering, Cloud ML, Cloud Ope
 
 ## Recognition & Professional Development at TCS
 During my 9 years and 5 months at Tata Consultancy Services, I received several recognitions for professional performance, service commitment, and continuous learning:
-- **BPS Star Performance Award**
-- **Service and Commitment Award**
-- **Xcelerate Warrior Award** – Upskilling and continuous learning
+- **BPS Star Performance Award** (Certificate preview available on `vraidaten.com`)
+- **Service and Commitment Award** – Received at 3 years post 1-year training period and at 5th year of tenure (Both certificate previews available on `vraidaten.com`)
+- **Xcelerate Warrior Award** – Upskilling and continuous learning (Certificate preview available on `vraidaten.com`)
 - **Internal Dedication Award** – Bank of America HIPAA project
 
-## Transparent Technical Skill Classification & Learning Milestones
+## Transparent Technical Skill Classification & Verified Credentials
 
-### Completed Learning & Formal Milestones
-1. **Linux Essentials Badge – Cisco Networking Academy** (Earned: 17 November 2026)
-2. **Machine Learning with Python – Cognitive Class** (Completed: July 2022)
-3. **Master of Data Science Bootcamp – Simplilearn** (Completed foundational Data Science & ML training)
+### Verified External Credentials
+1. **Linux Essentials Badge – Cisco Networking Academy** (Earned: 17 November 2026) — Verify: https://www.credly.com/badges/0713a5e5-070f-4150-8e08-a7e825ae60b6
+2. **IBM Machine Learning with Python – Cognitive Class** (Completed: July 2022) — Verify: https://courses.cognitiveclass.ai/certificates/78b296a49bd24d0e9e837efef775bca1
+3. **Master's Program for Data Scientist – Simplilearn** — Verify: https://success.simplilearn.com/2568c26f-3d1b-4692-b9cd-87d2fd2bf7cc#acc.RwOUGiWj
 4. **Mathematics & Statistics Refresher** (Dec 2024 – Present: Khan Academy, StatQuest by Josh Starmer, Paul's Online Math Notes)
 
 ### 3-Tier Technical Capability Breakdown
@@ -49,7 +49,7 @@ During my 9 years and 5 months at Tata Consultancy Services, I received several 
    - Python scripting, Markdown processing, and automated unit testing with `pytest`
    - Modern Python project and dependency management using Astral's `uv`
    - Automated code quality and security checks (`ruff`, `mypy`, `bandit`, `pip-audit`, `detect-secrets`, `trivy`) and OS Keyring (`libsecret`) credential management
-   - Foundational Data Science and Machine Learning with Python (Cognitive Class & Simplilearn)
+   - Foundational Data Science and Machine Learning with Python (IBM Cognitive Class & Simplilearn)
 2. **Currently Practising (Actively using, studying, and experimenting with):**
    - Google Cloud Platform (GCP) core infrastructure, IAM, resource management, monitoring, and logging
    - Studying toward the **Google Cloud Professional Machine Learning Engineer** certification (Target: December 2026; not yet attempted)
