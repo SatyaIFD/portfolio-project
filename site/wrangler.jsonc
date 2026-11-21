@@ -57,8 +57,8 @@
     "FALLBACK_MODEL_ID": "@cf/google/gemma-4-26b-a4b-it",
     "EMBEDDING_MODEL_ID": "@cf/baai/bge-small-en-v1.5",
     "SIMILARITY_THRESHOLD": "0.60",
-    "MAX_PROMPT_LENGTH": "500",
-    "MAX_OUTPUT_TOKENS": "384",
+    "MAX_PROMPT_LENGTH": "250",
+    "MAX_OUTPUT_TOKENS": "600",
     "VECTOR_TOP_K": "6",
     "ALLOWED_ORIGIN": "https://vraidaten.com"
   }

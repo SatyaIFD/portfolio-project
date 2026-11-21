@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import pytest
 
-from rag_pipeline.schemas import KnowledgeChunk, validate_user_prompt
+from rag_pipeline.schemas import (
+    MAX_PROMPT_LENGTH,
+    KnowledgeChunk,
+    validate_user_prompt,
+)
 
 
 def test_valid_knowledge_chunk() -> None:
@@ -54,6 +58,9 @@ def test_validate_user_prompt_valid() -> None:
     result = validate_user_prompt("  What is Satyajit's GCP architecture?  ")
     assert result == "What is Satyajit's GCP architecture?"
 
+    exact_limit_prompt = "a" * MAX_PROMPT_LENGTH
+    assert validate_user_prompt(exact_limit_prompt) == exact_limit_prompt
+
 
 def test_validate_user_prompt_empty_negative() -> None:
     with pytest.raises(ValueError, match="Prompt cannot be empty"):
@@ -62,7 +69,7 @@ def test_validate_user_prompt_empty_negative() -> None:
 
 def test_validate_user_prompt_oversized_negative() -> None:
     with pytest.raises(ValueError, match="exceeds maximum length"):
-        validate_user_prompt("a" * 501)
+        validate_user_prompt("a" * (MAX_PROMPT_LENGTH + 1))
 
 
 def test_validate_user_prompt_pii_blocked_security() -> None:

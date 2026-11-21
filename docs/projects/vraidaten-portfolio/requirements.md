@@ -17,7 +17,7 @@ Provide recruiters and engineering leads with a fast (<200ms TTFT), verified por
 - **Maintainability:** 100% pass rate on Ruff, Mypy, TypeScript (`tsc --noEmit`), Bandit, pip-audit, npm audit, detect-secrets, Trivy, and Pytest (>=80% coverage).
 
 ## 4. Input & Output Schemas
-- **Chat Request Schema (JSON):** `{"prompt": string (1 to 500 chars, non-empty, no PII)}`
+- **Chat Request Schema (JSON):** `{"prompt": string (1 to 250 chars, non-empty, no PII)}`
 - **Knowledge Chunk Schema:** `{"chunk_id": string, "source_file": string, "content": string, "git_commit": string}`
 - **Chat Response Schema:** `text/event-stream` (SSE tokens) or deterministic plain-text error/refusal string.
 - **Health Response Schema (JSON):** `{"status": "healthy" | "degraded", "request_id": string, "timestamp": string, "bindings": object, "config": object}`

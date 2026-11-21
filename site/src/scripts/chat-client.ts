@@ -175,7 +175,7 @@ function initFloatingRagAssistant(): void {
 
   input.addEventListener("input", () => {
     if (charCount) {
-      charCount.textContent = `${input.value.length} / 500`;
+      charCount.textContent = `${input.value.length} / 250`;
     }
   });
 
@@ -186,7 +186,7 @@ function initFloatingRagAssistant(): void {
         openPanel();
         input.value = starter;
         if (charCount) {
-          charCount.textContent = `${input.value.length} / 500`;
+          charCount.textContent = `${input.value.length} / 250`;
         }
         form.requestSubmit();
       }
@@ -202,7 +202,7 @@ function initFloatingRagAssistant(): void {
 
     input.value = "";
     if (charCount) {
-      charCount.textContent = "0 / 500";
+      charCount.textContent = "0 / 250";
     }
     submitBtn.disabled = true;
 

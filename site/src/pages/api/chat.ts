@@ -196,7 +196,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const cleanedPrompt = body.prompt.trim();
-    const maxLen = Number.parseInt(runtimeEnv.MAX_PROMPT_LENGTH || "500", 10);
+    const maxLen = Number.parseInt(runtimeEnv.MAX_PROMPT_LENGTH || "250", 10);
 
     if (cleanedPrompt.length === 0 || cleanedPrompt.length > maxLen) {
       logStructuredEvent(
@@ -275,13 +275,14 @@ export const POST: APIRoute = async ({ request }) => {
       "2. Strictly distinguish between TCS employer awards (BPS Star Performance, Service & Commitment, Xcelerate Warrior, Internal Dedication) and external technical certifications or learning milestones (Cisco Linux Essentials, IBM Machine Learning with Python, Simplilearn Master's Program for Data Scientist, and his in-progress Google Cloud Professional Machine Learning Engineer study track targeted for December 2026).",
       "3. Clearly separate completed milestones from in-progress study tracks or planned projects—never state that he has passed an unattempted exam.",
       "4. Format lists cleanly using '- **Title:** brief description'.",
-      "5. If a detail is not in the verified context, state clearly that it is not available in Satyajit's verified portfolio. Do not hallucinate.",
+      "5. Keep answers concise (under 200 words when possible) and always finish every sentence cleanly.",
+      "6. If a detail is not in the verified context, state clearly that it is not available in Satyajit's verified portfolio. Do not hallucinate.",
       "",
       "Verified Context:",
       groundedText,
     ].join("\n");
     const maxTokens = Number.parseInt(
-      runtimeEnv.MAX_OUTPUT_TOKENS || "384",
+      runtimeEnv.MAX_OUTPUT_TOKENS || "600",
       10
     );
 

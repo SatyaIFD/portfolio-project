@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-MAX_PROMPT_LENGTH: int = 500
+MAX_PROMPT_LENGTH: int = 250
 MIN_SIMILARITY_SCORE: float = 0.70
 PII_PATTERN: re.Pattern[str] = re.compile(
     r"\b(\d{3}-\d{2}-\d{4}|\d{13,16}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\b"
