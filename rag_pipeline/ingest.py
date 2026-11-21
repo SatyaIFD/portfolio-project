@@ -69,6 +69,38 @@ def merge_heading_blocks(raw_blocks: list[str]) -> list[str]:
     return merged_chunks
 
 
+def split_markdown_sections(content: str) -> list[str]:
+    """Splits Markdown content into context-enriched sections by ## and ### headings."""
+    doc_title: str | None = None
+    current_h2: str | None = None
+    section_lines: list[str] = []
+    sections: list[str] = []
+
+    def flush() -> None:
+        if any(ln.strip() and not ln.lstrip().startswith("#") for ln in section_lines):
+            joined = "\n".join(section_lines).strip()
+            if joined:
+                sections.append(joined)
+
+    for line in content.splitlines():
+        if line.startswith("### "):
+            flush()
+            section_lines = [p for p in (doc_title, current_h2, line) if p]
+        elif line.startswith("## "):
+            flush()
+            current_h2 = line
+            section_lines = [p for p in (doc_title, line) if p]
+        elif line.startswith("# "):
+            if doc_title is None:
+                doc_title = line
+            section_lines.append(line)
+        else:
+            section_lines.append(line)
+
+    flush()
+    return sections
+
+
 MAX_CHUNK_ID_BYTES = 64
 MAX_STEM_CHARS = 45
 PATH_HASH_CHARS = 10
@@ -106,10 +138,7 @@ def chunk_markdown_file(
     )
 
     content = file_path.read_text(encoding="utf-8")
-
-    # Split content by double newlines and attach standalone headings to body blocks
-    raw_blocks = [c.strip() for c in content.split("\n\n") if c.strip()]
-    raw_chunks = merge_heading_blocks(raw_blocks)
+    raw_chunks = split_markdown_sections(content)
 
     validated_chunks: list[KnowledgeChunk] = []
     for idx, text in enumerate(raw_chunks):

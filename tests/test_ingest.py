@@ -10,10 +10,12 @@ from rag_pipeline.ingest import (
     chunk_markdown_file,
     get_current_git_commit,
     main,
-    merge_heading_blocks,
+    split_markdown_sections,
 )
 
 EXPECTED_CHUNK_COUNT = 3
+EXPECTED_SECTION_COUNT = 3
+EXPECTED_SINGLE_CHUNK_COUNT = 1
 MAX_VECTORIZE_ID_BYTES = 64
 
 
@@ -59,14 +61,29 @@ def test_get_current_git_commit_missing_ref(
         get_current_git_commit()
 
 
-def test_merge_heading_blocks() -> None:
-    blocks = ["# Title", "## Subtitle", "Paragraph 1", "Paragraph 2", "# Trailing"]
-    merged = merge_heading_blocks(blocks)
-    assert merged == [
-        "# Title\n\n## Subtitle\n\nParagraph 1",
-        "Paragraph 2",
-        "# Trailing",
-    ]
+def test_split_markdown_sections() -> None:
+    markdown = "\n".join(
+        [
+            "# Doc Title",
+            "## Section A",
+            "Body A line.",
+            "### Sub B",
+            "- Bullet item",
+            "## Empty Header",
+            "## Section C",
+            "Body C line.",
+        ]
+    )
+    sections = split_markdown_sections(markdown)
+
+    assert len(sections) == EXPECTED_SECTION_COUNT
+    assert all("# Doc Title" in sec for sec in sections)
+    assert "## Empty Header" not in "\n".join(sections)
+
+    sub_b_section = next(sec for sec in sections if "### Sub B" in sec)
+    assert "# Doc Title" in sub_b_section
+    assert "## Section A" in sub_b_section
+    assert "- Bullet item" in sub_b_section
 
 
 def test_build_chunk_id_collision_and_length() -> None:
@@ -85,12 +102,15 @@ def test_build_chunk_id_collision_and_length() -> None:
 def test_chunk_markdown_file(tmp_path: Path) -> None:
     md_file = tmp_path / "test.md"
     md_file.write_text(
-        "# Doc Title\n\nChunk 1\n\nChunk 2\n\n   \n\nChunk 3", encoding="utf-8"
+        "# Doc Title\n\n## S1\nBody 1\n\n## S2\nBody 2\n\n## S3\nBody 3\n",
+        encoding="utf-8",
     )
     chunks = chunk_markdown_file(md_file, "1234567")
 
     assert len(chunks) == EXPECTED_CHUNK_COUNT
-    assert chunks[0].content == "# Doc Title\n\nChunk 1"
+    assert "# Doc Title" in chunks[0].content
+    assert "## S1" in chunks[0].content
+    assert "Body 1" in chunks[0].content
     assert chunks[0].chunk_id == build_chunk_id("test.md", 0)
     assert chunks[0].source_file == "test.md"
     assert chunks[0].git_commit == "1234567"
@@ -104,7 +124,7 @@ def test_chunk_markdown_file_with_docs_dir(tmp_path: Path) -> None:
 
     chunks = chunk_markdown_file(md_file, "1234567", docs_dir=tmp_path)
 
-    assert len(chunks) == 1
+    assert len(chunks) == EXPECTED_SINGLE_CHUNK_COUNT
     assert chunks[0].source_file == "projects/gcp-end-to-end/architecture.md"
     assert chunks[0].chunk_id == build_chunk_id(
         "projects/gcp-end-to-end/architecture.md", 0
@@ -125,7 +145,9 @@ def test_main_dynamic_discovery_and_env(
     custom_docs = tmp_path / "custom_docs"
     nested_decisions = custom_docs / "decisions"
     nested_decisions.mkdir(parents=True)
-    (custom_docs / "architecture.md").write_text("Arch 1\n\nArch 2", encoding="utf-8")
+    (custom_docs / "architecture.md").write_text(
+        "# Arch\n\n## Part 1\nArch 1\n\n## Part 2\nArch 2", encoding="utf-8"
+    )
     (nested_decisions / "001-adr.md").write_text(
         "# ADR Title\n\nADR 1", encoding="utf-8"
     )
@@ -143,7 +165,9 @@ def test_main_dynamic_discovery_and_env(
     first_record = json.loads(lines[0])
     assert first_record["id"] == build_chunk_id("architecture.md", 0)
     assert first_record["metadata"]["source_file"] == "architecture.md"
-    assert first_record["text"] == "Arch 1"
+    assert "# Arch" in first_record["text"]
+    assert "## Part 1" in first_record["text"]
+    assert "Arch 1" in first_record["text"]
     assert first_record["metadata"]["git_commit"] == "1234567"
 
     last_record = json.loads(lines[-1])

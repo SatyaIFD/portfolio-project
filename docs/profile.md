@@ -1,11 +1,11 @@
 # Satyajit Chakraborty — Professional Profile & Career Transition
 
 ## Professional Summary
-I am a business operations professional born and raised in Kolkata, India (IST / UTC+5:30), with 9 years and 5 months of experience at Tata Consultancy Services (TCS BPS, July 2015 – December 2024), working across financial services, UK pension administration (NEST), US healthcare operations, data validation, and quality assurance.
+Satyajit Chakraborty is a business operations professional born and raised in Kolkata, India (IST / UTC+5:30), with 9 years and 5 months of experience at Tata Consultancy Services (TCS BPS, July 2015 – December 2024), working across financial services, UK pension administration (NEST), US healthcare operations, data validation, and quality assurance.
 
-My interest in technology began in 2021 through collaboration with Robotic Process Automation (RPA) teams, where I shared operational workflows and helped explain existing business processes. Since then, I have progressively developed an interest in Python, Machine Learning, and Cloud technologies. After completing my professional tenure at TCS in December 2024, I dedicated time to strengthening my technical foundations through structured learning and practical development.
+His interest in technology began in 2021 through collaboration with Robotic Process Automation (RPA) teams, where he shared operational workflows and helped explain existing business processes. Since then, he has progressively developed skills in Python, Machine Learning, and Cloud technologies. After completing his tenure at TCS in December 2024, he took a dedicated career break to build first-principles foundations in mathematics, statistics, Linux, Python, and Cloud Engineering.
 
-I am now pursuing opportunities in Junior Cloud Engineering, Cloud ML, Cloud Operations, and MLOps, where I can combine my professional experience in operational reliability, troubleshooting, data integrity, and stakeholder communication with my developing engineering capabilities. I believe in being transparent about my current technical capabilities, continuously learning, and demonstrating progress through practical projects.
+He is currently pursuing junior-level opportunities in Cloud Engineering, Cloud ML, Cloud Operations, Cloud Support, and MLOps, combining his operational discipline in reliability, troubleshooting, data integrity, and stakeholder communication with developing hands-on engineering skills.
 
 - **Location & Timezone:** Born and raised in Kolkata, India (IST · UTC+5:30)
 - **Academic Qualification:** Bachelor of Commerce (Honours) in Accounting and Finance — University of Calcutta
@@ -27,23 +27,32 @@ I am now pursuing opportunities in Junior Cloud Engineering, Cloud ML, Cloud Ope
 - Performed quality checks, identified discrepancies in processed information, and adhered strictly to HIPAA privacy requirements.
 - **Knowledge Sharing & Team Support:** Supported new joiners after initial training across both projects, helping them understand workflows, resolve process queries, and follow operational procedures.
 
-## Recognition & Professional Development at TCS
-During my 9 years and 5 months at Tata Consultancy Services, I received several recognitions for professional performance, service commitment, and continuous learning:
-- **BPS Star Performance Award** (Certificate preview available on `vraidaten.com`)
-- **Service and Commitment Award** – Received at 3 years post 1-year training period and at 5th year of tenure (Both certificate previews available on `vraidaten.com`)
-- **Xcelerate Warrior Award** – Upskilling and continuous learning (Certificate preview available on `vraidaten.com`)
-- **Internal Dedication Award** – Bank of America HIPAA project
+## Employer Awards & Recognition at TCS
+These are employer performance, tenure, and upskilling awards received during Satyajit's 9 years and 5 months at Tata Consultancy Services (distinct from external technical certifications):
+- **BPS Star Performance Award** — Operational excellence, process accuracy, and quality delivery (Certificate preview available on `vraidaten.com`).
+- **Service and Commitment Award** — Received at 3 years (post 1-year training period) and at the 5th year of tenure (Both certificate previews available on `vraidaten.com`).
+- **Xcelerate Warrior Award** — Recognition for upskilling and continuous learning (Certificate preview available on `vraidaten.com`).
+- **Internal Dedication Award** — Project recognition on the Bank of America HIPAA healthcare operations engagement.
 
-## Transparent Technical Skill Classification & Verified Credentials
+## Technical Certifications, Courses & Learning Milestones
 
-### Verified External Credentials
-1. **Linux Essentials Badge – Cisco Networking Academy** (Earned: 17 November 2026) — Verify: https://www.credly.com/badges/0713a5e5-070f-4150-8e08-a7e825ae60b6
+### Completed Technical Badges, Courses & Foundations
+1. **Linux Essentials Badge – Cisco Networking Academy** (Earned: 17 November 2026) — Formal milestone in Linux CLI and operating system fundamentals. Verify: https://www.credly.com/badges/0713a5e5-070f-4150-8e08-a7e825ae60b6
 2. **IBM Machine Learning with Python – Cognitive Class** (Completed: July 2022) — Verify: https://courses.cognitiveclass.ai/certificates/78b296a49bd24d0e9e837efef775bca1
-3. **Master's Program for Data Scientist – Simplilearn** — Verify: https://success.simplilearn.com/2568c26f-3d1b-4692-b9cd-87d2fd2bf7cc#acc.RwOUGiWj
-4. **Mathematics & Statistics Refresher** (Dec 2024 – Present: Khan Academy, StatQuest by Josh Starmer, Paul's Online Math Notes)
+3. **Master's Program for Data Scientist – Simplilearn** — Comprehensive Data Science and Machine Learning bootcamp. Verify: https://success.simplilearn.com/2568c26f-3d1b-4692-b9cd-87d2fd2bf7cc#acc.RwOUGiWj
+4. **Mathematics & Statistics First-Principles Refresher** (December 2024 – Present) — Independent study via Khan Academy, StatQuest by Josh Starmer, and Paul's Online Math Notes.
 
-### 3-Tier Technical Capability Breakdown
-1. **Completed / Demonstrated (Used in completed coursework, formal learning, or this repository):**
+### In-Progress Certification Track: Google Cloud Professional Machine Learning Engineer
+- **Certification Target:** Google Cloud Professional Machine Learning Engineer (**Target Exam Date: December 2026**).
+- **Current Status:** Actively studying; **has not attempted the exam yet**.
+- **Study Philosophy:** Prioritising deep conceptual understanding of ML foundations, statistics, and GCP ML tooling APIs before attempting the exam, viewing certification as a structured learning milestone rather than a substitute for practical engineering experience.
+
+## Current & Planned Practical Projects
+- **Current Active Project — VraiDaten Portfolio & Edge AI Assistant (`vraidaten.com`):** Completing and documenting this Astro 7 + Cloudflare Workers + Vectorize + Python 3.13 Edge RAG website to practise Git workflows, automated testing (`pytest`), CI/CD security checks, OS Keyring credential injection, and transparent engineering documentation (ADRs and Operational Hurdles).
+- **Planned Next Project — Google Cloud End-to-End Implementation:** Commencing immediately after completing the `vraidaten.com` launch. The exact use case and architecture are under evaluation to practically demonstrate Google Cloud infrastructure, IAM least-privilege configuration, containerization (Docker), deployment automation, monitoring, logging, troubleshooting, and ML model serving.
+
+## Transparent 3-Tier Technical Capability Breakdown
+1. **Completed / Demonstrated (Used in completed coursework, formal badges, or this repository):**
    - Linux fundamentals & command-line operations (Cisco Linux Essentials)
    - Git version control, branching, and pull request workflows
    - Python scripting, Markdown processing, and automated unit testing with `pytest`
@@ -60,9 +69,16 @@ During my 9 years and 5 months at Tata Consultancy Services, I received several 
    - Infrastructure as Code (IaC) fundamentals
    - End-to-end Machine Learning deployment, model serving, ML pipelines, and model monitoring on Google Cloud
 
-## Target Roles & Location / Work Mode Preferences
-Open to junior-level, entry-level, and career-transition-friendly technical positions as an integrated team collaborator (rather than an external consultant):
-- **Preferred Roles:** Junior Cloud ML Engineer, Junior Cloud Engineer, Cloud Operations Associate, Cloud Support Engineer, ML Platform Support / Operations, Junior Machine Learning Engineer (deployment/infrastructure), and Junior MLOps Engineer.
+## Target Roles, Career Goals & Location Preferences
+Satyajit is targeting junior-level, entry-level, and career-transition-friendly technical roles as an integrated engineering team collaborator (rather than an external consultant), with a long-term goal of specialising in MLOps:
+- **Preferred Target Roles:**
+  1. Junior Cloud ML Engineer
+  2. Junior Cloud Engineer
+  3. Cloud Operations Associate
+  4. Cloud Support Engineer
+  5. ML Platform Support / Operations
+  6. Junior Machine Learning Engineer (deployment and infrastructure-oriented)
+  7. Junior MLOps Engineer
 - **Domestic (India):** Preferential **Kolkata (On-Site / Hybrid)**; **Remote** across the rest of India, and open to relocation or hybrid arrangements outside Kolkata depending on the role and offer.
 - **Global EOR (Employer of Record):** **Remote** full-time employment (IST / UTC+5:30).
 - **B2B Contract:** **Remote** structured B2B contract working directly inside the engineering team.
