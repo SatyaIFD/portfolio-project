@@ -234,7 +234,7 @@ export const POST: APIRoute = async ({ request }) => {
       throw new Error("Embedding generation returned empty vector.");
     }
 
-    const topK = Number.parseInt(runtimeEnv.VECTOR_TOP_K || "4", 10);
+    const topK = Number.parseInt(runtimeEnv.VECTOR_TOP_K || "6", 10);
     const vectorQuery = await runtimeEnv.VECTOR_INDEX.query(queryVector, {
       topK,
       returnValues: false,
@@ -268,9 +268,20 @@ export const POST: APIRoute = async ({ request }) => {
       )
       .join("\n\n");
 
-    const systemInstruction = `You are Satyajit's portfolio AI. Answer using ONLY this verified context:\n${groundedText}\nIf the answer is not in the context, refuse. Do not hallucinate.`;
+    const systemInstruction = [
+      "You are Satyajit Chakraborty's portfolio AI assistant. Answer clearly and concisely using ONLY the verified context below.",
+      "Rules:",
+      "1. Answer every part of multi-part questions whenever covered in the context.",
+      "2. Strictly distinguish between TCS employer awards (BPS Star Performance, Service & Commitment, Xcelerate Warrior, Internal Dedication) and external technical certifications or learning milestones (Cisco Linux Essentials, IBM Machine Learning with Python, Simplilearn Master's Program for Data Scientist, and his in-progress Google Cloud Professional Machine Learning Engineer study track targeted for December 2026).",
+      "3. Clearly separate completed milestones from in-progress study tracks or planned projects—never state that he has passed an unattempted exam.",
+      "4. Format lists cleanly using '- **Title:** brief description'.",
+      "5. If a detail is not in the verified context, state clearly that it is not available in Satyajit's verified portfolio. Do not hallucinate.",
+      "",
+      "Verified Context:",
+      groundedText,
+    ].join("\n");
     const maxTokens = Number.parseInt(
-      runtimeEnv.MAX_OUTPUT_TOKENS || "256",
+      runtimeEnv.MAX_OUTPUT_TOKENS || "384",
       10
     );
 
