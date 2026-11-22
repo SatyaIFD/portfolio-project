@@ -11,6 +11,7 @@ Career-transition portfolio and grounded Edge RAG assistant for **Satyajit Chakr
   - **OS Keyring Secret Management:** Uses Ubuntu `libsecret` (`secret-tool`) for process-scoped credential injection with zero plaintext `.env` files.
 
 ## Developer & Operations Commands
-- `make all` — Run Ruff format/check, Mypy, TypeScript (`wrangler types && astro sync && tsc --noEmit`), Bandit, pip-audit, npm audit, detect-secrets, and Pytest (98.78% coverage).
+- `make all` — Run Ruff format/check, Mypy, TypeScript (`wrangler types && astro sync && tsc --noEmit`), Bandit, pip-audit, npm audit, detect-secrets, and Pytest (`>=92%` coverage).
+- `make sync-external-docs` — One-way `rsync --delete` mirror of canonical engineering documentation from standalone `../project-gcp-end2end/docs/` into `docs/projects/gcp-end-to-end/`.
 - `make sync-vectors` — Ingest `docs/**/*.md`, embed via OS keyring credentials, and upsert vectors into `vraidaten-index`.
 - `make deploy` — Build the Astro 7 bundle and deploy to Cloudflare Edge (`vraidaten.com` & `www.vraidaten.com`).
