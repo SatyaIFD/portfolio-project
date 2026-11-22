@@ -40,11 +40,11 @@ const PROJECT_META: Record<
     order: 1,
   },
   "gcp-end-to-end": {
-    name: "Google Cloud End-to-End Implementation",
-    subtitle: "Google Cloud Platform · IAM · Containerization · Cloud ML",
+    name: "Google Cloud End-to-End MLOps: Claims QA Triage",
+    subtitle: "GCP Always Free Tier (us-central1) · BigQuery ML · Docker · Cloud Run · Terraform",
     summary:
-      "End-to-end cloud infrastructure, deployment automation, monitoring, and ML integration project.",
-    status: "Planned",
+      "Cost-controlled ($0/month steady-state) imbalanced claims and transaction QA triage pipeline built local-first with zero real PII, keyless WIF CI/CD, and automated drift detection.",
+    status: "Active · Phase 0 Complete",
     order: 2,
   },
 };
@@ -52,7 +52,10 @@ const PROJECT_META: Record<
 const CORE_DOC_ORDER: Record<string, number> = {
   "architecture.md": 1,
   "requirements.md": 2,
-  "known-limitations.md": 3,
+  "security-and-threat-model.md": 3,
+  "data-governance.md": 4,
+  "runbook-and-finops.md": 5,
+  "known-limitations.md": 6,
 };
 
 const rawCoreDocs = import.meta.glob<string>("../../../docs/projects/*/*.md", {

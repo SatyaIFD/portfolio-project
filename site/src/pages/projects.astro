@@ -3,13 +3,19 @@ import Layout from "../layouts/Layout.astro";
 
 const adrCount = Object.keys(import.meta.glob("../../../docs/projects/vraidaten-portfolio/decisions/*.md")).length;
 const hurdleCount = Object.keys(import.meta.glob("../../../docs/projects/vraidaten-portfolio/hurdles/*.md")).length;
+const gcpSpecCount = Object.keys(import.meta.glob("../../../docs/projects/gcp-end-to-end/*.md")).length;
+const gcpAdrCount = Object.keys(import.meta.glob("../../../docs/projects/gcp-end-to-end/decisions/*.md")).length;
+const gcpHurdleCount = Object.keys(import.meta.glob("../../../docs/projects/gcp-end-to-end/hurdles/*.md")).length;
 
 const projects = [
   {
-    title: "Current Project: VraiDaten Portfolio & Edge AI Assistant (vraidaten.com)",
-    status: "Active Development & Live Deployment",
-    timeline: "Current Priority",
+    title: "VraiDaten Portfolio & Edge AI Assistant (vraidaten.com)",
+    status: "Live · v1.0.0 Released",
+    timeline: "Completed & Maintained",
     role: "Cloud Engineering & Edge AI Implementation",
+    repoUrl: "https://github.com/SatyaIFD/portfolio-project",
+    repoLabel: "View portfolio-project on GitHub",
+    logbookUrl: "/logbook",
     stack: [
       "Python 3.13",
       "Astral uv",
@@ -21,45 +27,50 @@ const projects = [
       "Linux libsecret Keyring",
     ],
     description:
-      "My immediate practical priority is completing and documenting this portfolio website and grounded Edge AI assistant while strengthening my understanding of cloud deployment workflows. Implements a local Python Markdown ingestion pipeline, Cloudflare Vectorize (384-dim BGE embeddings), OS Keyring credential injection (zero plaintext .env files), automated code quality and security checks, and a compile-time synchronized Engineering Logbook.",
+      "Production career-transition portfolio and grounded Edge RAG assistant operating at $0/month within Cloudflare free-tier boundaries. Implements a local Python hierarchical section-chunking pipeline, Cloudflare Vectorize (384-dim BGE embeddings), OS Keyring credential injection (zero plaintext .env files), automated DevSecOps checks, and a compile-time synchronized Engineering Logbook.",
     goals: [
-      "Practise end-to-end Git branching, pull request reviews, automated testing (pytest), and CI/CD deployment workflows.",
-      `Document every architectural decision (${adrCount} ADRs) and operational troubleshooting hurdle (${hurdleCount} Hurdles) transparently in the Engineering Logbook.`,
-      "Operate reliably within $0/month free-tier cloud boundaries using lightweight edge inference (@cf/ibm-granite/granite-4.0-h-micro).",
+      "Practised end-to-end Git branching, protected rulesets, automated unit testing (25 Pytest tests, 92%+ coverage), and CI/CD security gates.",
+      `Documented every architectural decision (${adrCount} ADRs) and operational troubleshooting hurdle (${hurdleCount} Hurdles) transparently in the Engineering Logbook.`,
+      "Engineered a $0/month edge inference assistant (@cf/ibm-granite/granite-4.0-h-micro with Gemma fallback), GDPR zero-PII guardrails, and Edge-to-Python schema parity.",
     ],
   },
   {
-    title: "Planned Project: Google Cloud End-to-End Implementation",
-    status: "Planned (Commencing After Website Completion)",
-    timeline: "Next Milestone",
-    role: "Cloud Engineering & Cloud ML Practice",
+    title: "Google Cloud End-to-End MLOps: Claims & Transaction QA Triage",
+    status: "Active · Phase 0 Complete (Scaffolding & Governance)",
+    timeline: "Current Build",
+    role: "Cloud ML & MLOps Engineering",
+    repoUrl: "https://github.com/SatyaIFD/project-gcp-end2end",
+    repoLabel: "View project-gcp-end2end on GitHub",
+    logbookUrl: "/logbook",
     stack: [
-      "Google Cloud Platform (GCP)",
-      "Cloud IAM & Resource Management",
-      "Python Automation",
-      "Docker Containerization",
-      "Cloud Monitoring & Logging",
-      "ML Model Deployment & Serving",
+      "Python 3.13 & Astral uv",
+      "GCP Always Free Tier (us-central1)",
+      "Cloud Storage & BigQuery ML",
+      "scikit-learn / XGBoost",
+      "FastAPI & Multi-Stage Docker",
+      "Artifact Registry & Cloud Run",
+      "Terraform IaC",
+      "Keyless GitHub OIDC (WIF)",
     ],
     description:
-      "After completing this website project, I intend to undertake an end-to-end Google Cloud project. The exact use case and architecture are currently being evaluated so that the project practically demonstrates cloud infrastructure management, application deployment, automation, monitoring, and troubleshooting—incorporating a machine learning component to connect my Data Science learning with my Cloud ML and MLOps interests.",
+      "Standalone, $0/month steady-state MLOps pipeline for imbalanced claims and financial transaction exception detection (3–4% base rate, evaluated on PR-AUC). Built local-first with a deterministic zero-PII synthetic QA generator, BigQuery ML baseline vs. custom model promotion gate, scale-to-zero Cloud Run canary serving, and automated PSI/KS feature-drift monitoring.",
     goals: [
-      "Reinforce concepts from my Google Cloud Professional Machine Learning Engineer study track (targeted for December 2026) through hands-on implementation.",
-      "Practice cloud resource provisioning, least-privilege IAM, containerization, and operational observability.",
-      "Update this page with concrete architecture diagrams, repository links, and troubleshooting logs as implementation progresses.",
+      "Reinforce all 6 domains of the Google Cloud Professional Machine Learning Engineer exam (Target: December 2026) through hands-on architecture and IaC.",
+      `Maintain canonical Specs (${gcpSpecCount} Core Specs), Architectural Decision Records (${gcpAdrCount} ADRs), and Operational Hurdles (${gcpHurdleCount} Hurdle) in project-gcp-end2end, mirrored one-way into vraidaten.com.`,
+      "Enforce zero static cloud keys (keyless WIF), non-root slim containers, Trivy/Bandit/pip-audit CI gates, and hard billing guardrails before activating GCP trial credits.",
     ],
   },
 ];
 ---
 
-<Layout title="Projects | Satyajit Chakraborty" description="Current and planned practical projects in Cloud Engineering, Cloud ML, and MLOps.">
+<Layout title="Projects | Satyajit Chakraborty" description="Live and active practical projects in Cloud Engineering, Cloud ML, and MLOps.">
   <section class="py-6 md:py-10 space-y-10">
     <div class="space-y-3 max-w-3xl">
       <p class="font-mono text-xs uppercase tracking-wider text-brand-accent-light dark:text-brand-accent-dark">
         Practical Implementation &amp; Roadmap
       </p>
       <h1 class="text-3xl font-bold tracking-tight text-brand-ink dark:text-brand-cream">
-        Current &amp; Planned Projects
+        Live &amp; Active Projects
       </h1>
       <p class="text-xs sm:text-sm text-brand-ink-muted dark:text-brand-cream-muted leading-relaxed">
         I focus on building and thoroughly documenting one practical project at a time—recording why each technology was selected, how it was implemented, what problems occurred, and how they were resolved.
@@ -95,6 +106,23 @@ const projects = [
                 <li>{g}</li>
               ))}
             </ul>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-4 pt-1">
+            <a
+              href={project.repoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="font-mono text-xs font-semibold text-brand-accent-light dark:text-brand-accent-dark hover:underline"
+            >
+              {project.repoLabel} &rarr;
+            </a>
+            <a
+              href={project.logbookUrl}
+              class="font-mono text-xs font-semibold text-brand-forest-light dark:text-brand-forest-dark hover:underline"
+            >
+              Inspect Engineering Logbook &rarr;
+            </a>
           </div>
 
           <div class="flex flex-wrap gap-1.5 pt-2 border-t border-brand-border/60 dark:border-brand-slate-border">

@@ -1,6 +1,9 @@
 .RECIPEPREFIX = >
 
-.PHONY: format lint typecheck security test sync-vectors deploy all
+GCP_DOCS_SRC ?= ../project-gcp-end2end/docs
+GCP_DOCS_DST := docs/projects/gcp-end-to-end
+
+.PHONY: format lint typecheck security test sync-external-docs sync-vectors deploy all
 
 format:
 > uv run --isolated ruff format .
@@ -21,6 +24,11 @@ security:
 
 test:
 > uv run --isolated pytest
+
+sync-external-docs:
+> test -d "$(GCP_DOCS_SRC)" || (echo "ERROR: Missing source directory $(GCP_DOCS_SRC)" >&2 && exit 1)
+> mkdir -p "$(GCP_DOCS_DST)"
+> rsync -av --delete --exclude='.gitkeep' "$(GCP_DOCS_SRC)/" "$(GCP_DOCS_DST)/"
 
 sync-vectors:
 > uv run --isolated python -m rag_pipeline.ingest
