@@ -36,7 +36,7 @@ const projects = [
   },
   {
     title: "Google Cloud End-to-End MLOps: Claims & Transaction QA Triage",
-    status: "Active · Phase 1 Complete (Synthetic Generator & Schema)",
+    status: "Active · Phase 2 Complete (ML Training, PR-AUC Gate & Artifact Integrity)",
     timeline: "Current Build",
     role: "Cloud ML & MLOps Engineering",
     repoUrl: "https://github.com/SatyaIFD/project-gcp-end2end",
@@ -56,7 +56,7 @@ const projects = [
       "Standalone, $0/month steady-state MLOps pipeline for imbalanced claims and financial transaction exception detection (3–4% base rate, evaluated on PR-AUC). Built local-first with a deterministic zero-PII synthetic QA generator, BigQuery ML baseline vs. custom model promotion gate, scale-to-zero Cloud Run canary serving, and automated PSI/KS feature-drift monitoring.",
     goals: [
       "Reinforce all 6 domains of the Google Cloud Professional Machine Learning Engineer exam (Target: December 2026) through hands-on architecture and IaC.",
-      `Maintain canonical Specs (${gcpSpecCount} Core Specs), Architectural Decision Records (${gcpAdrCount} ADRs), and Operational Hurdles (${gcpHurdleCount} Hurdle) in project-gcp-end2end, mirrored one-way into vraidaten.com.`,
+      `Maintain canonical Specs (${gcpSpecCount} Core Specs), Architectural Decision Records (${gcpAdrCount} ADRs), and Operational Hurdles (${gcpHurdleCount} ${gcpHurdleCount === 1 ? "Hurdle" : "Hurdles"}) in project-gcp-end2end, mirrored one-way into vraidaten.com.`,
       "Enforce zero static cloud keys (keyless WIF), non-root slim containers, Trivy/Bandit/pip-audit CI gates, and hard billing guardrails before activating GCP trial credits.",
     ],
   },
