@@ -1,17 +1,25 @@
-# Vraidaten Portfolio & Edge AI Assistant (`vraidaten.com`)
+# VraiDaten — Edge-RAG Engineering Portfolio & Live Logbook
 
-Career-transition portfolio and grounded Edge RAG assistant for **Satyajit Chakraborty** (9 years 5 months in Business Operations at Tata Consultancy Services, transitioning into **Cloud Engineering, Cloud ML, Cloud Operations, and MLOps**). Built with **Astro 7**, **Tailwind CSS v4**, **Cloudflare Workers with Static Assets**, **Cloudflare Vectorize (`vraidaten-index`)**, and **Cloudflare Workers AI** operating at **$0/month** within Cloudflare free-tier quotas.
+Live production site: **[https://vraidaten.com](https://vraidaten.com)** · Engineering Logbook: **[https://vraidaten.com/logbook/](https://vraidaten.com/logbook/)**
 
-## Architecture Highlights
-- **Floating Edge RAG Assistant (`/api/chat`):** Powered by `@cf/ibm-granite/granite-4.0-h-micro` (~1.61 Neurons/turn) with automatic failover to `@cf/google/gemma-4-26b-a4b-it`, accessible across all pages via a viewport-fixed floating corner button.
-- **384-Dim Vectorize Index (`vraidaten-index`):** Local Markdown ingestion (`rag_pipeline/ingest.py`) chunks `docs/profile.md` and project-segregated `docs/projects/<slug>/**/*.md` (Core Specs, ADRs, and Hurdles), stamps Git commit SHA lineage metadata, and embeds via `@cf/baai/bge-small-en-v1.5` with a calibrated `0.60` cosine similarity cutoff.
-- **Compile-Time Synchronized Engineering Logbook (`/logbook`):** Uses Vite `import.meta.glob` (`?raw`) to compile every project's Core Specifications, ADRs, and Operational Hurdle logs into project-segregated sections at build time.
-- **Security, Privacy & Quality Hygiene:**
-  - **GDPR Zero-PII Telemetry & EU AI Act Art. 50 Disclosure:** Blocks PII inputs via regex (`HTTP 403`) and logs structured JSON metrics with zero raw prompt or client IP storage.
-  - **OS Keyring Secret Management:** Uses Ubuntu `libsecret` (`secret-tool`) for process-scoped credential injection with zero plaintext `.env` files.
+A zero-cost, security-hardened engineering portfolio built with **Astro 7**, **Tailwind CSS v4**, **Cloudflare Workers**, **Cloudflare Vectorize**, and **Workers AI**. It hosts a live, single-source-of-truth architectural logbook (mirroring standalone project repositories automatically) alongside an EU AI Act-transparent Edge-RAG assistant grounded strictly in repository documentation.
 
-## Developer & Operations Commands
-- `make all` — Run Ruff format/check, Mypy, TypeScript (`wrangler types && astro sync && tsc --noEmit`), Bandit, pip-audit, npm audit, detect-secrets, and Pytest (`>=92%` coverage).
-- `make sync-external-docs` — One-way `rsync --delete` mirror of canonical engineering documentation from standalone `../project-gcp-end2end/docs/` into `docs/projects/gcp-end-to-end/`.
-- `make sync-vectors` — Ingest `docs/**/*.md`, embed via OS keyring credentials, and upsert vectors into `vraidaten-index`.
-- `make deploy` — Build the Astro 7 bundle and deploy to Cloudflare Edge (`vraidaten.com` & `www.vraidaten.com`).
+## Architecture & Data Flow
+
+```mermaid
+flowchart LR
+    subgraph Local["Local Ingestion & DevSecOps Pipeline (Python 3.13 + uv)"]
+        A["docs/ Markdown<br/>(Portfolio + Mirrored GCP Docs)"] --> B["rag_pipeline.ingest<br/>Section Chunking + Git SHA Lineage"]
+        B --> C["rag_pipeline.embed<br/>bge-small-en-v1.5 (384-d)"]
+    end
+
+    subgraph Edge["Cloudflare Edge Runtime (Workers + Astro 7)"]
+        C -->|"wrangler vectorize upsert"| D[("Vectorize Index<br/>vraidaten-index")]
+        U["Browser / Client"] -->|"Static Pages"| S["Astro 7 Prerendered Assets<br/>/, /projects, /logbook, /contact"]
+        U -->|"POST /api/chat"| G["Edge Guardrails<br/>Origin · 10 req/60s · 250-char · PII Filter"]
+        G -->|"Query Embed + Top-6 (cos >= 0.60)"| D
+        D --> M1["Primary SLM<br/>@cf/ibm-granite/granite-4.0-h-micro"]
+        M1 -->|"Automatic Failover"| M2["Fallback LLM<br/>@cf/google/gemma-4-26b-a4b-it"]
+        M1 --> U
+        M2 --> U
+    end
